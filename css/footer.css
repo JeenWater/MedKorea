@@ -4,6 +4,14 @@ body{
     margin: 0;
 }
 
+.footer{
+    margin: 1em 0;
+}
+
+.footer:hover{
+    box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
+}
+
 .footer-top{
     transition: ease-in-out .3s;
 }

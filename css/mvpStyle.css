@@ -1,0 +1,106 @@
+.nav-bar{
+    justify-content: center;
+}
+
+.nav-mid{
+    margin: 0;
+}
+
+.nav-right{
+    justify-content: flex-start;
+}
+
+
+
+
+
+
+.main-top{
+    padding: 2em 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: ease-in-out .3s;
+}
+
+.main-top:hover{
+    box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
+}
+
+.main-mid{
+    transition: ease-in-out .3s;
+
+}
+
+.main-mid:hover{
+    box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
+}
+
+
+
+
+
+
+
+.doctor-info{
+    padding: 1em 0;
+    transition: ease-in-out .3s;
+}
+
+.doctor-info:hover:hover{
+    box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
+}
+
+.details{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.doctor-profile{
+    width: 50%;
+    float: left;
+    display: flex;
+}
+
+.doctor-img{
+    margin: .5em;
+}
+
+.doctor-detail{
+    display: flex;
+    flex-direction: column;
+}
+
+.doctor-subtit{
+    margin-bottom: 0;
+}
+
+.reservation-container{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.reservation-content{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.reservations{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 2em;
+}
+
+.reservations ul, a{
+    list-style: none;
+    text-decoration: none;
+    padding: 0;
+    margin: 0;
+}
