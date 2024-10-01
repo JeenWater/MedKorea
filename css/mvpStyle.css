@@ -43,7 +43,7 @@
 
 
 .doctor-info{
-    padding: 1em 0;
+    padding: 1em 3em;
     transition: ease-in-out .3s;
 }
 
@@ -95,7 +95,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin: 0 2em;
+    padding: 0 1em 1em 1em;
+    margin: 0 .5em;
+    box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
 }
 
 .reservations ul, a{
@@ -103,4 +105,9 @@
     text-decoration: none;
     padding: 0;
     margin: 0;
+    color: rgba(0, 0, 0, .5);
+}
+
+.reservations li:hover{
+    color: rgba(0, 0, 0, .8);
 }
