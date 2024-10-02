@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MVP</title>
-
     <link rel="stylesheet" href="./css/header.css">
     <link rel="stylesheet" href="./css/footer.css">
     <link rel="stylesheet" href="./css/mvpStyle.css">
@@ -14,14 +13,17 @@
     <div class="SecondColor" style="background-color: #1ABC9C; width: 100px; height: 100px;"></div>
     <div class="pointColor" style="background-color: #E74C3C; width: 100px; height: 100px;"></div> -->
     <header class="header">
-    <nav class="nav-bar">
-        <div class="nav-left">
-            <div class="logo">
-                <a href="./index.html"><img src="./img/fixedIconMain(blue).png" alt="MedKorea logo"/></a>
-                <a href="./index.html"><h1>MedKorea</h1></a>
+        <nav class="nav-bar">
+            <div class="nav-left">
+                <div class="logo">
+                    <a href="./index.html"><img src="./img/fixedIconMain(blue).png" alt="MedKorea logo"/></a>
+                    <a href="./index.html"><h1>MedKorea</h1></a>
+                </div>
             </div>
-        </div>
-    </nav>
+            <div class="nav-right">
+                <a href="./login.html" class="btn">Login</a>
+            </div>
+        </nav>
     </header>
 
     <main class="main">
@@ -29,12 +31,12 @@
             <div class="nav-mid">
                 <form action="#" role="search" class="nav-mid-form">
                     <input type="search" class="nav-mid-search" placeholder="Condition, procedure, doctor..." value="" title="Search for" autocomplete="off" required/>
-                    <input type="search" class="nav-mid-search" placeholder="Location" value="" title="Search for" autocomplete="off" required/>
-                    <input type="date" class="nav-mid-search" placeholder="Choose insurance" value="" title="Search for" autocomplete="off" required/>
+                    <input type="search" class="nav-mid-search" placeholder="Location" value="" title="Location" autocomplete="off" required/>
+                    <input type="date" class="nav-mid-search" id="date" value="" title="Date" autocomplete="off" required/>
                 </form>
-                </div>
-                <div class="nav-right">
-                <a href="#signup" class="btn">Search</a>
+            </div>
+            <div class="nav-right">
+                <a href="#search" class="btn">Search</a>
             </div>
         </div>
         <div class="main-mid">
@@ -59,25 +61,25 @@
                             <span class="reservations">
                                 <h4>October 1</h4>
                                 <ul>
-                                    <a href=""><li>10:00 AM</li></a>
-                                    <a href=""><li>11:00 AM</li></a>
-                                    <a href=""><li>1:00 PM</li></a>
+                                    <li><a href="#" onclick="selectTime('October 1', '10:00')">10:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 1', '11:00')">11:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 1', '13:00')">1:00 PM</a></li>
                                 </ul>
                             </span>
                             <span class="reservations">
                                 <h4>October 2</h4>
                                 <ul>
-                                    <a href=""><li>10:00 AM</li></a>
-                                    <a href=""><li>11:00 AM</li></a>
-                                    <a href=""><li>1:00 PM</li></a>
+                                    <li><a href="#" onclick="selectTime('October 2', '10:00')">10:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 2', '11:00')">11:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 2', '13:00')">1:00 PM</a></li>
                                 </ul>
                             </span>
                             <span class="reservations">
                                 <h4>October 3</h4>
                                 <ul>
-                                    <a href=""><li>10:00 AM</li></a>
-                                    <a href=""><li>11:00 AM</li></a>
-                                    <a href=""><li>1:00 PM</li></a>
+                                    <li><a href="#" onclick="selectTime('October 3', '10:00')">10:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 3', '11:00')">11:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 3', '13:00')">1:00 PM</a></li>
                                 </ul>
                             </span>
                         </div>
@@ -105,25 +107,25 @@
                             <span class="reservations">
                                 <h4>October 1</h4>
                                 <ul>
-                                    <a href=""><li>10:00 AM</li></a>
-                                    <a href=""><li>11:00 AM</li></a>
-                                    <a href=""><li>1:00 PM</li></a>
+                                    <li><a href="#" onclick="selectTime('October 1', '10:00')">10:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 1', '11:00')">11:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 1', '13:00')">1:00 PM</a></li>
                                 </ul>
                             </span>
                             <span class="reservations">
                                 <h4>October 2</h4>
                                 <ul>
-                                    <a href=""><li>10:00 AM</li></a>
-                                    <a href=""><li>11:00 AM</li></a>
-                                    <a href=""><li>1:00 PM</li></a>
+                                    <li><a href="#" onclick="selectTime('October 2', '10:00')">10:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 2', '11:00')">11:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 2', '13:00')">1:00 PM</a></li>
                                 </ul>
                             </span>
                             <span class="reservations">
                                 <h4>October 3</h4>
                                 <ul>
-                                    <a href=""><li>10:00 AM</li></a>
-                                    <a href=""><li>11:00 AM</li></a>
-                                    <a href=""><li>1:00 PM</li></a>
+                                    <li><a href="#" onclick="selectTime('October 3', '10:00')">10:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 3', '11:00')">11:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 3', '13:00')">1:00 PM</a></li>
                                 </ul>
                             </span>
                         </div>
@@ -151,25 +153,25 @@
                             <span class="reservations">
                                 <h4>October 1</h4>
                                 <ul>
-                                    <a href=""><li>10:00 AM</li></a>
-                                    <a href=""><li>11:00 AM</li></a>
-                                    <a href=""><li>1:00 PM</li></a>
+                                    <li><a href="#" onclick="selectTime('October 1', '10:00')">10:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 1', '11:00')">11:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 1', '13:00')">1:00 PM</a></li>
                                 </ul>
                             </span>
                             <span class="reservations">
                                 <h4>October 2</h4>
                                 <ul>
-                                    <a href=""><li>10:00 AM</li></a>
-                                    <a href=""><li>11:00 AM</li></a>
-                                    <a href=""><li>1:00 PM</li></a>
+                                    <li><a href="#" onclick="selectTime('October 2', '10:00')">10:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 2', '11:00')">11:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 2', '13:00')">1:00 PM</a></li>
                                 </ul>
                             </span>
                             <span class="reservations">
                                 <h4>October 3</h4>
                                 <ul>
-                                    <a href=""><li>10:00 AM</li></a>
-                                    <a href=""><li>11:00 AM</li></a>
-                                    <a href=""><li>1:00 PM</li></a>
+                                    <li><a href="#" onclick="selectTime('October 3', '10:00')">10:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 3', '11:00')">11:00 AM</a></li>
+                                    <li><a href="#" onclick="selectTime('October 3', '13:00')">1:00 PM</a></li>
                                 </ul>
                             </span>
                         </div>
@@ -221,5 +223,8 @@
             </div>
         </div>
     </footer>
+
+    <script src="./js/bookTime.js"></script>
+    <script src="./js/currentTime.js"></script>
 </body>
 </html>

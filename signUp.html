@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>book</title>
+    <title>Sign Up</title>
     <link rel="stylesheet" href="./css/header.css">
     <link rel="stylesheet" href="./css/footer.css">
-    <link rel="stylesheet" href="./css/mvpStyle.css">
     <link rel="stylesheet" href="./css/book.css">
+    <link rel="stylesheet" href="./css/signup.css">
 </head>
 <body>
     <header class="header">
@@ -21,73 +21,29 @@
         </nav>
     </header>
 
-    <main class="main">
-        <section class="mid-top">
-            <div class="doctor-profile">
-                <div class="doctor-img">
-                    <img src="./img/imgMain.png" alt="Doctor's Photo" class="doctor-photo" style="width: 100px; height: 100px;">
-                    <div class="rating"><span>★</span>5/5</div>
-                </div>
-                <div class="doctor-detail">
-                    <h2 class="doctor-tit">Doctor Name</h2>
-                    <p class="doctor-speciality">Doctor Speciality</p>
-                    <h3 class="doctor-subtit">Appointment on <span id="appointment-date"></span> at <span id="time"></span></h3>
-                </div>
-            </div>
-        </section>
-
-        <section class="booking-section">
-            <h2>Book Your Appointment</h2>
-            <div class="first-visit-buttons">
-                <p>Is this your first visit?</p>
-                <button type="button" id="yes-btn" class="visit-btn">YES</button>
-                <button type="button" id="no-btn" class="visit-btn">NO</button>
-                <input type="hidden" id="first-visit" name="first-visit">
-            </div>
-
-            <div class="social-login">
-                <button class="google-login">
-                    <span class="google-img"><img src="./img/google-img.png" alt="google-icon"></span>
-                    <span>Sign in with Google</span>
-                </button>
-            </div>
-            <div class="separator">
-                <span>or</span>
-            </div>
-            
+    <main>
+        <section class="signup-section">
+            <h2>Create an Account</h2>
             <form id="booking-form">
-                <!-- <label for="symptom">Tell us a bit about yourself</label>
-                <textarea name="symptom" id="symptom" placeholder="Describe your symptoms"></textarea> -->
                 <div class="two-column">
                     <div>
-                        <label for="first-name">First Name:</label>
+                        <label for="first-name">First Name</label>
                         <input type="text" id="first-name" name="first-name" autocomplete="off" required>
                     </div>
-                    
                     <div>
-                        <label for="last-name">Last Name:</label>
+                        <label for="last-name">Last Name</label>
                         <input type="text" id="last-name" name="last-name" autocomplete="off" required>
                     </div>
-                </div>
-        
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email">
-        
-                <div class="two-column">
                     <div>
-                        <label for="phone">Phone Number:</label>
+                        <label for="phone">Phone Number</label>
                         <input type="tel" id="phone" name="phone" autocomplete="off" required>
                     </div>
-        
                     <div>
-                        <label for="birth">Date of Birth:</label>
+                        <label for="birth">Date of Birth</label>
                         <input type="date" id="birth" name="birth" required>
                     </div>
-                </div>
-        
-                <div class="two-column">
                     <div>
-                        <label for="sex">Sex:</label>
+                        <label for="sex">Sex</label>
                         <select id="sex" name="sex" required>
                             <option value="">-</option>
                             <option value="Female">Female</option>
@@ -96,7 +52,7 @@
                     </div>
         
                     <div>
-                        <label for="insurance">Health Insurance:</label>
+                        <label for="insurance">Health Insurance</label>
                         <select id="insurance" name="insurance">
                             <option value="">-</option>
                             <option value="y">Yes</option>
@@ -105,13 +61,30 @@
                     </div>
                 </div>
         
-                <label for="note">Comments for Doctor (optional)</label>
-                <textarea name="note" id="note" placeholder="Describe your symptoms"></textarea>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" autocomplete="off" required>
         
-                <button type="submit">Book Appointment</button>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" autocomplete="off" required>
+        
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm-password" autocomplete="off" required>
+        
+                <button type="submit">Sign Up</button>
             </form>
+        
+            <div class="separator">
+                <span>or</span>
+            </div>
+            <div class="social-login">
+                <button class="google-login">
+                    <span class="google-img"><img src="./img/google-img.png" alt="google-icon"></span>
+                    <span>Sign in with Google</span>
+                </button>
+            </div>
         </section>
     </main>
+
 
     <footer class="footer">
         <div class="footer-top">
@@ -154,8 +127,5 @@
             </div>
         </div>
     </footer>
-
-    <script src="./js/bookTime.js"></script>
-    <script src="./js/visitBtn.js"></script>
 </body>
 </html>

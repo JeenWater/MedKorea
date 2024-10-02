@@ -1,20 +1,3 @@
-.nav-bar{
-    justify-content: center;
-}
-
-.nav-mid{
-    margin: 0;
-}
-
-.nav-right{
-    justify-content: flex-start;
-}
-
-
-
-
-
-
 .main{
     display: flex;
     flex-direction: column;
@@ -109,6 +92,10 @@
     align-items: center;
 }
 
+.reservation-tit{
+    margin-bottom: .5em;
+}
+
 .reservation-content{
     display: flex;
     justify-content: space-evenly;
@@ -120,7 +107,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 0 1em 1em 1em;
+    padding: 1em;
     margin: 0 .5em;
     border-radius: 1em;
     box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
@@ -131,7 +118,11 @@
     box-shadow: -.01em 0 .5em #1ABC9C, .01em 0 .1em #1ABC9C;
 }
 
-.reservations ul, a{
+.reservations h4{
+    margin-bottom: .5em;
+}
+
+.reservations ul, li, a{
     list-style: none;
     text-decoration: none;
     padding: 0;
@@ -139,6 +130,6 @@
     color: rgba(0, 0, 0, .5);
 }
 
-.reservations li:hover{
+.reservations a:hover{
     color: rgba(0, 0, 0, .8);
 }
