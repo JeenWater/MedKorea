@@ -15,7 +15,16 @@
 
 
 
+.main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 .main-top{
+    width: 80%;
+    position: relative;
     padding: 2em 0;
     display: flex;
     justify-content: center;
@@ -43,7 +52,7 @@
 
 .doctor-info{
     /* width: 75%; */
-    padding: 1em 3em;
+    padding: 1em 0 1em 3em;
     margin: 1em 3em;
     transition: ease-in-out .3s;
 }
@@ -56,7 +65,7 @@
 .details{
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .doctor-profile{
@@ -65,8 +74,22 @@
     display: flex;
 }
 
+.rating{
+    display: flex;
+    justify-content: center;
+    font-weight: 600;
+    letter-spacing: 3px;
+}
+
+.rating span{
+    color: #FFD700;
+}
+
 .doctor-img{
     margin: .5em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .doctor-detail{
@@ -101,6 +124,11 @@
     margin: 0 .5em;
     border-radius: 1em;
     box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
+    transition: ease-in-out .3s;
+}
+
+.reservations:hover{
+    box-shadow: -.01em 0 .5em #1ABC9C, .01em 0 .1em #1ABC9C;
 }
 
 .reservations ul, a{

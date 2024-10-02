@@ -2,9 +2,10 @@ body{
     width: 100%;
     padding: 0;
     margin: 0;
+    background: linear-gradient(to bottom right, #f0f8ff, #e6f7ff);
 }
 
-header{
+.header{
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,7 +14,7 @@ header{
     margin: 1em 3em;
 }
 
-header:hover{
+.header:hover{
     box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
 }
 
@@ -25,10 +26,6 @@ header:hover{
     justify-content: space-between;
     align-items: center;
     
-}
-
-.nav-left{
-    width: 20%;
 }
 
 .nav-left a, .nav-left h1{
@@ -97,7 +94,6 @@ header:hover{
 
 .nav-right .btn {
     color: white;
-    width: 3em;
     display: flex;
     justify-content: center;
     align-items: center;
