@@ -9,6 +9,8 @@ header{
     justify-content: center;
     align-items: center;
     transition: ease-in-out .3s;
+    border-radius: 1em;
+    margin: 1em 3em;
 }
 
 header:hover{
