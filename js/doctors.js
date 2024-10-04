@@ -162,8 +162,8 @@ function loadMore() {
         container.appendChild(doctorArticle);
 
         requestAnimationFrame(() => {
-            doctorArticle.style.transition = "opacity 1s ease-in-out"; // 트랜지션 설정
-            doctorArticle.style.opacity = 1; // 점차적으로 나타나도록 변경
+            doctorArticle.style.transition = "opacity 1s ease-in-out";
+            doctorArticle.style.opacity = 1;
         });
     });
 
