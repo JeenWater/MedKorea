@@ -23,6 +23,14 @@
 
     <main class="main">
         <section class="mid-top">
+            <h1 class="back-btn">
+                <a href="./MVP.html">
+                    <span>
+                        <img src="./img/left.png" alt="left icon">
+                        <div>Back</div>
+                    </span>
+                </a>
+            </h1>
             <div class="doctor-profile">
                 <div class="doctor-img">
                     <img src="./img/imgMain.png" alt="Doctor's Photo" class="doctor-photo" style="width: 100px; height: 100px;">
@@ -35,81 +43,83 @@
                 </div>
             </div>
         </section>
-
         <section class="booking-section">
-            <h2>Book Your Appointment</h2>
-            <div class="first-visit-buttons">
-                <p>Is this your first visit?</p>
-                <button type="button" id="yes-btn" class="visit-btn">YES</button>
-                <button type="button" id="no-btn" class="visit-btn">NO</button>
-                <input type="hidden" id="first-visit" name="first-visit">
-            </div>
-
-            <div class="social-login">
-                <button class="google-login">
-                    <span class="google-img"><img src="./img/google-img.png" alt="google-icon"></span>
-                    <span>Sign in with Google</span>
-                </button>
-            </div>
-            <div class="separator">
-                <span>or</span>
-            </div>
+            <div class="booking-content">
+                <h2>Book Your Appointment</h2>
+                <div class="first-visit-buttons">
+                    <p>Is this your first visit?</p>
+                    <button type="button" id="yes-btn" class="visit-btn">YES</button>
+                    <button type="button" id="no-btn" class="visit-btn">NO</button>
+                    <input type="hidden" id="first-visit" name="first-visit">
+                </div>
+                
+                <form id="booking-form">
+                    <div class="booking-top">
+                        <h3>Tell us a bit about yourself.</h3>
+                        <p>Please enter the below information to book your appointment.</p>
+                    </div>
+                    <div class="two-column">
+                        <div>
+                            <label for="first-name">First Name:</label>
+                            <input type="text" id="first-name" name="first-name" autocomplete="off" required>
+                        </div>
+                        
+                        <div>
+                            <label for="last-name">Last Name:</label>
+                            <input type="text" id="last-name" name="last-name" autocomplete="off" required>
+                        </div>
+                    </div>
             
-            <form id="booking-form">
-                <!-- <label for="symptom">Tell us a bit about yourself</label>
-                <textarea name="symptom" id="symptom" placeholder="Describe your symptoms"></textarea> -->
-                <div class="two-column">
-                    <div>
-                        <label for="first-name">First Name:</label>
-                        <input type="text" id="first-name" name="first-name" autocomplete="off" required>
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" name="email">
+            
+                    <div class="two-column">
+                        <div>
+                            <label for="phone">Phone Number:</label>
+                            <input type="tel" id="phone" name="phone" autocomplete="off" required>
+                        </div>
+            
+                        <div>
+                            <label for="birth">Date of Birth:</label>
+                            <input type="date" id="birth" name="birth" required>
+                        </div>
                     </div>
-                    
-                    <div>
-                        <label for="last-name">Last Name:</label>
-                        <input type="text" id="last-name" name="last-name" autocomplete="off" required>
+            
+                    <div class="two-column">
+                        <div>
+                            <label for="sex">Sex:</label>
+                            <select id="sex" name="sex" required>
+                                <option value="">-</option>
+                                <option value="Female">Female</option>
+                                <option value="Male">Male</option>
+                            </select>
+                        </div>
+            
+                        <div>
+                            <label for="insurance">Health Insurance:</label>
+                            <select id="insurance" name="insurance">
+                                <option value="">-</option>
+                                <option value="y">Yes</option>
+                                <option value="n">No</option>
+                            </select>
+                        </div>
                     </div>
+            
+                    <label for="note">Comments for Doctor (optional)</label>
+                    <textarea name="note" id="note" placeholder="Describe your symptoms"></textarea>
+            
+                    <button type="submit">Book Appointment</button>
+                </form>
+                <!-- <div class="separator">
+                    <span>or</span>
                 </div>
-        
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email">
-        
-                <div class="two-column">
-                    <div>
-                        <label for="phone">Phone Number:</label>
-                        <input type="tel" id="phone" name="phone" autocomplete="off" required>
-                    </div>
-        
-                    <div>
-                        <label for="birth">Date of Birth:</label>
-                        <input type="date" id="birth" name="birth" required>
-                    </div>
-                </div>
-        
-                <div class="two-column">
-                    <div>
-                        <label for="sex">Sex:</label>
-                        <select id="sex" name="sex" required>
-                            <option value="">-</option>
-                            <option value="Female">Female</option>
-                            <option value="Male">Male</option>
-                        </select>
-                    </div>
-        
-                    <div>
-                        <label for="insurance">Health Insurance:</label>
-                        <select id="insurance" name="insurance">
-                            <option value="">-</option>
-                            <option value="y">Yes</option>
-                            <option value="n">No</option>
-                        </select>
-                    </div>
-                </div>
-        
-                <label for="note">Comments for Doctor (optional)</label>
-                <textarea name="note" id="note" placeholder="Describe your symptoms"></textarea>
-        
-                <button type="submit">Book Appointment</button>
-            </form>
+                <div class="social-login">
+                    <button class="google-login">
+                        <span class="google-img"><img src="./img/google-img.png" alt="google-icon"></span>
+                        <span>Sign in with Google</span>
+                    </button>
+                </div> -->
+            </div>
         </section>
     </main>
 

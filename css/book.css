@@ -1,16 +1,47 @@
 .mid-top{
-    width: 80%;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
 }
 
 
 
+.back-btn{
+    width: 80%;
+    margin: 0 0 0 1em;
+    display: flex;
+    align-items: center;
+}
+
+.back-btn span{
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+    font-size: 16px;
+    background-color: #fff;
+    box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
+    border-radius: 4px;
+    padding: .3em .4em .2em 0;
+    transition: ease-in-out .3s;
+    color: #777;
+}
+
+.back-btn span:hover{
+    text-decoration: underline;
+    box-shadow: -.01em 0 .5em #E74C3C, .01em 0 .1em #E74C3C;
+}
+
+.back-btn img{
+    width: 100%;
+}
+
+
+
+
 
 .doctor-profile{
     float: none;
-    width: 80%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -45,8 +76,28 @@
 
 
 
-.booking-section {
-    width: 50%;
+
+
+
+.booking-top{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0 0 2em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0.8em 2em;
+}
+
+.booking-section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.booking-content {
+    width: 55%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -58,12 +109,12 @@
     transition: ease-in-out .3s;
 }
 
-.booking-section:hover{
+.booking-content:hover{
     box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
     border-radius: 1em;
 }
 
-.booking-section h2 {
+.booking-content h2 {
     text-align: center;
     font-size: 1.8em;
     margin-bottom: 1.5em;
@@ -94,7 +145,7 @@
     padding: 1.0421em .123em;
 }
 
-.booking-section textarea{
+.booking-content textarea{
     resize: vertical;
     height: 100px;
 }

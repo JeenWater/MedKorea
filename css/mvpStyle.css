@@ -1,11 +1,15 @@
 .main{
     display: flex;
     flex-direction: column;
+}
+
+.main-top{
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.main-top{
+.main-top-nav{
     width: 80%;
     position: relative;
     padding: 2em 0;
@@ -17,32 +21,35 @@
     margin: 1em 3em;
 }
 
-.main-top:hover{
+.main-top-nav:hover{
     box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
 }
+
+
+
+
+
+
 
 .main-mid{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-
-
-
-
-
-
-.doctor-info{
-    /* width: 75%; */
-    padding: 1em 0 1em 3em;
-    margin: 1em 3em;
     transition: ease-in-out .3s;
 }
 
-.doctor-info:hover:hover{
-    box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
+.doctor-info{
+    width: 75%;
+    padding: 1em 0 1em 3em;
+    margin: 1em 3em;
+    background-color: #fff;
     border-radius: 1em;
+    transition: ease-in-out .3s;
+}
+
+.doctor-info:hover{
+    box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
 }
 
 .details{
@@ -53,6 +60,7 @@
 
 .doctor-profile{
     width: 50%;
+    height: auto;
     float: left;
     display: flex;
 }
@@ -78,14 +86,23 @@
 .doctor-detail{
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
+}
+
+.doctor-tit{
+    margin: .2em 0 .2em;
 }
 
 .doctor-subtit{
-    margin-bottom: 0;
+    margin-bottom: .2em;
 }
 
+
+
+
+
 .reservation-container{
-    width: 40%;
+    width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -132,4 +149,30 @@
 
 .reservations a:hover{
     color: rgba(0, 0, 0, .8);
+}
+
+
+
+
+.load-more-btn-area{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#load-more-btn{
+    width: 60%;
+    margin: 1.5em 0;
+    padding: 0.5em 1.5em;
+    background-color: #5DADE2;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    font-size: 1em;
+}
+
+#load-more-btn:hover {
+    background-color: #1ABC9C;
 }
