@@ -1,6 +1,12 @@
+let is_logged_in = true
+
 function selectTime(date, time) {
     const formattedTime = encodeURIComponent(time);
-    window.location.href = `book.html?date=${date}&time=${formattedTime}`;
+    if(is_logged_in){
+        window.location.href = `/booking?date=${date}&time=${formattedTime}`;
+    }else{
+        window.location.href = `/login`;
+    }
 }
 
 function getQueryParam(param) {

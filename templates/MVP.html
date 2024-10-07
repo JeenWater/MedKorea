@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MVP</title>
-    <link rel="stylesheet" href="../static/css/header.css">
-    <link rel="stylesheet" href="../static/css/footer.css">
-    <link rel="stylesheet" href="../static/css/mvpStyle.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mvpStyle.css') }}">
 </head>
 <body>
     <!-- <div class="firstColor" style="background-color: #5DADE2; width: 100px; height: 100px;"></div>
@@ -16,12 +16,14 @@
         <nav class="nav-bar">
             <div class="nav-left">
                 <div class="logo">
-                    <a href="./index.html"><img src="../static/img/fixedIconMain(blue).png" alt="MedKorea logo"/></a>
-                    <a href="./index.html"><h1>MedKorea</h1></a>
+                    <a href="/"><img src="{{ url_for('static', filename='img/fixedIconMain(blue).png') }}" alt="MedKorea logo"/></a>
+                    <a href="/">
+                        <h1>MedKorea</h1>
+                    </a>
                 </div>
             </div>
             <div class="nav-right">
-                <a href="./login.html" class="btn">Login</a>
+                <a href="/login" class="btn">Login</a>
             </div>
         </nav>
     </header>
@@ -30,14 +32,14 @@
         <div class="main-top">
             <div class="main-top-nav">
                 <div class="nav-mid">
-                    <form action="#" role="search" class="nav-mid-form">
+                    <form action="#" role="search" class="nav-mid-form" method="POST">
                         <input type="search" class="nav-mid-search" placeholder="Condition, procedure, doctor..." value="" title="Search for" autocomplete="off" required/>
                         <input type="search" class="nav-mid-search" placeholder="Location" value="" title="Location" autocomplete="off" required/>
                         <input type="date" class="nav-mid-search" id="date" value="" title="Date" autocomplete="off" required/>
                     </form>
                 </div>
                 <div class="nav-right">
-                    <a href="#search" class="btn">Search</a>
+                    <a href="/search" class="btn">Search</a>
                 </div>
             </div>
         </div>
@@ -46,7 +48,6 @@
 
         <div class="main-mid" id="doctor-container">
             <!-- JavaScript -->
-            
         </div>
         <div class="load-more-btn-area">
             <button id="load-more-btn" onclick="loadMore()">Show more providers</button>
@@ -236,8 +237,8 @@
         </div>
     </footer>
 
-    <script src="../static/js/doctors.js"></script>
-    <script src="../static/js/bookTime.js"></script>
-    <script src="../static/js/currentTime.js"></script>
+    <script src="{{ url_for('static', filename='js/doctors.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bookTime.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/currentTime.js') }}"></script>
 </body>
 </html>

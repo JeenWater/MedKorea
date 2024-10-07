@@ -4,18 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>book</title>
-    <link rel="stylesheet" href="../static/css/header.css">
-    <link rel="stylesheet" href="../static/css/footer.css">
-    <link rel="stylesheet" href="../static/css/mvpStyle.css">
-    <link rel="stylesheet" href="../static/css/book.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mvpStyle.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
 </head>
 <body>
     <header class="header">
         <nav class="nav-bar">
             <div class="nav-left">
                 <div class="logo">
-                    <a href="./index.html"><img src="../static/img/fixedIconMain(blue).png" alt="MedKorea logo"/></a>
-                    <a href="./index.html"><h1>MedKorea</h1></a>
+                    <a href="/"><img src="{{ url_for('static', filename='img/fixedIconMain(blue).png') }}" alt="MedKorea logo"/></a>
+                    <a href="/">
+                        <h1>MedKorea</h1>
+                    </a>
                 </div>
             </div>
         </nav>
@@ -24,16 +26,16 @@
     <main class="main">
         <section class="mid-top">
             <h1 class="back-btn">
-                <a href="./MVP.html">
+                <a href="/search">
                     <span>
-                        <img src="../static/img/left.png" alt="left icon">
+                        <img src="{{ url_for('static', filename='img/left.png') }}" alt="left icon">
                         <div>Back</div>
                     </span>
                 </a>
             </h1>
             <div class="doctor-profile">
                 <div class="doctor-img">
-                    <img src="../static/img/imgMain.png" alt="Doctor's Photo" class="doctor-photo" style="width: 100px; height: 100px;">
+                    <img src="{{ url_for('static', filename='img/imgMain.png') }}" alt="Doctor's Photo" class="doctor-photo" style="width: 100px; height: 100px;">
                     <div class="rating"><span>★</span>5/5</div>
                 </div>
                 <div class="doctor-detail">
@@ -43,6 +45,7 @@
                 </div>
             </div>
         </section>
+        
         <section class="booking-section">
             <div class="booking-content">
                 <h2>Book Your Appointment</h2>
@@ -53,7 +56,7 @@
                     <input type="hidden" id="first-visit" name="first-visit">
                 </div>
                 
-                <form id="booking-form">
+                <form id="booking-form" method="POST">
                     <div class="booking-top">
                         <h3>Tell us a bit about yourself.</h3>
                         <p>Please enter the below information to book your appointment.</p>
@@ -165,7 +168,7 @@
         </div>
     </footer>
 
-    <script src="../static/js/bookTime.js"></script>
-    <script src="../static/js/visitBtn.js"></script>
+    <script src="{{ url_for('static', filename='js/bookTime.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/visitBtn.js') }}"></script>
 </body>
 </html>

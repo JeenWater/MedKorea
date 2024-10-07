@@ -4,18 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
-    <link rel="stylesheet" href="../static/css/header.css">
-    <link rel="stylesheet" href="../static/css/footer.css">
-    <link rel="stylesheet" href="../static/css/book.css">
-    <link rel="stylesheet" href="../static/css/signup.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
 </head>
 <body>
     <header class="header">
         <nav class="nav-bar">
             <div class="nav-left">
                 <div class="logo">
-                    <a href="./index.html"><img src="../static/img/fixedIconMain(blue).png" alt="MedKorea logo"/></a>
-                    <a href="./index.html"><h1>MedKorea</h1></a>
+                    <a href="/"><img src="{{ url_for('static', filename='img/fixedIconMain(blue).png') }}" alt="MedKorea logo"/></a>
+                    <a href="/">
+                        <h1>MedKorea</h1>
+                    </a>
                 </div>
             </div>
         </nav>
@@ -24,7 +26,7 @@
     <main>
         <section class="signup-section">
             <h2>Create an Account</h2>
-            <form id="booking-form">
+            <form id="booking-form" method="POST">
                 <div class="two-column">
                     <div>
                         <label for="first-name">First Name</label>

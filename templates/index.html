@@ -5,9 +5,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MedKorea</title>
-  <link rel="stylesheet" href="../static/css/header.css">
-  <link rel="stylesheet" href="../static/css/main.css">
-  <link rel="stylesheet" href="../static/css/footer.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
 </head>
 
 <body>
@@ -18,15 +18,15 @@
     <nav class="nav-bar">
       <div class="nav-left">
         <div class="logo">
-          <a href="./index.html"><img src="../static/img/fixedIconMain(blue).png" alt="MedKorea logo" /></a>
-          <a href="./index.html">
+          <a href="/"><img src="{{ url_for('static', filename='img/fixedIconMain(blue).png') }}" alt="MedKorea logo"/></a>
+          <a href="/">
             <h1>MedKorea</h1>
           </a>
         </div>
       </div>
 
       <div class="nav-mid">
-        <form action="#" role="search" class="nav-mid-form">
+        <form action="#" role="search" class="nav-mid-form" method="POST">
           <input type="search" class="nav-mid-search" placeholder="Condition, procedure, doctor..." value=""
             title="Search for" autocomplete="off" required />
           <input type="search" class="nav-mid-search" placeholder="Location" value="" title="Location"
@@ -36,8 +36,8 @@
         </form>
       </div>
       <div class="nav-right">
-        <a href="../templates/MVP.html" class="btn">Search</a>
-        <a href="../templates/login.html" class="btn">Login</a>
+        <a href="/search" class="btn">Search</a>
+        <a href="/login" class="btn">Login</a>
       </div>
     </nav>
   </header>
@@ -121,7 +121,7 @@
       </div>
     </div>
   </footer>
-  <script src="../static/js/currentTime.js"></script>
+  <script src="{{ url_for('static', filename='js/currentTime.js') }}"></script>
 </body>
 
 </html>
