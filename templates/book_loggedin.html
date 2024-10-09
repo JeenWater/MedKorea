@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="../static/css/header.css">
-    <link rel="stylesheet" href="../static/css/footer.css">
-    <link rel="stylesheet" href="../static/css/book.css">
-    <link rel="stylesheet" href="../static/css/login.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
 </head>
 
 <body>
@@ -16,9 +16,9 @@
         <nav class="nav-bar">
             <div class="nav-left">
                 <div class="logo">
-                    <a href="../templates/index.html"><img src="../static/img/fixedIconMain(blue).png"
+                    <a href="/"><img src="{{ url_for('static', filename='img/fixedIconMain(blue).png') }}"
                             alt="MedKorea logo" /></a>
-                    <a href="../templates/index.html">
+                    <a href="/">
                         <h1>MedKorea</h1>
                     </a>
                 </div>
@@ -97,7 +97,6 @@
                     </form>
                 </div>
             </section>
-            <button type="submit" id="openModalBtn">Login</button>
             <!-- Modal -->
             <div id="myModal" class="modal">
                 <div class="modal-content">
@@ -178,7 +177,8 @@
             </div>
         </div>
     </footer>
-    <script src="../static/js/login.js"></script>
+    <script src="{{ url_for('static', filename='js/login.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/visitBtn.js') }}"></script>
 </body>
 
 </html>

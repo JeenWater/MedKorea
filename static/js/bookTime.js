@@ -2,9 +2,9 @@ let is_logged_in = true
 
 function selectTime(date, time) {
     const formattedTime = encodeURIComponent(time);
-    if(is_logged_in){
+    if (is_logged_in) {
         window.location.href = `/booking?date=${date}&time=${formattedTime}`;
-    }else{
+    } else {
         window.location.href = `/login`;
     }
 }
@@ -14,17 +14,17 @@ function getQueryParam(param) {
     return urlParams.get(param);
 }
 
-window.onload = function() {
+window.onload = function () {
     const date = getQueryParam("date");
     let time = getQueryParam("time");
 
     if (date && time) {
         time = parseInt(time);
-    
+
         if (time >= 24) {
             time -= 24;
         }
-    
+
         if (time === 0) {
             document.getElementById("time").textContent = "12:00 AM";
             document.getElementById("appointment-date").textContent = date;
