@@ -3,7 +3,8 @@ let is_logged_in = true
 function selectTime(date, time) {
     const formattedTime = encodeURIComponent(time);
     if (is_logged_in) {
-        window.location.href = `/booking?date=${date}&time=${formattedTime}`;
+        window.location.href = `/book_loggedin`;
+        // window.location.href = `/booking?date=${date}&time=${formattedTime}`;
     } else {
         window.location.href = `/login`;
     }

@@ -10,6 +10,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
 </head>
 <body>
+    <div class="preloader">
+        <div class="loader"></div>
+    </div>
+    
     <header class="header">
         <nav class="nav-bar">
             <div class="nav-left">
@@ -129,5 +133,7 @@
             </div>
         </div>
     </footer>
+    
+    <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
 </body>
 </html>

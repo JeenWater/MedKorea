@@ -8,12 +8,18 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/healthNews.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 </head>
 
 <body>
   <!-- <div class="firstColor" style="background-color: #5DADE2; width: 100px; height: 100px;"></div>
   <div class="SecondColor" style="background-color: #1ABC9C; width: 100px; height: 100px;"></div>
   <div class="pointColor" style="background-color: #E74C3C; width: 100px; height: 100px;"></div> -->
+  <div class="preloader">
+    <div class="loader"></div>
+  </div>
+
   <header class="header">
     <nav class="nav-bar">
       <div class="nav-left">
@@ -44,18 +50,32 @@
 
 
   <main class="main-container">
-    <div class="icon"></div>
-    <div class="icon"></div>
-    <div class="icon"></div>
-    <div class="icon"></div>
-    <div class="icon"></div>
-    <div class="icon"></div>
-    <div class="icon"></div>
+    <section class="health-news-container">
+      <div class="health-news">
+        <h1>Latest Health News</h1>
+        <ul class="health-news-articles">
+        </ul>
+      </div>
+      <div class="health-news-img">
+        <img src="{{ url_for('static', filename='img/news.png') }}" alt="news img">
+        </div>
+      </div>
+
+      <div id="myModal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <h2 id="modalTitle"></h2>
+          <img id="modalImage" src="" alt="article modal img" />
+          <p id="modalDescription"></p>
+          <p><small id="modalPublishedAt"></small></p>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="footer">
     <div class="footer-top">
-      <div class="icon"></div>
+      <!-- <div class="icon"></div> -->
     </div>
     <div class="footer-bottom">
       <div class="footer-bottom-left">
@@ -122,6 +142,8 @@
     </div>
   </footer>
   <script src="{{ url_for('static', filename='js/currentTime.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/healthNews.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
 </body>
 
 </html>

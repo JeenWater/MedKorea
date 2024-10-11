@@ -1,4 +1,9 @@
-from flask import Blueprint, blueprints, render_template
+from flask import Blueprint, blueprints, render_template, jsonify
+import requests
+import os
+
+from dotenv import load_dotenv
+from flask_cors import CORS
 
 views = Blueprint("view", __name__)
 
@@ -25,3 +30,21 @@ def sign_up():
 @views.route("/book_loggedin")
 def login2():
     return render_template("book_loggedin.html")
+
+
+
+
+load_dotenv()
+CORS(views, resources={r"/api/*": {"origins": "*"}})
+NEWS_API_KEY = os.getenv('NEWS_API_KEY')
+
+@views.route('/api/health-news', methods=['GET'])
+def get_health_news():
+    url = f'https://newsapi.org/v2/everything?q=health&apiKey={NEWS_API_KEY}'
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        data = response.json()
+        return jsonify(data['articles'])
+    else:
+        return jsonify({"error": "Unable to fetch data"}), 500
