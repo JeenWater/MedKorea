@@ -65,7 +65,7 @@ function displayArticles(articles, count) {
             if (article.urlToImage) {
                 modalImage.src = article.urlToImage;
                 modalImage.style.display = 'block';
-            } else {
+            }else{
                 modalImage.style.display = 'none';
             }
 
@@ -94,10 +94,15 @@ function displayArticles(articles, count) {
     if (existingReadMoreBtn) existingReadMoreBtn.remove();
     if (existingReadLessBtn) existingReadLessBtn.remove();
 
-    const btns = document.createElement('div');
-    btns.className = 'btns';
-    const healthNews = document.querySelector('.health-news');
-    healthNews.appendChild(btns)
+    let btns = document.querySelector('.btns');
+    if(!btns){
+        btns = document.createElement('div');
+        btns.className = 'btns';
+        btns.style.display = 'flex';
+        btns.style.justifyContent = 'space-between';
+        const healthNews = document.querySelector('.health-news');
+        healthNews.appendChild(btns);
+    }
 
     // Read More
     if(currentIndex < articles.length){
@@ -105,7 +110,6 @@ function displayArticles(articles, count) {
         readMoreBtn.textContent = 'Read More';
         readMoreBtn.classList.add('read-more-Btn');
         btns.appendChild(readMoreBtn);
-        btns.style.justifyContent = 'center';
 
         readMoreBtn.addEventListener('click', () => {
             displayArticles(articles, 4);
@@ -118,7 +122,6 @@ function displayArticles(articles, count) {
         readLessBtn.textContent = 'Read Less';
         readLessBtn.classList.add('read-less-Btn');
         btns.appendChild(readLessBtn);
-        btns.style.justifyContent = 'space-between';
 
         readLessBtn.addEventListener('click', () => {
             const articlesToHide = displayedArticles.slice(-count);
@@ -128,9 +131,19 @@ function displayArticles(articles, count) {
             displayedArticles = displayedArticles.slice(0, -count);
             currentIndex -= count;
 
-            if (currentIndex <= count) {
+            if(currentIndex <= count){
                 readLessBtn.remove();
-                btns.style.justifyContent = 'center';
+            }
+
+            if(currentIndex < articles.length && !document.querySelector('.read-more-Btn')){
+                const readMoreBtn = document.createElement('button');
+                readMoreBtn.textContent = 'Read More';
+                readMoreBtn.classList.add('read-more-Btn');
+                btns.appendChild(readMoreBtn);
+
+                readMoreBtn.addEventListener('click', () => {
+                    displayArticles(articles, 4);
+                });
             }
         });
     }
