@@ -1,4 +1,4 @@
-from flask import Blueprint, blueprints, render_template, jsonify
+from flask import Blueprint, render_template, jsonify
 import requests
 import os
 
@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 
 views = Blueprint("view", __name__)
+
+load_dotenv()
 
 @views.route("/")
 def landing_page():
@@ -19,14 +21,6 @@ def search():
 def booking():
     return render_template("book.html")
 
-@views.route("/login")
-def login():
-    return render_template("login.html")
-
-@views.route("/sign_up")
-def sign_up():
-    return render_template("signUp.html")
-
 @views.route("/book_loggedin")
 def login2():
     return render_template("book_loggedin.html")
@@ -34,7 +28,7 @@ def login2():
 
 
 
-load_dotenv()
+
 CORS(views, resources={r"/api/*": {"origins": "*"}})
 NEWS_API_KEY = os.getenv('NEWS_API_KEY')
 
