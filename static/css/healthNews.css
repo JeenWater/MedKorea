@@ -91,7 +91,6 @@
 
 .btns{
     display: flex;
-    flex-direction: row-reverse
 }
 
 .read-more-Btn {
