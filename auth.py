@@ -55,7 +55,6 @@ def login():
             if check_password_hash(user["password"], form.password.data):
                 session['user'] = user['email']
                 flash("Login successful", "success")
-                print("Login successful")
                 return redirect(url_for("views.landing_page"))
             else:
                 flash("Incorrect password.", "danger")
@@ -71,4 +70,4 @@ def login():
 def logout():
     session.pop('user', None)
     flash("You have been logged out.", "success")
-    return redirect(url_for("auth.login"))
+    return redirect(url_for("views.landing_page"))
