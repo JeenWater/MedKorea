@@ -93,11 +93,20 @@
     margin: .2em 0 .2em;
 }
 
-.doctor-subtit{
-    margin-bottom: .2em;
+.doctor-speciality{
+    margin: 0 0 .2em;
+    color: rgba(0, 0, 0, .8);
 }
 
+.hospital-address{
+    margin: .2em 0 .2em;
+    color: rgba(0, 0, 0, .6);
+}
 
+.doctor-description{
+    margin-top: .2em;
+    color: rgba(0, 0, 0, .4);
+}
 
 
 

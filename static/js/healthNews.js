@@ -1,137 +1,183 @@
 document.addEventListener('DOMContentLoaded', () => {
-    fetch('http://localhost:9119/api/health-news')
-        .then(response => {
-            if(!response.ok){
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if(Array.isArray(data)){
-                displayArticles(data, 4);
-            }else if (data.articles){
-                displayArticles(data.articles, 4);
-            }else{
-                console.error('No articles found or data is not in expected format:', data);
-            }
-        })
-        .catch(error => {
-            console.error('Error fetching health news:', error);
-        });
+    const healthNewsApp = new HealthNews('http://localhost:9119/api/health-news');
+    healthNewsApp.init();
 });
 
-let currentIndex = 0;
-let displayedArticles = [];
+class HealthNews {
+    constructor(apiUrl) {
+        this.apiUrl = apiUrl;
+        this.currentIndex = 0;
+        this.displayedArticles = [];
+        this.articles = [];
+        this.count = 4; // Number of articles to display at a time
+    }
 
-function displayArticles(articles, count) {
-    const newsContainer = document.querySelector('.health-news-articles');
+    init() {
+        this.fetchArticles()
+            .then(data => {
+                if (Array.isArray(data)) {
+                    this.articles = data;
+                } else if (data.articles) {
+                    this.articles = data.articles;
+                } else {
+                    console.error('No articles found or data is not in expected format:', data);
+                }
+                this.displayArticles();
+            })
+            .catch(error => console.error('Error fetching health news:', error));
+    }
 
-    const articlesToShow = articles.slice(currentIndex, currentIndex + count);
+    async fetchArticles() {
+        const response = await fetch(this.apiUrl);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    }
 
-    articlesToShow.forEach(article => {
+    displayArticles() {
+        const newsContainer = document.querySelector('.health-news-articles');
+        const articlesToShow = this.articles.slice(this.currentIndex, this.currentIndex + this.count);
+
+        articlesToShow.forEach(article => {
+            const articleDiv = this.createArticleElement(article);
+            newsContainer.appendChild(articleDiv);
+            this.displayedArticles.push(articleDiv);
+        });
+
+        this.currentIndex += this.count;
+        this.updateButtons();
+    }
+
+    createArticleElement(article) {
         const articleDiv = document.createElement('li');
         articleDiv.classList.add('article');
 
-        if(article.urlToImage){
-            articleDiv.innerHTML = `
-                <div class="article-img">
-                    <img src="${article.urlToImage}" alt="Article Image" />
-                </div>
-                <div class="article-txt">
-                    <h3 class="headline">${article.title}</h3>
-                    <p class="summary">${article.description || 'No description available.'}</p>
-                    <p><small>Published at: ${new Date(article.publishedAt).toLocaleString()}</small></p>
-                </div>
-            `;
-        }else{
-            articleDiv.innerHTML = `
-                <div class="article-txt">
-                    <h3 class="headline">${article.title}</h3>
-                    <p class="summary">${article.description || 'No description available.'}</p>
-                    <p><small>Published at: ${new Date(article.publishedAt).toLocaleString()}</small></p>
-                </div>
-            `;
+        const imageContent = article.urlToImage
+            ? `<div class="article-img">
+                 <img src="${article.urlToImage}" alt="Article Image" />
+               </div>`
+            : '';
+
+        articleDiv.innerHTML = `
+            ${imageContent}
+            <div class="article-txt">
+                <h3 class="headline">${article.title}</h3>
+                <p class="summary">${article.description || 'No description available.'}</p>
+                <p><small>Published at: ${new Date(article.publishedAt).toLocaleString()}</small></p>
+            </div>
+        `;
+
+        articleDiv.querySelector('.headline').addEventListener('click', () => this.openModal(article));
+        return articleDiv;
+    }
+
+    openModal(article) {
+        document.getElementById('modalTitle').textContent = article.title;
+        document.getElementById('modalDescription').textContent = article.description || 'No description available.';
+        document.getElementById('modalPublishedAt').textContent = `Published at: ${new Date(article.publishedAt).toLocaleString()}`;
+
+        const modalImage = document.getElementById('modalImage');
+        if (article.urlToImage) {
+            modalImage.src = article.urlToImage;
+            modalImage.style.display = 'block';
+        } else {
+            modalImage.style.display = 'none';
         }
-        newsContainer.appendChild(articleDiv);
 
-        const headline = articleDiv.querySelector('.headline');
+        document.getElementById('myModal').style.display = 'block';
 
-        headline.addEventListener('click', () => {
-            document.getElementById('modalTitle').textContent = article.title;
-            document.getElementById('modalDescription').textContent = article.description || 'No description available.';
-            document.getElementById('modalPublishedAt').textContent = `Published at: ${new Date(article.publishedAt).toLocaleString()}`;
+        this.setupModalClose();
+    }
 
-            const modalImage = document.getElementById('modalImage');
-            if (article.urlToImage) {
-                modalImage.src = article.urlToImage;
-                modalImage.style.display = 'block';
-            } else {
-                modalImage.style.display = 'none';
-            }
+    setupModalClose() {
+        const modal = document.getElementById('myModal');
+        const closeModal = document.querySelector('.modal .close');
 
-            document.getElementById('myModal').style.display = 'block';
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
         });
 
-        displayedArticles.push(articleDiv);
-    });
-
-    currentIndex += count;
-
-    const modal = document.getElementById('myModal');
-    const closeModal = document.querySelector('.modal .close');
-    closeModal.addEventListener('click', () => {
-        modal.style.display = 'none';
-    });
-
-    window.addEventListener('click', (event) => {
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-
-    const existingReadMoreBtn = document.querySelector('.read-more-Btn');
-    const existingReadLessBtn = document.querySelector('.read-less-Btn');
-    if (existingReadMoreBtn) existingReadMoreBtn.remove();
-    if (existingReadLessBtn) existingReadLessBtn.remove();
-
-    const btns = document.createElement('div');
-    btns.className = 'btns';
-    const healthNews = document.querySelector('.health-news');
-    healthNews.appendChild(btns)
-
-    // Read More
-    if(currentIndex < articles.length){
-        const readMoreBtn = document.createElement('button');
-        readMoreBtn.textContent = 'Read More';
-        readMoreBtn.classList.add('read-more-Btn');
-        btns.appendChild(readMoreBtn);
-        btns.style.justifyContent = 'center';
-
-        readMoreBtn.addEventListener('click', () => {
-            displayArticles(articles, 4);
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
         });
     }
 
-    // Read Less
-    if(displayedArticles.length > 4){
+    updateButtons() {
+        this.clearButtons();
+        const btns = this.getOrCreateButtonsContainer();
+
+        if (this.displayedArticles.length > this.count) {
+            this.createReadLessButton(btns);
+        }
+
+        if (this.currentIndex < this.articles.length) {
+            this.createReadMoreButton(btns);
+        }
+
+        this.updateButtonAlignment();
+    }
+
+    clearButtons() {
+        const existingReadMoreBtn = document.querySelector('.read-more-Btn');
+        const existingReadLessBtn = document.querySelector('.read-less-Btn');
+        if (existingReadMoreBtn) existingReadMoreBtn.remove();
+        if (existingReadLessBtn) existingReadLessBtn.remove();
+    }
+
+    getOrCreateButtonsContainer() {
+        let btns = document.querySelector('.btns');
+        if (!btns) {
+            btns = document.createElement('div');
+            btns.className = 'btns';
+            const healthNews = document.querySelector('.health-news');
+            healthNews.appendChild(btns);
+        }
+        return btns;
+    }
+
+    createReadMoreButton(container) {
+        const readMoreBtn = document.createElement('button');
+        readMoreBtn.textContent = 'Read More';
+        readMoreBtn.classList.add('read-more-Btn');
+        container.appendChild(readMoreBtn);
+
+        readMoreBtn.addEventListener('click', () => {
+            this.displayArticles();
+        });
+    }
+
+    createReadLessButton(container) {
         const readLessBtn = document.createElement('button');
         readLessBtn.textContent = 'Read Less';
         readLessBtn.classList.add('read-less-Btn');
-        btns.appendChild(readLessBtn);
-        btns.style.justifyContent = 'space-between';
+        container.appendChild(readLessBtn);
 
         readLessBtn.addEventListener('click', () => {
-            const articlesToHide = displayedArticles.slice(-count);
-            articlesToHide.forEach(article => {
-                article.remove();
-            });
-            displayedArticles = displayedArticles.slice(0, -count);
-            currentIndex -= count;
+            const articlesToHide = this.displayedArticles.slice(-this.count);
+            articlesToHide.forEach(article => article.remove());
+            this.displayedArticles = this.displayedArticles.slice(0, -this.count);
+            this.currentIndex -= this.count;
 
-            if (currentIndex <= count) {
+            if (this.currentIndex <= this.count) {
                 readLessBtn.remove();
-                btns.style.justifyContent = 'center';
             }
+
+            this.updateButtons();
         });
+    }
+
+    updateButtonAlignment() {
+        const hasReadMore = document.querySelector('.read-more-Btn') !== null;
+        const hasReadLess = document.querySelector('.read-less-Btn') !== null;
+        const btns = document.querySelector('.btns');
+
+        if (hasReadMore && hasReadLess) {
+            btns.style.justifyContent = 'space-between';
+        } else {
+            btns.style.justifyContent = 'center';
+        }
     }
 }

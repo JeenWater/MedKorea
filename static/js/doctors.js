@@ -1,9 +1,13 @@
 const doctors = [
     {
         name: 'Doctor Name',
-        description: 'Doctor Speciality',
-        rating: '5/5',
+        speciality: 'Doctor Speciality',
+        hospital_name: 'Hospital Name',
         image: '../static/img/imgMain.png',
+        address: '101 Daehak-ro, Jongno-gu, Seoul, South Korea',
+        phone: '+82 2-2072-1234',
+        description: 'Doctor Description',
+        rating: '5/5',
         availableDates: {
             'October 1': ['10:00 AM', '11:00 AM', '1:00 PM'],
             'October 2': ['10:00 AM', '11:00 AM', '1:00 PM'],
@@ -12,9 +16,13 @@ const doctors = [
     },
     {
         name: 'Doctor Name',
-        description: 'Doctor Speciality',
-        rating: '5/5',
+        speciality: 'Doctor Speciality',
+        hospital_name: 'Hospital Name',
         image: '../static/img/imgMain.png',
+        address: '101 Daehak-ro, Jongno-gu, Seoul, South Korea',
+        phone: '+82 2-2072-1234',
+        description: 'Doctor Description',
+        rating: '5/5',
         availableDates: {
             'October 1': ['10:00 AM', '11:00 AM', '1:00 PM'],
             'October 2': ['10:00 AM', '11:00 AM', '1:00 PM'],
@@ -23,9 +31,13 @@ const doctors = [
     },
     {
         name: 'Doctor Name',
-        description: 'Doctor Speciality',
-        rating: '5/5',
+        speciality: 'Doctor Speciality',
+        hospital_name: 'Hospital Name',
         image: '../static/img/imgMain.png',
+        address: '101 Daehak-ro, Jongno-gu, Seoul, South Korea',
+        phone: '+82 2-2072-1234',
+        description: 'Doctor Description',
+        rating: '5/5',
         availableDates: {
             'October 1': ['10:00 AM', '11:00 AM', '1:00 PM'],
             'October 2': ['10:00 AM', '11:00 AM', '1:00 PM'],
@@ -34,9 +46,13 @@ const doctors = [
     },
     {
         name: 'Doctor Name',
-        description: 'Doctor Speciality',
-        rating: '5/5',
+        speciality: 'Doctor Speciality',
+        hospital_name: 'Hospital Name',
         image: '../static/img/imgMain.png',
+        address: '101 Daehak-ro, Jongno-gu, Seoul, South Korea',
+        phone: '+82 2-2072-1234',
+        description: 'Doctor Description',
+        rating: '5/5',
         availableDates: {
             'October 1': ['10:00 AM', '11:00 AM', '1:00 PM'],
             'October 2': ['10:00 AM', '11:00 AM', '1:00 PM'],
@@ -45,9 +61,13 @@ const doctors = [
     },
     {
         name: 'Doctor Name',
-        description: 'Doctor Speciality',
-        rating: '5/5',
+        speciality: 'Doctor Speciality',
+        hospital_name: 'Hospital Name',
         image: '../static/img/imgMain.png',
+        address: '101 Daehak-ro, Jongno-gu, Seoul, South Korea',
+        phone: '+82 2-2072-1234',
+        description: 'Doctor Description',
+        rating: '5/5',
         availableDates: {
             'October 1': ['10:00 AM', '11:00 AM', '1:00 PM'],
             'October 2': ['10:00 AM', '11:00 AM', '1:00 PM'],
@@ -56,9 +76,13 @@ const doctors = [
     },
     {
         name: 'Doctor Name',
-        description: 'Doctor Speciality',
-        rating: '5/5',
+        speciality: 'Doctor Speciality',
+        hospital_name: 'Hospital Name',
         image: '../static/img/imgMain.png',
+        address: '101 Daehak-ro, Jongno-gu, Seoul, South Korea',
+        phone: '+82 2-2072-1234',
+        description: 'Doctor Description',
+        rating: '5/5',
         availableDates: {
             'October 1': ['10:00 AM', '11:00 AM', '1:00 PM'],
             'October 2': ['10:00 AM', '11:00 AM', '1:00 PM'],
@@ -67,9 +91,13 @@ const doctors = [
     },
     {
         name: 'Doctor Name',
-        description: 'Doctor Speciality',
-        rating: '5/5',
+        speciality: 'Doctor Speciality',
+        hospital_name: 'Hospital Name',
         image: '../static/img/imgMain.png',
+        address: '101 Daehak-ro, Jongno-gu, Seoul, South Korea',
+        phone: '+82 2-2072-1234',
+        description: 'Doctor Description',
+        rating: '5/5',
         availableDates: {
             'October 1': ['10:00 AM', '11:00 AM', '1:00 PM'],
             'October 2': ['10:00 AM', '11:00 AM', '1:00 PM'],
@@ -78,9 +106,13 @@ const doctors = [
     },
     {
         name: 'Doctor Name',
-        description: 'Doctor Speciality',
-        rating: '5/5',
+        speciality: 'Doctor Speciality',
+        hospital_name: 'Hospital Name',
         image: '../static/img/imgMain.png',
+        address: '101 Daehak-ro, Jongno-gu, Seoul, South Korea',
+        phone: '+82 2-2072-1234',
+        description: 'Doctor Description',
+        rating: '5/5',
         availableDates: {
             'October 1': ['10:00 AM', '11:00 AM', '1:00 PM'],
             'October 2': ['10:00 AM', '11:00 AM', '1:00 PM'],
@@ -89,9 +121,13 @@ const doctors = [
     },
     {
         name: 'Doctor Name',
-        description: 'Doctor Speciality',
-        rating: '5/5',
+        speciality: 'Doctor Speciality',
+        hospital_name: 'Hospital Name',
         image: '../static/img/imgMain.png',
+        address: '101 Daehak-ro, Jongno-gu, Seoul, South Korea',
+        phone: '+82 2-2072-1234',
+        description: 'Doctor Description',
+        rating: '5/5',
         availableDates: {
             'October 1': ['10:00 AM', '11:00 AM', '1:00 PM'],
             'October 2': ['10:00 AM', '11:00 AM', '1:00 PM'],
@@ -100,15 +136,35 @@ const doctors = [
     },
     {
         name: 'Doctor Name',
-        description: 'Doctor Speciality',
-        rating: '5/5',
+        speciality: 'Doctor Speciality',
+        hospital_name: 'Hospital Name',
         image: '../static/img/imgMain.png',
+        address: '101 Daehak-ro, Jongno-gu, Seoul, South Korea',
+        phone: '+82 2-2072-1234',
+        description: 'Doctor Description',
+        rating: '5/5',
         availableDates: {
             'October 1': ['10:00 AM', '11:00 AM', '1:00 PM'],
             'October 2': ['10:00 AM', '11:00 AM', '1:00 PM'],
             'October 3': ['10:00 AM', '11:00 AM', '1:00 PM'],
         }
     },
+    {
+        name: 'Doctor Name',
+        speciality: 'Doctor Speciality',
+        hospital_name: 'Hospital Name',
+        image: '../static/img/imgMain.png',
+        address: '101 Daehak-ro, Jongno-gu, Seoul, South Korea',
+        phone: '+82 2-2072-1234',
+        description: 'Doctor Description',
+        rating: '5/5',
+        availableDates: {
+            'October 1': ['10:00 AM', '11:00 AM', '1:00 PM'],
+            'October 2': ['10:00 AM', '11:00 AM', '1:00 PM'],
+            'October 3': ['10:00 AM', '11:00 AM', '1:00 PM'],
+        }
+    },
+    
     
     // You can add more doctors here
 ];
@@ -137,8 +193,9 @@ function loadMore() {
                     </div>
                     <span class="doctor-detail">
                         <h2 class="doctor-tit">${doctor.name}</h2>
-                        <h3 class="doctor-subtit">${doctor.description}</h3>
-                        <p>Doctor Description${visibleDoctors+1}</p>
+                        <h3 class="doctor-speciality">${doctor.speciality}</h3>
+                        <h4 class="hospital-address">${doctor.address}</h4>
+                        <p class="doctor-description">${doctor.description}</p>
                     </span>
                 </div>
                 <div class="reservation-container">

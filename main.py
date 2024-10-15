@@ -1,15 +1,20 @@
 from flask import Flask
-
-from flask_cors import CORS
 from dotenv import load_dotenv
+import os
+
 
 from views import views
-
-app = Flask(__name__)
-app.register_blueprint(views)
+from auth import auth
 
 load_dotenv()
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+app = Flask(__name__)
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+
+app.register_blueprint(views, url_prefix='/')
+app.register_blueprint(auth, url_prefix='/')
+
+
 
 if __name__ == "__main__":
-    app.run(debug=True, port=9119)
+        app.run(debug=True, port=9119)
+
