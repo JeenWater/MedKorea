@@ -2,7 +2,7 @@
 env/
 
 # Environment variables file
-/env
+.env
 
 /env
 
