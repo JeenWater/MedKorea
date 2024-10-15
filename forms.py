@@ -17,6 +17,6 @@ class SignUp_patient(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    username = StringField("Username", validators=[InputRequired(), Length(min=2, max=20)])
+    email = EmailField("Email", validators=[InputRequired(), Email()])
     password = PasswordField("Password", validators=[InputRequired(), Length(min=6, max=20)])
-    submit = SubmitField("Register")
+    submit = SubmitField("Login")

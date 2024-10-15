@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 from flask_cors import CORS
 
-views = Blueprint("view", __name__)
+views = Blueprint("views", __name__)
 
 load_dotenv()
 

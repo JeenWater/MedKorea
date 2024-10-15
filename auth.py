@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, redirect, url_for, flash
+from flask import Blueprint, request, render_template, redirect, url_for, flash, session
 from pymongo import MongoClient
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
@@ -17,7 +17,7 @@ patients_collection = db['patient']
 @auth.route("/signUp_patient", methods=["GET", "POST"])
 def signUp_patient():
     form = SignUp_patient()
-    
+
     if form.validate_on_submit():
         password_hash = generate_password_hash(form.password.data, method="pbkdf2:sha256")
         user = {
@@ -31,7 +31,7 @@ def signUp_patient():
             "insurance": form.insurance.data,
             "user_type": "patient",
         }
-        
+
         existing_user = patients_collection.find_one({"email": form.email.data})
         if existing_user:
             flash("This email address is already registered.", "danger")
@@ -41,21 +41,34 @@ def signUp_patient():
 
         flash("You have successfully signed up!", "success")
         return redirect(url_for("auth.login"))
-    
+
     return render_template("signUp_patient.html", form=form)
 
 @auth.route("/login", methods=["GET", "POST"])
 def login():
     form = LoginForm()
+
     if form.validate_on_submit():
         user = patients_collection.find_one({"email": form.email.data})
 
-        if user and check_password_hash(user["password"], form.password.data):
-            flash("Login successful", "success")
-            return redirect(url_for("views.home"))
-        
+        if user:
+            if check_password_hash(user["password"], form.password.data):
+                session['user'] = user['email']
+                flash("Login successful", "success")
+                print("Login successful")
+                return redirect(url_for("views.landing_page"))
+            else:
+                flash("Incorrect password.", "danger")
         else:
-            flash("Login unsuccessful", "danger")
-            return redirect(url_for("auth.login"))
-        
+            flash("User not found.", "danger")
+
+        return redirect(url_for("auth.login"))
+
     return render_template("login.html", form=form)
+
+
+@auth.route("/logout")
+def logout():
+    session.pop('user', None)
+    flash("You have been logged out.", "success")
+    return redirect(url_for("auth.login"))

@@ -167,3 +167,19 @@
 .nav-right .btn:hover {
     background-color: #1edab4;
 }
+
+.nav-right .logout-btn{
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #E74C3C;
+    padding: .625em 1.88em;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.nav-right .logout-btn:hover {
+    background-color: #c94334;
+}

@@ -27,7 +27,11 @@
                 </div>
             </div>
             <div class="nav-right">
-                <a href="/login" class="btn">Login</a>
+                {% if session['user'] %}
+                    <a href="/logout" class="logout-btn">Logout</a>
+                {% else %}
+                    <a href="/login" class="btn">Login</a>
+                {% endif %}
             </div>
         </nav>
     </header>
