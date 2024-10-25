@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MedKorea</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/healthNews.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 </head>
@@ -20,14 +20,24 @@
     <div class="loader"></div>
   </div>
 
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="alert {{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
   <header class="header">
     <nav class="nav-bar">
       <div class="nav-left">
         <div class="logo">
           <a href="/"><img src="{{ url_for('static', filename='img/fixedIconMain(blue).png') }}" alt="MedKorea logo"/></a>
-          <a href="/">
-            <h1>MedKorea</h1>
-          </a>
+          <a href="/"><h1>MedKorea</h1></a>
         </div>
       </div>
 
@@ -41,14 +51,27 @@
             autocomplete="off" required />
         </form>
       </div>
-      <div class="nav-right">
-        <a href="/search" class="btn">Search</a>
-        {% if session['user'] %}
-          <a href="/logout" class="logout-btn">Logout</a>
-        {% else %}
-          <a href="/login" class="btn">Login</a>
-        {% endif %}
-      </div>
+      {% if session['user'] %}
+        <div class="nav-right" style="justify-content: flex-start;">
+          <a href="{{ url_for('views.search') }}" class="btn">Search</a>
+          <div class="hamburger-menu">
+            <div class="menu-icon" onclick="toggleMenu()">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div class="menu-content" id="user-menu">
+              <a href="{{ url_for('auth.myAccount') }}" class="btn">My Account</a>
+              <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        <div class="nav-right">
+          <a href="{{ url_for('views.search') }}" class="btn" style="width: 45%;">Search</a>
+          <a href="{{ url_for('auth.login') }}" class="btn" style="width: 45%;">Login</a>
+        </div>
+      {% endif %}
     </nav>
   </header>
 
@@ -74,6 +97,13 @@
           <p><small id="modalPublishedAt"></small></p>
         </div>
       </div>
+    </section>
+
+    <section>
+      <img src="{{ url_for('static', filename='img/imgMain.png') }}" alt="a" style="height: 100px; width: 100px;">
+      <img src="{{ url_for('static', filename='img/imgMain.png') }}" alt="a" style="height: 100px; width: 100px;">
+      <img src="{{ url_for('static', filename='img/imgMain.png') }}" alt="a" style="height: 100px; width: 100px;">
+      <img src="{{ url_for('static', filename='img/imgMain.png') }}" alt="a" style="height: 100px; width: 100px;">
     </section>
   </main>
 

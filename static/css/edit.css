@@ -1,0 +1,99 @@
+.menu-content{
+    right: -5.5em;
+}
+
+.two-column .two-column-content{
+    background-color: #fff;
+    border-radius: .5em;
+    padding: 1em 0.1em;
+    transition: 0.3s ease-in-out;
+}
+
+.one-column{
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1em;
+    margin: .5em;
+}
+
+.one-column .one-column-content{
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    border-radius: .5em;
+    padding: 1em 0.1em;
+    transition: 0.3s ease-in-out;
+}
+
+.one-column .one-column-content:nth-child(3){
+    margin-bottom: 1em;
+}
+
+.one-column .one-column-content, .two-column .two-column-content{
+    padding: .5em .1em;
+    margin: .1em
+}
+
+
+.one-column .one-column-content:hover, .two-column .two-column-content:hover{
+    box-shadow: -.01em 0 .5em #1edab4, .01em 0 .1em #1edab4;
+}
+
+#booking-form input{
+    padding: 0.8em .1em;
+    margin-bottom: 0;
+}
+
+#booking-form select{
+    margin-bottom: 0;
+}
+
+.form-group {
+    margin-bottom: 1.5em;
+}
+
+.error {
+    color: red;
+    font-size: 0.8em;
+    margin-top: 5px;
+}
+
+
+
+.operating-hours-display{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.day-schedule{
+    padding: .5em .1em;
+    margin: .1em;
+    border-radius: .5em;
+}
+
+
+
+.save-btn{
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #5DADE2;
+    padding: .625em 1.88em;
+    margin-top: 1em;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    border-radius: .3em;
+    transition: background-color 0.3s;
+}
+
+.save-btn:hover{
+    background-color: #66bbf3;
+}
+
+#signup-form button{
+    font-size: 16px;
+    margin-top: 1em;
+    padding: 0.6em;
+}

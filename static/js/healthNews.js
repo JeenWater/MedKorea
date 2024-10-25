@@ -55,8 +55,8 @@ class HealthNews {
 
         const imageContent = article.urlToImage
             ? `<div class="article-img">
-                 <img src="${article.urlToImage}" alt="Article Image" />
-               </div>`
+                <img src="${article.urlToImage}" alt="Article Image" />
+            </div>`
             : '';
 
         articleDiv.innerHTML = `

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
+    <title>Sign Up For Patient</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
@@ -13,6 +13,18 @@
     <div class="preloader">
         <div class="loader"></div>
     </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+            {% for category, message in messages %}
+                <div class="alert {{ category }}">
+                {{ message }}
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
     
     <header class="header">
         <nav class="nav-bar">
@@ -27,62 +39,67 @@
         </nav>
     </header>
 
+
     <main>
         <section class="signup-section">
-            <h2>Create an Account</h2>
-            <form action="{{ url_for('auth.signUp_patient') }}" id="booking-form" method="POST">
+            <h2>Create an Account<br>(For Patient)</h2>
+            <form action="{{ url_for('auth.signUp_patient') }}" id="signup-form" method="POST">
                 {{ form.hidden_tag() }}
                 <div class="two-column">
                     <div>
-                        <label for="first-name">First Name</label>
+                        <label for="first_name">First Name<sup class="required">*</sup></label>
                         {{ form.first_name(class="form-control", autocomplete="off", required=True) }}
                     </div>
                     <div>
-                        <label for="last-name">Last Name</label>
+                        <label for="last_name">Last Name<sup class="required">*</sup></label>
                         {{ form.last_name(class="form-control", autocomplete="off", required=True) }}
                     </div>
                     <div>
-                        <label for="phone">Phone Number</label>
+                        <label for="phone">Phone Number<sup class="required">*</sup></label>
                         {{ form.phone(class="form-control", autocomplete="off", required=True) }}
                     </div>
                     <div>
-                        <label for="birth">Date of Birth</label>
+                        <label for="birth">Date of Birth<sup class="required">*</sup></label>
                         {{ form.birth(class="form-control", required=True) }}
                     </div>
                     <div>
-                        <label for="sex">Sex</label>
+                        <label for="sex">Sex<sup class="required">*</sup></label>
                         {{ form.sex(class="form-control", required=True) }}
                     </div>
                     <div>
-                        <label for="insurance">Health Insurance</label>
+                        <label for="insurance">Health Insurance<sup></sup></label>
                         {{ form.insurance(class="form-control") }}
                     </div>
                 </div>
+
+                <label for="address">Address<sup class="required">*</sup></label>
+                {{ form.address(class="form-control", placeholder="123 gil Yanghwa-ro, Mapo-gu, Seoul", required=True) }}
             
-                <label for="email">Email</label>
+                <label for="email">Email<sup class="required">*</sup></label>
                 {{ form.email(class="form-control", autocomplete="off", required=True) }}
-            
-                <label for="password">Password</label>
-                {{ form.password(class="form-control", autocomplete="off", required=True) }}
-            
-                <label for="confirm-password">Confirm Password</label>
-                {{ form.confirm_password(class="form-control", autocomplete="off", required=True) }}
+                
+                <div class="two-column">
+                    <div>
+                        <label for="password">Password<sup class="required">*</sup></label>
+                        {{ form.password(class="form-control", autocomplete="off", required=True) }}
+                    </div>
+                    <div>
+                        <label for="confirm-password">Confirm Password<sup class="required">*</sup></label>
+                        {{ form.confirm_password(class="form-control", autocomplete="off", required=True) }}
+                    </div>
+                </div>
+
+                <label for="preferred_language">Preferred Language</label>
+                {{ form.preferred_language(class="form-control") }}
+
+                <label for="medical_history">Medical History</label>
+                {{ form.medical_history(class="form-control", placeholder="Include any allergies or past conditions") }}
             
                 <button type="submit">Sign Up</button>
             </form>
-            
-        
-            <!-- <div class="separator">
-                <span>or</span>
-            </div>
-            <div class="social-login">
-                <button class="google-login">
-                    <span class="google-img"><img src="../static/img/google-img.png" alt="google-icon"></span>
-                    <span>Sign in with Google</span>
-                </button>
-            </div> -->
         </section>
     </main>
+
 
 
     <footer class="footer">

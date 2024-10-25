@@ -3,27 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Change Password</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit.css') }}">
 </head>
 <body>
     <div class="preloader">
         <div class="loader"></div>
     </div>
-
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <div class="flash-messages">
+        <div class="flash-messages">
             {% for category, message in messages %}
-                <div class="alert {{ category }}">
+            <div class="alert {{ category }}">
                 {{ message }}
-                </div>
-            {% endfor %}
             </div>
+            {% endfor %}
+        </div>
         {% endif %}
     {% endwith %}
 
@@ -31,46 +30,80 @@
         <nav class="nav-bar">
             <div class="nav-left">
                 <div class="logo">
-                    <a href="/"><img src="{{ url_for('static', filename='img/fixedIconMain(blue).png') }}" alt="MedKorea logo"/></a>
+                    <a href="/"><img src="{{ url_for('static', filename='img/fixedIconMain(blue).png') }}"
+                            alt="MedKorea logo" /></a>
                     <a href="/">
                         <h1>MedKorea</h1>
                     </a>
+                </div>
+            </div>
+            <div class="nav-right">
+                <div class="hamburger-menu">
+                    <div class="menu-icon" onclick="toggleMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <div class="menu-content" id="user-menu">
+                        <a href="{{ url_for('auth.myAccount') }}" class="btn">Personal Information</a>
+                        <a href="{{ url_for('auth.login_security') }}" class="btn">Login & Security</a>
+                        <a href="/appointments" class="btn">Appointments</a>
+                        <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
+                    </div>
                 </div>
             </div>
         </nav>
     </header>
 
     <main>
-        <section class="login-section">
-            <h2>Login to Your Account</h2>
-            <form id="login-form" method="POST" action="{{ url_for('auth.login') }}" >
+        <section class="signup-section">
+            <h2>Change Password</h2>
+            <form action="{{ url_for('auth.login_security') }}" method="POST" id="booking-form">
                 {{ form.hidden_tag() }}
-                <label for="email">Email</label>
-                {{ form.email() }}
-            
-                <label for="password">Password</label>
-                {{ form.password() }}
-        
-                <button type="submit">Login</button>
+                <div class="one-column">
+                    <div class="one-column-content">
+                        <label>Name</label>
+                        {{ user.first_name | upper }} {{ user.last_name | upper }}
+                    </div>
+                    <div class="one-column-content">
+                        <label>Email</label>
+                        {{ user.email }}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="current_password">Current Password<sup class="required">*</sup></label>
+                    {{ form.current_password(class="form-control", required=True) }}
+                    {% if form.current_password.errors %}
+                        {% for error in form.current_password.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+    
+                <div class="form-group">
+                    <label for="new_password">New Password<sup class="required">*</sup></label>
+                    {{ form.new_password(class="form-control", required=True) }}
+                    {% if form.new_password.errors %}
+                        {% for error in form.new_password.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+    
+                <div class="form-group">
+                    <label for="confirm_password">Confirm New Password<sup class="required">*</sup></label>
+                    {{ form.confirm_password(class="form-control", required=True) }}
+                    {% if form.confirm_password.errors %}
+                        {% for error in form.confirm_password.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                {{ form.submit(class="btn") }}
             </form>
-        
-            <div class="separator">
-                <span>or</span>
-            </div>
-            <div class="social-login">
-                <button class="google-login">
-                    <span class="google-img"><img src="{{ url_for('static', filename='img/google-img.png') }}" alt="google-icon"></span>
-                    <span>Sign in with Google</span>
-                </button>
-            </div>
-            
-        
-            <div class="signup-link">
-                <p>Don't have an account? <a href="{{ url_for('auth.signUp_patient') }}" id="signup-link-patient">Sign up now</a></p>
-                <p>(If you are a doctor) <a href="{{ url_for('auth.signUp_doctor') }}" id="signup-link-doctor">Click here</a></p>
-            </div>
         </section>
     </main>
+
 
     <footer class="footer">
         <div class="footer-top">

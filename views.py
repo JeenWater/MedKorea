@@ -17,14 +17,6 @@ def landing_page():
 def search():
     return render_template("MVP.html")
 
-@views.route("/booking")
-def booking():
-    return render_template("book.html")
-
-@views.route("/book_loggedin")
-def login2():
-    return render_template("book_loggedin.html")
-
 
 
 

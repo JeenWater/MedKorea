@@ -127,12 +127,11 @@
 
 .health-news-img{
     text-align: center;
+    margin-left: 1em;
     z-index: -1;
 }
 
 .health-news-img img{
-    position: absolute;
-    bottom: 3.5%;
-    right: 5%;
-    
+    position: sticky;
+    top: 3%;
 }
