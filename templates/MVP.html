@@ -15,7 +15,19 @@
     <div class="preloader">
         <div class="loader"></div>
     </div>
-    
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+            {% for category, message in messages %}
+                <div class="alert {{ category }}">
+                {{ message }}
+                </div>
+            {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
     <header class="header">
         <nav class="nav-bar">
             <div class="nav-left">
@@ -64,156 +76,12 @@
             </div>
         </div>
 
-
-
-        <div class="main-mid" id="doctor-container">
-            <!-- JavaScript -->
-        </div>
+        <div class="main-mid" id="doctor-container"></div>
         <div class="load-more-btn-area">
             <button id="load-more-btn" onclick="loadMore()">Show more providers</button>
         </div>
-        <!-- <div class="main-mid">
-            <article class="doctor-info">
-                <div class="details">
-                    <div class="doctor-profile">
-                        <div class="doctor-img">
-                            <img src="../static/img/imgMain.png" alt="Doctor's Photo" class="doctor-photo" style="width: 100px; height: 100px;">
-                            <div class="rating"><span>★</span>5/5</div>
-                        </div>
-                        <span class="doctor-detail">
-                            <h2 class="doctor-tit">Doctor Name</h2>
-                            <h3 class="doctor-subtit">Doctor description </h3>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea facere, eum totam repudiandae fuga natus esse vero dolores ipsum ab delectus ex at? Officiis deserunt soluta accusamus provident, hic dolorum.</p>
-                        </span>
-                    </div>
-                    <div class="reservation-container">
-                        <div class="reservation-tit">
-                            <h3>Available Reservations</h3>
-                        </div>
-                        <div class="reservation-content">
-                            <span class="reservations">
-                                <h4>October 1</h4>
-                                <ul>
-                                    <li><a href="#" onclick="selectTime('October 1', '10:00')">10:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 1', '11:00')">11:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 1', '13:00')">1:00 PM</a></li>
-                                </ul>
-                            </span>
-                            <span class="reservations">
-                                <h4>October 2</h4>
-                                <ul>
-                                    <li><a href="#" onclick="selectTime('October 2', '10:00')">10:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 2', '11:00')">11:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 2', '13:00')">1:00 PM</a></li>
-                                </ul>
-                            </span>
-                            <span class="reservations">
-                                <h4>October 3</h4>
-                                <ul>
-                                    <li><a href="#" onclick="selectTime('October 3', '10:00')">10:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 3', '11:00')">11:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 3', '13:00')">1:00 PM</a></li>
-                                </ul>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-            <article class="doctor-info">
-                <div class="details">
-                    <div class="doctor-profile">
-                        <div class="doctor-img">
-                            <img src="./img/imgMain.png" alt="Doctor's Photo" class="doctor-photo" style="width: 100px; height: 100px;">
-                            <div class="rating"><span>★</span>5/5</div>
-                        </div>
-                        <span class="doctor-detail">
-                            <h2 class="doctor-tit">Doctor Name</h2>
-                            <h3 class="doctor-subtit">Doctor description </h3>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea facere, eum totam repudiandae fuga natus esse vero dolores ipsum ab delectus ex at? Officiis deserunt soluta accusamus provident, hic dolorum.</p>
-                        </span>
-                    </div>
-                    <div class="reservation-container">
-                        <div class="reservation-tit">
-                            <h3>Available Reservations</h3>
-                        </div>
-                        <div class="reservation-content">
-                            <span class="reservations">
-                                <h4>October 1</h4>
-                                <ul>
-                                    <li><a href="#" onclick="selectTime('October 1', '10:00')">10:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 1', '11:00')">11:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 1', '13:00')">1:00 PM</a></li>
-                                </ul>
-                            </span>
-                            <span class="reservations">
-                                <h4>October 2</h4>
-                                <ul>
-                                    <li><a href="#" onclick="selectTime('October 2', '10:00')">10:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 2', '11:00')">11:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 2', '13:00')">1:00 PM</a></li>
-                                </ul>
-                            </span>
-                            <span class="reservations">
-                                <h4>October 3</h4>
-                                <ul>
-                                    <li><a href="#" onclick="selectTime('October 3', '10:00')">10:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 3', '11:00')">11:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 3', '13:00')">1:00 PM</a></li>
-                                </ul>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-            <article class="doctor-info">
-                <div class="details">
-                    <div class="doctor-profile">
-                        <div class="doctor-img">
-                            <img src="./img/imgMain.png" alt="Doctor's Photo" class="doctor-photo" style="width: 100px; height: 100px;">
-                            <div class="rating"><span>★</span>5/5</div>
-                        </div>
-                        <span class="doctor-detail">
-                            <h2 class="doctor-tit">Doctor Name</h2>
-                            <h3 class="doctor-subtit">Doctor description </h3>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea facere, eum totam repudiandae fuga natus esse vero dolores ipsum ab delectus ex at? Officiis deserunt soluta accusamus provident, hic dolorum.</p>
-                        </span>
-                    </div>
-                    <div class="reservation-container">
-                        <div class="reservation-tit">
-                            <h3>Available Reservations</h3>
-                        </div>
-                        <div class="reservation-content">
-                            <span class="reservations">
-                                <h4>October 1</h4>
-                                <ul>
-                                    <li><a href="#" onclick="selectTime('October 1', '10:00')">10:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 1', '11:00')">11:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 1', '13:00')">1:00 PM</a></li>
-                                </ul>
-                            </span>
-                            <span class="reservations">
-                                <h4>October 2</h4>
-                                <ul>
-                                    <li><a href="#" onclick="selectTime('October 2', '10:00')">10:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 2', '11:00')">11:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 2', '13:00')">1:00 PM</a></li>
-                                </ul>
-                            </span>
-                            <span class="reservations">
-                                <h4>October 3</h4>
-                                <ul>
-                                    <li><a href="#" onclick="selectTime('October 3', '10:00')">10:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 3', '11:00')">11:00 AM</a></li>
-                                    <li><a href="#" onclick="selectTime('October 3', '13:00')">1:00 PM</a></li>
-                                </ul>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        </div> -->
+        
     </main>
-
 
     <footer class="footer">
         <div class="footer-top">
@@ -257,9 +125,9 @@
         </div>
     </footer>
 
-    <script src="{{ url_for('static', filename='js/doctors.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
     <script src="{{ url_for('static', filename='js/bookTime.js') }}"></script>
     <script src="{{ url_for('static', filename='js/currentTime.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/doctors.js') }}"></script>
 </body>
 </html>

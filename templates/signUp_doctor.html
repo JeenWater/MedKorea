@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up For Doctor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/mvpStyle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
@@ -43,8 +44,12 @@
     <main>
         <section class="signup-section">
             <h2>Create an Account<br>(For Doctor)</h2>
-            <form action="{{ url_for('auth.signUp_doctor') }}" id="signup-form" method="POST">
+            <form action="{{ url_for('auth.signUp_doctor') }}" id="signup-form" method="POST" enctype="multipart/form-data">
                 {{ form.hidden_tag() }}
+                <div class="doctor-img">
+                    <label for="file">Profile Picture<sup class="required">*</sup></label>
+                    {{ form.image(class="form-control", required=True) }}
+                </div>
                 <div class="two-column">
                     <div>
                         <label for="first_name">First Name<sup class="required">*</sup></label>
@@ -88,9 +93,12 @@
                     </div>
                 </div>
 
+                <label for="hospital_name">Hospital Name<sup class="required">*</sup></label>
+                {{ form.hospital_name(class="form-control", required=True) }}
+
                 <label for="address">Address<sup class="required">*</sup></label>
                 {{ form.address(class="form-control", placeholder="123 gil Yanghwa-ro, Mapo-gu, Seoul", autocomplete="off", required=True) }}
-            
+
                 <label for="email">Email<sup class="required">*</sup></label>
                 {{ form.email(class="form-control", autocomplete="off", required=True) }}
 

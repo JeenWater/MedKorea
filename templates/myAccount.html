@@ -61,9 +61,14 @@
         <section class="signup-section">
             <h2>Personal Information</h2>
             {% if editing %}
-                <form action="{{ url_for('auth.myAccount') }}" id="signup-form" method="POST">
+                <form action="{{ url_for('auth.myAccount') }}" id="signup-form" method="POST" enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
-                    
+                    {% if user.user_type == 'doctor' %}
+                    <div class="doctor-img">
+                        <label for="file">Profile Picture<sup class="required">*</sup></label>
+                        {{ form.image(class="form-control", required=True) }}
+                    </div>
+                    {% endif %}
                     <div class="two-column">
                         <div class="two-column-content">
                             <label for="first-name">First Name<sup class="required">*</sup></label>
@@ -121,7 +126,7 @@
                     {# Address and Additional Information #}
                     <div class="one-column">
                         <div class="one-column-content">
-                            <label for="address">Address</label>
+                            <label for="address">Address<sup class="required">*</sup></label>
                             {{ form.address(class="form-control", placeholder="123 gil Yanghwa-ro, Mapo-gu, Seoul") }}
                         </div>
                         
@@ -138,6 +143,10 @@
                         
                         {# Doctor Additional Information #}
                         {% elif user.user_type == 'doctor' %}
+                            <div class="one-column-content">
+                                <label for="hospital_name">Hospital Name<sup class="required">*</sup></label>
+                                {{ form.hospital_name(class="form-control", required=True) }}
+                            </div class="one-column-content">
                             <div class="one-column-content">
                                 <label for="bio">Bio<sup class="required">*</sup></label>
                                 {{ form.bio(class="form-control", required=True) }}
@@ -185,7 +194,20 @@
                 {# View Mode #}
                 <form action="{{ url_for('auth.myAccount') }}" id="signup-form" method="POST">
                     {{ form.hidden_tag() }}
-                    
+                    {% if user.user_type == 'doctor' %}
+                        <div class="one-column" style="justify-items: center;">
+                            <div class="one-column-content">
+                                <label for="file">Profile Picture</label>
+                                <div class="doctor-img" style="width: 100px;">
+                                    {% if user.image %}
+                                        <img src="{{ url_for('static', filename='img/' + user.image) }}" alt="Profile Image">
+                                    {% else %}
+                                        <img src="{{ url_for('static', filename='img/imgMain.png') }}" alt="Default Profile Image">
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endif %}
                     <div class="two-column">
                         <div class="two-column-content">
                             <label>First Name</label>
@@ -274,8 +296,12 @@
                         
                         {% if user.user_type == 'doctor' %}
                             <div class="one-column-content">
+                                <label>Hospital Name</label>
+                                {{ user.hospital_name | upper }}
+                            </div>
+                            <div class="one-column-content">
                                 <label>Bio</label>
-                                {{ user.bio | upper }}
+                                {{ user.bio | capitalize }}
                             </div>
                             <div class="one-column-content">
                                 <label>Operating Hours</label>

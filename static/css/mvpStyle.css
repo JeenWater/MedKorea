@@ -41,11 +41,17 @@
 
 .doctor-info{
     width: 75%;
-    padding: 1em 0 1em 3em;
+    padding: 1em 0 1em 1em;
     margin: 1em 3em;
     background-color: #fff;
     border-radius: 1em;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
     transition: ease-in-out .3s;
+}
+
+.doctor-info.show {
+    opacity: 1;
 }
 
 .doctor-info:hover{
@@ -54,7 +60,7 @@
 
 .details{
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: flex-start;
 }
 
@@ -63,13 +69,13 @@
     height: auto;
     float: left;
     display: flex;
+    justify-content: flex-start;
 }
 
 .rating{
     display: flex;
     justify-content: center;
     font-weight: 600;
-    letter-spacing: 3px;
 }
 
 .rating span{
@@ -77,20 +83,21 @@
 }
 
 .doctor-img{
-    margin: .5em;
+    margin: 0 .5em .5em;
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
 .doctor-detail{
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
 
 .doctor-tit{
-    margin: .2em 0 .2em;
+    margin: 0 0 .2em;
 }
 
 .doctor-speciality{
@@ -125,7 +132,7 @@
 .reservation-content{
     display: flex;
     justify-content: space-evenly;
-    align-items: center;
+    align-items: flex-start;
 }
 
 .reservations{
@@ -158,6 +165,11 @@
 
 .reservations a:hover{
     color: rgba(0, 0, 0, .8);
+}
+
+.reservations p{
+    color: rgba(0, 0, 0, .4);
+    text-align: center;
 }
 
 
