@@ -9,16 +9,27 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class AppointmentForm(FlaskForm):
+    first_name = StringField("First Name", validators=[InputRequired(), Length(min=2, max=30)])
+    last_name = StringField("Last Name", validators=[InputRequired(), Length(min=2, max=30)])
+    email = EmailField("Email", validators=[InputRequired(), Email()])
+    phone = StringField("Phone Number", validators=[InputRequired(), Length(min=10, max=15)])
+    birth = DateField("Date of Birth", format='%Y-%m-%d', validators=[InputRequired()])
+    sex = SelectField("Sex", choices=[('Male', 'Male'), ('Female', 'Female')], validators=[InputRequired()])
+    preferred_language = SelectField("Preferred Language", choices=[('English', 'English'), ('Chinese', 'Chinese'), ('Japanese', 'Japanese')], validators=[])
+    insurance = SelectField("Health Insurance", choices=[('y', 'Yes'), ('n', 'No')])
+    address = StringField("Address", validators=[InputRequired(), Length(max=100)])
+    medical_history = TextAreaField("Medical History", validators=[])
+    comments_for_doctor = TextAreaField("Comments for Doctor", validators=[])
+    submit = SubmitField("Book Appointment")
+    
     appointment_date = DateField("Select Date", validators=[InputRequired()])
     appointment_time = SelectField("Select Time", validators=[InputRequired()])
-    submit = SubmitField("Book Appointment")
 
     def validate_appointment_date(self, field):
         today = datetime.now()
         if field.data < today:
             raise ValidationError("Cannot book appointments in the past")
         
-        # Limit booking to next 2 months
         max_date = today + timedelta(days=60)
         if field.data > max_date:
             raise ValidationError("Cannot book appointments more than 2 months in advance")
@@ -38,9 +49,9 @@ class EditProfile_patient(FlaskForm):
     phone = StringField("Phone Number", validators=[InputRequired(), Length(min=10, max=15)])
     birth = DateField("Date of Birth", format='%Y-%m-%d', validators=[InputRequired()])
     sex = SelectField("Sex", choices=[('Male', 'Male'), ('Female', 'Female')], validators=[InputRequired()])
+    preferred_language = SelectField("Preferred Language", choices=[('English', 'English'), ('Chinese', 'Chinese'), ('Japanese', 'Japanese')], validators=[])
     insurance = SelectField("Health Insurance", choices=[('y', 'Yes'), ('n', 'No')])
     address = StringField("Address", validators=[ Length(max=100)])
-    preferred_language = SelectField("Preferred Language", choices=[('English', 'English'), ('Chinese', 'Chinese'), ('Japanese', 'Japanese')], validators=[])
     medical_history = TextAreaField("Medical History", validators=[])
     comments_for_doctor = TextAreaField("Comments for Doctor", validators=[])
     submit = SubmitField("Save Changes")

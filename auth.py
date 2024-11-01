@@ -295,7 +295,7 @@ def check_login():
     user_id = session['user_id']
     user_type = session['user_type']
     
-    user_collection = get_patient_collection if user_type == 'patient' else get_doctor_collection
+    user_collection = get_patient_collection() if user_type == 'patient' else get_doctor_collection()
     user = user_collection.find_one({'_id': ObjectId(user_id)}) if user_collection else None
     
     if not user:
@@ -348,6 +348,6 @@ def login():
 
 @auth.route("/logout")
 def logout():
-    session.pop('user', None)
+    session.clear()
     flash("You have been logged out.", "alert-success")
     return redirect(url_for("views.landing_page"))

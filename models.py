@@ -3,8 +3,8 @@ from db import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
-class Patient(db.patients):
-    __tablename__ = 'patients'
+class Patient(db.patient):
+    __tablename__ = 'patient'
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(30), nullable=False)
     last_name = db.Column(db.String(30), nullable=False)
@@ -29,8 +29,8 @@ class Patient(db.patients):
     def __repr__(self):
         return f'<Patient {self.email}>'
 
-class Doctor(db.doctors):
-    __tablename__ = 'doctors'
+class Doctor(db.doctor):
+    __tablename__ = 'doctor'
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(20), nullable=False)

@@ -42,6 +42,7 @@
 
 .doctor-profile{
     float: none;
+    padding: 1em 0 1em 1em;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -78,6 +79,37 @@
 
 
 
+
+.first-visit-buttons {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1em;
+    margin-bottom: 1.5em;
+}
+
+.visit-btn {
+    padding: 0.5em 1.5em;
+    background-color: #f1f1f1;
+    border: 1px solid #ddd;
+    border-radius: .3em;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    font-size: 1em;
+}
+
+.visit-btn.active {
+    color: white;
+}
+
+.visit-btn:hover {
+    background-color: #ddd;
+}
+
+#first-visit {
+    display: none;
+}
 
 .booking-top{
     display: flex;
@@ -122,11 +154,15 @@
 }
 
 #booking-form {
-    display: flex;
     flex-direction: column;
 }
 
-#booking-form label, .first-visit-buttons p{
+.first-visit-buttons p{
+    font-weight: bold;
+    color: #333;
+}
+
+#booking-form label{
     margin-bottom: 0.5em;
     font-weight: bold;
     color: #333;
@@ -150,7 +186,8 @@
     height: 100px;
 }
 
-#booking-form button {
+.book-btn{
+    width: 100%;
     background-color: #5DADE2;
     color: white;
     padding: 0.6em;
@@ -161,7 +198,7 @@
     font-size: 1.2em;
 }
 
-#booking-form button:hover {
+.book-btn:hover {
     background-color: #1ABC9C;
 }
 
@@ -240,34 +277,7 @@
 
 
 
-.first-visit-buttons {
-    display: flex;
-    align-items: center;
-    gap: 1em;
-    margin-bottom: 1.5em;
-}
 
-.visit-btn {
-    padding: 0.5em 1.5em;
-    background-color: #f1f1f1;
-    border: 1px solid #ddd;
-    border-radius: .3em;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
-    font-size: 1em;
-}
-
-.visit-btn.active {
-    color: white;
-}
-
-.visit-btn:hover {
-    background-color: #ddd;
-}
-
-#first-visit {
-    display: none;
-}
 
 @media (max-width: 768px) {
     .two-column {

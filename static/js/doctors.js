@@ -1,4 +1,4 @@
-let offset = 0;  // 초기 offset 설정
+let offset = 0;
 
 function getAvailableTimes(start, end, day) {
     const times = [];
@@ -7,15 +7,16 @@ function getAvailableTimes(start, end, day) {
 
     while (currentTime <= endTime) {
         const hour = currentTime.getHours();
-        
-        if (day === 'Saturday' && (hour === 13 || (hour === 14 && currentTime.getMinutes() === 0))) {
-            currentTime.setMinutes(currentTime.getMinutes() + 30);
-            continue;
+        const minutes = currentTime.getMinutes();
+
+        if (day === 'Saturday' && endTime.getHours() > 14) {
+            if (hour === 13 || (hour === 14 && minutes === 0)) {
+                currentTime.setMinutes(currentTime.getMinutes() + 30);
+                continue;
+            }
         }
 
-        if (!(hour === 13 || (hour === 14 && currentTime.getMinutes() === 0))) {
-            times.push(currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-        }
+        times.push(currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
         
         currentTime.setMinutes(currentTime.getMinutes() + 30);
     }
@@ -23,16 +24,20 @@ function getAvailableTimes(start, end, day) {
     return times;
 }
 
-// 예약 정보를 가지고 예약 페이지로 이동하는 함수
 function selectTime(day, time, doctorId) {
     const bookingUrl = `/booking?doctorId=${doctorId}&date=${encodeURIComponent(day)}&time=${encodeURIComponent(time)}`;
     window.location.href = bookingUrl;
 }
 
 function loadMoreDoctors() {
-    fetch(`/api/doctors?offset=${offset}`)
-        .then(response => response.json())
-        .then(data => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = ('0' + (today.getMonth() + 1)).slice(-2);
+    const day = ('0' + today.getDate()).slice(-2);
+    const currentTime = `${year}-${month}-${day}`;
+    document.getElementById("date").value = currentTime;
+
+    fetch(`/api/doctors?offset=${offset}`).then(response => response.json()).then(data => {
             const container = document.getElementById('doctor-container');
             if (data.length === 0) {
                 document.getElementById('load-more-btn').style.display = 'none';
@@ -87,14 +92,13 @@ function loadMoreDoctors() {
                                     const availableTimes = getAvailableTimes(hours.start, hours.end, day);
                                     
                                     if (availableTimes.length === 0) {
-                                        // 예약 가능한 시간이 없을 때 아예 해당 날짜 섹션을 숨김
                                         return '';
                                     }
 
                                     return `
                                         <span class="reservations">
                                             <h4>${day}</h4>
-                                            <select onchange="selectTime('${day}', this.value, '${doctor._id}')">
+                                            <select onchange="selectTime('${day}', this.value, '${doctor.id}')">
                                                 <option value="">Select a time</option>
                                                 ${availableTimes.map(time => `
                                                     <option value="${time}">${time}</option>
@@ -108,7 +112,6 @@ function loadMoreDoctors() {
                     </div>
                 `;
 
-                // 카드에 트랜지션 효과 추가
                 setTimeout(() => {
                     card.classList.add('show');
                 }, 0);
@@ -117,7 +120,6 @@ function loadMoreDoctors() {
             });
             offset += data.length;
 
-            // 버튼을 숨기거나 보이도록 처리
             if (data.length < 3) {
                 document.getElementById('load-more-btn').style.display = 'none';
             }
@@ -127,4 +129,6 @@ function loadMoreDoctors() {
 
 window.onload = loadMoreDoctors;
 
-document.getElementById('load-more-btn').addEventListener('click', loadMoreDoctors);
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('load-more-btn')?.addEventListener('click', loadMoreDoctors);
+});

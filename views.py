@@ -3,9 +3,10 @@ import requests
 import os
 
 from forms import *
-from db import *
+from db import get_patient_collection, get_doctor_collection
 from datetime import datetime, timedelta
 from auth import check_login
+from bson.objectid import ObjectId
 
 from dotenv import load_dotenv
 from flask_cors import CORS
@@ -58,82 +59,37 @@ def get_doctors():
 
 
 
-# @views.route("/booking", methods=["GET", "POST"])
-# def booking(doctor_id):
-#     form = AppointmentForm()
+@views.route("/booking", methods=["GET", "POST"])
+def booking():
+    user = None
+    user_id = session.get('user_id')
 
-#     doctor = get_doctor_collection.find_one({"_id": doctor_id})
-#     operating_hours = doctor.get("operating_hours", {})
+    if user_id:
+        user = get_patient_collection().find_one({"_id": ObjectId(user_id)})
 
-#     if form.appointment_date.data:
-#         select_date = form.appointment_date.data
-#         weekday = select_date.strftime("%A").lower()
+    doctor_id = request.args.get("doctorId")
+    
+    if doctor_id:
+        doctor = get_doctor_collection().find_one({"_id": ObjectId(doctor_id)})
 
-#         time_slots = operating_hours.get(weekday, [])
+    else:
+        flash("Doctor ID is missing or invalid", "alert-danger")
+        return redirect(url_for("views.search"))
 
-#         available_times = []
-#         for time in time_slots:
-#             start_time, end_time = time.split("-")
-#             current_time = datetime.strftime(start_time, "%H:%M")
-#             end_time = datetime.strftime(end_time, "%H:%M")
+    appointment_date = request.args.get("date")
+    appointment_time = request.args.get("time")
 
-#             while current_time < end_time:
-#                 available_times.append(current_time.strftime("%H:%M"))
-#                 current_time += timedelta(minutes=30)
-
-#         form.appointment_date.choices = [(time, time) for time in available_times]
-
-#     if form.validate_on_submit():
-#         appointment_data = {
-#             "doctor_id": doctor_id,
-#             "patient_id": session['user_id'],
-#             "date": form.appointment_date.data,
-#             "time": form.appointment_time.data,
-            
-#         }
-
-#         existing_appointment = get_appointment_collection.find_one({
-#             "doctor_id": doctor_id,
-#             "date": form.appointment_date.data,
-#             "time": form.appointment_time.data,
-#         })
-
-#         if existing_appointment:
-#             flash("Selected time is already booked. Please choose another time.", "alert-danger")
-
-#         else:
-#             get_appointment_collection.insert_one(appointment_data)
-#             get_doctor_collection.update_one(
-#                 {"_id": doctor_id},
-#                 {"$push": {"appointments": appointment_data}}
-#             )
-#             get_patient_collection.update_one(
-#                 {"_id": session['user_id']},
-#                 {"$push": {"appointments": appointment_data}}
-#             )
-
-#             flash("Your appointment has been booked successfully!", "alert-success")
-#             return redirect(url_for(views.booking))
-        
-#         return render_template('booking.html', form=form, doctor=doctor)
-    # user_email = session.get('user')
-    # user_info = get_patient_collection().find_one({"email": user_email})
-    # if not user_info:
-    #     return redirect(url_for('auth.login', next=request.url))
-
-    # if request.method == "POST":
-    #     # 예약 처리 코드 (예: 예약 정보를 MongoDB에 저장)
-    #     appointment_data = {
-    #         "date": request.form.get("appointment_date"),
-    #         "time": request.form.get("appointment_time"),
-    #         "patient_email": user_email,
-    #         "note": request.form.get("note"),
-    #     }
-    #     get_patient_collection().insert_one(appointment_data)
-    #     flash("Your appointment has been booked successfully.", "success")
-    #     return redirect(url_for('auth.myAccount'))
-
-    # return render_template("book_loggedin.html", user_info=user_info)
+    if doctor:
+        return render_template(
+            "book_loggedin.html",
+            doctor=doctor,
+            user=user,
+            appointment_date=appointment_date,
+            appointment_time=appointment_time,
+        )
+    else:
+        flash("Doctor not found", "alert-danger")
+        return redirect(url_for("views.search"))
 
 
 
