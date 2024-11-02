@@ -49,8 +49,8 @@ class EditProfile_patient(FlaskForm):
     phone = StringField("Phone Number", validators=[InputRequired(), Length(min=10, max=15)])
     birth = DateField("Date of Birth", format='%Y-%m-%d', validators=[InputRequired()])
     sex = SelectField("Sex", choices=[('Male', 'Male'), ('Female', 'Female')], validators=[InputRequired()])
-    preferred_language = SelectField("Preferred Language", choices=[('English', 'English'), ('Chinese', 'Chinese'), ('Japanese', 'Japanese')], validators=[])
     insurance = SelectField("Health Insurance", choices=[('y', 'Yes'), ('n', 'No')])
+    preferred_language = SelectField("Preferred Language", choices=[('English', 'English'), ('Chinese', 'Chinese'), ('Japanese', 'Japanese')], validators=[])
     address = StringField("Address", validators=[ Length(max=100)])
     medical_history = TextAreaField("Medical History", validators=[])
     comments_for_doctor = TextAreaField("Comments for Doctor", validators=[])
@@ -67,7 +67,7 @@ class SignUp_patient(FlaskForm):
     phone = StringField("Phone Number", validators=[InputRequired(), Length(min=10, max=15)])
     birth = DateField("Date of Birth", format='%Y-%m-%d', validators=[InputRequired()])
     sex = SelectField("Sex", choices=[('Male', 'Male'), ('Female', 'Female')], validators=[InputRequired()])
-    insurance = SelectField("Health Insurance", choices=[('y', 'Yes'), ('n', 'No')])
+    insurance = SelectField("Health Insurance", choices=[('n', 'No'), ('y', 'Yes')])
     preferred_language = SelectField("Preferred Language", choices=[('English', 'English'), ('Chinese', 'Chinese'), ('Japanese', 'Japanese')], validators=[])
     address = StringField("Address", validators=[InputRequired(), Length(max=100)])
     medical_history = TextAreaField("Medical History", validators=[])
@@ -96,6 +96,7 @@ class EditProfile_doctor(FlaskForm):
     operating_hours = StringField("Operating Hours", validators=[])
 
 
+
 class SignUp_doctor(FlaskForm):
     image = FileField("Profile Picture", validators=[FileRequired()])
     first_name = StringField("First Name", validators=[InputRequired(), Length(min=1, max=20)])
@@ -116,6 +117,7 @@ class SignUp_doctor(FlaskForm):
     hospital_name = StringField("Practice Address", validators=[Length(min=1, max=50)])
     operating_hours = StringField("Operating Hours", validators=[])
     submit = SubmitField("Register")
+
 
 
 class LoginForm(FlaskForm):

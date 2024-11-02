@@ -66,6 +66,7 @@ def booking():
 
     if user_id:
         user = get_patient_collection().find_one({"_id": ObjectId(user_id)})
+        form = AppointmentForm()
 
     doctor_id = request.args.get("doctorId")
     
@@ -84,6 +85,7 @@ def booking():
             "book_loggedin.html",
             doctor=doctor,
             user=user,
+            form=form,
             appointment_date=appointment_date,
             appointment_time=appointment_time,
         )

@@ -161,6 +161,8 @@
                         <label for="email">Email:</label>
                         <input type="email" id="email" name="email" value="{{ user.email }}" required>
 
+                        <label for="medical_history">Medical History</label>
+                        {{ form.medical_history(class="form-control", placeholder="Include any allergies or past conditions") }}
 
                         <label for="note">Comments for Doctor (optional)</label>
                         <textarea name="note" id="note" placeholder="Describe your symptoms">{{ user.comments_for_doctor }}</textarea>
