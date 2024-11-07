@@ -5,7 +5,6 @@ import os
 from forms import *
 from db import get_patient_collection, get_doctor_collection
 from datetime import datetime, timedelta
-from auth import check_login
 from bson.objectid import ObjectId
 
 from dotenv import load_dotenv
@@ -75,7 +74,6 @@ def booking():
     doctor_id = request.args.get("doctorId")
     date = request.args.get("date")
     time = request.args.get("time")
-
 
     doctor = get_doctor_collection().find_one({"_id": ObjectId(doctor_id)}) if doctor_id else None
     if not doctor:
