@@ -61,38 +61,30 @@ def get_doctors():
 
 @views.route("/booking", methods=["GET", "POST"])
 def booking():
-    user = None
     user_id = session.get('user_id')
-
-    if user_id:
-        user = get_patient_collection().find_one({"_id": ObjectId(user_id)})
-        form = AppointmentForm()
-
-    doctor_id = request.args.get("doctorId")
     
-    if doctor_id:
-        doctor = get_doctor_collection().find_one({"_id": ObjectId(doctor_id)})
+    if not user_id:
+        doctor_id = request.args.get("doctorId")
+        date = request.args.get("date")
+        time = request.args.get("time")
+        
+        flash("Please log in first.", "alert-danger")
+        return redirect(url_for("auth.login_patient", doctorId=doctor_id, date=date, time=time))
 
-    else:
-        flash("Doctor ID is missing or invalid", "alert-danger")
-        return redirect(url_for("views.search"))
+    user = get_patient_collection().find_one({"_id": ObjectId(user_id)})
+    doctor_id = request.args.get("doctorId")
+    date = request.args.get("date")
+    time = request.args.get("time")
 
-    appointment_date = request.args.get("date")
-    appointment_time = request.args.get("time")
 
-    if doctor:
-        return render_template(
-            "book_loggedin.html",
-            doctor=doctor,
-            user=user,
-            form=form,
-            appointment_date=appointment_date,
-            appointment_time=appointment_time,
-        )
-    else:
+    doctor = get_doctor_collection().find_one({"_id": ObjectId(doctor_id)}) if doctor_id else None
+    if not doctor:
         flash("Doctor not found", "alert-danger")
         return redirect(url_for("views.search"))
 
+    form = AppointmentForm()
+
+    return render_template("book_loggedin.html", doctor=doctor, user=user, form=form, appointment_date=date, appointment_time=time,)
 
 
 
