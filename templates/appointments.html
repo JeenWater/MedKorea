@@ -3,28 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MVP</title>
+    <title>Change Password</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mvpStyle.css') }}">
 </head>
 <body>
-    <!-- <div class="firstColor" style="background-color: #5DADE2; width: 100px; height: 100px;"></div>
-    <div class="SecondColor" style="background-color: #1ABC9C; width: 100px; height: 100px;"></div>
-    <div class="pointColor" style="background-color: #E74C3C; width: 100px; height: 100px;"></div> -->
     <div class="preloader">
         <div class="loader"></div>
     </div>
-
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
-            <div class="flash-messages">
+        <div class="flash-messages">
             {% for category, message in messages %}
-                <div class="alert {{ category }}">
+            <div class="alert {{ category }}">
                 {{ message }}
-                </div>
-            {% endfor %}
             </div>
+            {% endfor %}
+        </div>
         {% endif %}
     {% endwith %}
 
@@ -32,65 +30,109 @@
         <nav class="nav-bar">
             <div class="nav-left">
                 <div class="logo">
-                    <a href="/"><img src="{{ url_for('static', filename='img/fixedIconMain(blue).png') }}" alt="MedKorea logo"/></a>
-                    <a href="/"><h1>MedKorea</h1></a>
+                    <a href="/"><img src="{{ url_for('static', filename='img/fixedIconMain(blue).png') }}"
+                            alt="MedKorea logo" /></a>
+                    <a href="/">
+                        <h1>MedKorea</h1>
+                    </a>
                 </div>
             </div>
-            {% if session['user'] %}
-                <div class="nav-right" style="justify-content: flex-start;">
-                    <div class="hamburger-menu">
-                        <div class="menu-icon" onclick="toggleMenu()">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                        <div class="menu-content" id="user-menu">
-                            {% if session['user_type'] == 'patient' %}
-                                <h4>Hello<br>{{ session['user_name'] }}</h4>
-                            {% else %}
-                                <h4>Hello<br>Dr.{{ session['user_name'] }}</h4>
-                            {% endif %}
-                            <a href="{{ url_for('auth.myAccount') }}" class="btn">My Account</a>
-                            <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
-                        </div>
+            <div class="nav-right">
+                <div class="hamburger-menu">
+                    <div class="menu-icon" onclick="toggleMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <div class="menu-content" id="user-menu">
+                        <a href="{{ url_for('auth.myAccount') }}" class="btn">Personal Information</a>
+                        <a href="{{ url_for('auth.login_security') }}" class="btn">Login & Security</a>
+                        <a href="/appointments" class="btn">Appointments</a>
+                        <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
                     </div>
                 </div>
-            {% else %}
-                <div class="nav-mid"></div>
-                <div class="nav-right">
-                    <button type="submit" id="search-btn" class="btn" style="width: 45%; visibility: hidden;" >Search</button>
-                    <a href="#" class="btn" style="width: 45%;" onclick="loginMenu()">Login</a>
-                    <div class="login-menu-content" id="login-menu">
-                        <a href="{{ url_for('auth.login_patient') }}" class="btn loginBtn">Login as Patient</a>
-                        <a href="{{ url_for('auth.login_doctor') }}" class="btn loginBtn">Login as Doctor</a>
-                    </div>
-                </div>
-            {% endif %}
+            </div>
         </nav>
     </header>
 
-    <main class="main">
-        <div class="main-top">
-            <div class="main-top-nav">
-                <form action="{{ url_for('views.search') }}" role="search" class="nav-mid-form" method="POST">
-                    <div class="nav-mid">
-                        <input type="search" class="nav-mid-search" placeholder="Condition, procedure, doctor..." value="" title="Search for" autocomplete="off"/>
-                        <input type="search" class="nav-mid-search" placeholder="Location" value="" title="Location" autocomplete="off"/>
-                        <input type="date" class="nav-mid-search" id="date" value="" title="Date" autocomplete="off" required/>
-                    </div>
-                    <div class="nav-right">
-                        <button type="submit" id="search-btn" class="btn" style="width: 45%;">Search</button>
-                    </div>
-                </form>
-            </div>
-        </div>
+    <main>
+        <section class="signup-section">
+            <h2>Your Appointments</h2>
+            {% for appointment in appointments %}
 
-        <div class="main-mid" id="doctor-container"></div>
-        <div class="load-more-btn-area">
-            <button id="load-more-btn" onclick="loadMore()">Show more providers</button>
-        </div>
-        
+                {% if user_type == 'patient' %}
+
+                    <div class="doctor-info">
+                        <div class="details">
+                            <div class="doctor-profile">
+                                <div class="doctor-img">
+                                    <img src="{{ url_for('static', filename='img/' + appointment['image']) }}" alt="{{ appointment['doctor_name'] }}'s img" class="doctor-img" style="width: 100px; height: 100px;">
+                                    <div class="rating">
+                                        <span>★</span> {{ appointment.get('rating', 'No ratings yet') }}
+                                    </div>
+                                </div>
+                                <span class="doctor-detail">
+                                    <h2 class="doctor-tit">Dr. {{ appointment['doctor_name'] }}</h2>
+                                    <h3 class="doctor-specialization">{{ appointment['doctor_specialization'] }}</h3>
+                                    <h4 class="hospital-address">{{ appointment['doctor_hospital_name'] }}</h4>
+                                    <h5>{{ appointment['doctor_address'] }}</h5>
+                                    <p class="doctor-description">Preferred Language: {{ appointment['doctor_preferred_language'] }}</p>
+                                    <p class="doctor-description">{{ appointment['bio'] }}</p>
+                                </span>
+                            </div>
+                            <div class="reservation-container">
+                                <div class="reservation-tit">
+                                    <h3>Time</h3>
+                                </div>
+                                <div class="reservation-content">
+                                    <p>Appointment on {{ appointment['date'] }} at {{ appointment['time'] }}</p>
+                                </div>
+                            </div>
+                            <button class="btn-cancel" data-appointment-id="{{ appointment['_id'] }}">Cancel Appointment</button>
+                        </div>
+            
+                {% elif user_type == 'doctor' %}
+                    <!-- 의사용 템플릿 -->
+                        <div class="details">
+                            <div class="doctor-profile">
+                                <div class="doctor-img">
+                                </div>
+                                <span class="doctor-detail">
+                                    <h2 class="doctor-tit">{{ appointment['patient_name'] }}</h2>
+                                    <h3 class="doctor-speciality">Specialty: {{ appointment['patient_phone'] }}</h3>
+                                    <h4 class="hospital-address">{{ appointment['patient_birth'] }}</h4>
+                                    <h5>{{ appointment['patient_sex'] }}</h5>
+                                    <p class="doctor-description">{{ 'Yes' | upper if appointment[patient_insurance] == 'y' else 'No' | upper }}</p>
+                                    <p class="doctor-description">{{ appointment['patient_preferred_language'] }}</p>
+                                    <p class="doctor-description">{{ appointment['patient_medical_history'] }}</p>
+                                    <p class="doctor-description">{{ appointment['patient_comments_for_doctor'] }}</p>
+                                </span>
+                            </div>
+                            <div class="reservation-container">
+                                <div class="reservation-tit">
+                                    <h3>Time</h3>
+                                </div>
+                                <div class="reservation-content">
+                                    <p>Appointment on {{ appointment['date'] }} at {{ appointment['time'] }}</p>
+                                </div>
+                            </div>
+                            <button class="btn-cancel" data-appointment-id="{{ appointment['_id'] }}">Cancel Appointment</button>
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <div id="cancelModal" class="modal">
+                <div class="modal-content">
+                    <h4>Cancel Appointment</h4>
+                    <p>Are you sure you want to cancel this appointment?</p>
+                    <label for="cancel_reason">Cancellation Reason:</label>
+                    <textarea id="cancel_reason" name="cancel_reason"></textarea>
+                    <button id="confirmCancelBtn" class="btn">Confirm Cancellation</button>
+                </div>
+            </div>
+        </section>
     </main>
+
 
     <footer class="footer">
         <div class="footer-top">
@@ -134,7 +176,7 @@
         </div>
     </footer>
 
+    <script src="{{ url_for('static', filename='js/cancel.js') }}"></script>
     <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/doctors.js') }}"></script>
 </body>
 </html>

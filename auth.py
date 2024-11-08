@@ -22,6 +22,67 @@ def allowed_file(filename):
 
 
 
+@auth.route("/appointments", methods=['GET', 'POST'])
+def appointments():
+    user_id = session.get("user_id")
+    user_type = session.get("user_type")
+
+    if not user_id or not user_type:
+        flash("Please log in first.", "alert-danger")
+        return redirect(url_for("auth.login"))
+
+    if user_type == "patient":
+        # 환자의 예약 정보 불러오기
+        user_data = get_patient_collection().find_one({"_id": ObjectId(user_id)})
+        appointments = user_data.get("appointments", [])
+        
+        # 의사 정보를 예약과 함께 병합하기
+        enriched_appointments = []
+        for a in appointments:
+            doctor = get_doctor_collection().find_one({"_id": ObjectId(a["doctor_id"])})
+            if doctor:
+                a["doctor_image"] = doctor.get("image")
+                a["doctor_name"] = f"{doctor['first_name']} {doctor['last_name']}"
+                a["doctor_specialization"] = doctor.get("specialization")
+                a["doctor_hospital_name"] = doctor.get("hospital_name")
+                a["doctor_address"] = doctor.get("address")
+                a["doctor_preferred_language"] = doctor.get("preferred_language")
+                a["doctor_bio"] = doctor.get("bio")
+                a["doctor_phone"] = doctor.get("phone")
+                a["doctor_rating"] = doctor.get("rating")
+            enriched_appointments.append(a)
+
+        return render_template("appointments.html", appointments=enriched_appointments, user_type="patient")
+
+    elif user_type == "doctor":
+        # 의사의 환자 예약 정보 불러오기
+        doctor_data = get_doctor_collection().find_one({"_id": ObjectId(user_id)})
+        appointments = doctor_data.get("appointments", [])
+
+        # 환자 정보를 예약과 함께 병합하기
+        enriched_appointments = []
+        for a in appointments:
+            patient = get_patient_collection().find_one({"_id": ObjectId(a["patient_id"])})
+            if patient:
+                a["patient_name"] = f"{patient['first_name']} {patient['last_name']}"
+                a["patient_phone"] = patient.get("phone")
+                a["patient_birth"] = patient.get("birth")
+                a["patient_sex"] = patient.get("sex")
+                a["patient_insurance"] = patient.get("insurance")
+                a["patient_preferred_language"] = patient.get("preferred_language")
+                a["patient_medical_history"] = patient.get("medical_history")
+                a["patient_comments_for_doctor"] = patient.get("comments_for_doctor")
+            enriched_appointments.append(a)
+
+        return render_template("appointments.html", appointments=enriched_appointments, user_type="doctor")
+
+    else:
+        flash("Invalid user type.", "alert-danger")
+        return redirect(url_for("views.landing_page"))
+
+
+
+
 
 
 @auth.route('/login_security', methods=['GET', 'POST'])
@@ -44,11 +105,15 @@ def login_security():
 
         if not check_password_hash(user['password'], form.current_password.data):
             flash('Current password is incorrect.', 'alert-danger')
-            return redirect(url_for('auth.login_security'))
+            return render_template('login_security.html', form=form, user=user)
+        
+        if user['password'] == form.current_password.data:
+            flash('New password must be different from the current password.', 'alert-danger')
+            return render_template('login_security.html', form=form, user=user)
 
         if form.new_password.data != form.confirm_password.data:
             flash('New password and confirmation do not match.', 'alert-danger')
-            return redirect(url_for('auth.login_security'))
+            return render_template('login_security.html', form=form, user=user)
 
         new_password_hash = generate_password_hash(form.new_password.data, method="pbkdf2:sha256")
 
@@ -90,7 +155,7 @@ def myAccount():
         form = EditProfile_doctor()
 
     if not user:
-        flash("Your account was not found. Please log in again or contact support.", "alert-danger")
+        flash("Your account was not found. Please log in again.", "alert-danger")
         return redirect(url_for('auth.login'))
 
     if request.method == 'GET':
@@ -112,8 +177,8 @@ def myAccount():
 
     if form.validate_on_submit():
         update_data = {
-            "first_name": form.first_name.data,
-            "last_name": form.last_name.data,
+            "first_name": form.first_name.data.capitalize(),
+            "last_name": form.last_name.data.capitalize(),
             "phone": form.phone.data,
             "birth": form.birth.data.strftime('%Y-%m-%d'),
             "sex": form.sex.data,
@@ -125,8 +190,8 @@ def myAccount():
             update_data.update({
                 "insurance": form.insurance.data,
                 "address": form.address.data,
-                "medical_history": form.medical_history.data,
-                "comments_for_doctor": form.comments_for_doctor.data,
+                "medical_history": form.medical_history.data.capitalize(),
+                "comments_for_doctor": form.comments_for_doctor.data.capitalize(),
             })
         elif user_type == 'doctor':
             if filename:
@@ -138,7 +203,7 @@ def myAccount():
                 "license_number": form.license_number.data,
                 "address": form.address.data,
                 "hospital_name": form.hospital_name.data,
-                "bio": form.bio.data,
+                "bio": form.bio.data.capitalize(),
                 "operating_hours": json.loads(form.operating_hours.data) if form.operating_hours.data else None,
             })
 
@@ -175,7 +240,6 @@ def from_user_data(form, user):
         form.bio.data = user.get('bio')
         operating_hours = user.get('operating_hours')
         form.operating_hours.data = json.dumps(operating_hours) if operating_hours else ''
-        # form.availability.data = user.get('availability')
 
 
 
@@ -200,10 +264,10 @@ def signUp_doctor():
             try:
                 password_hash = generate_password_hash(form.password.data, method="pbkdf2:sha256")
                 user = {
-                    "user_type": "doctor",
+                    "user_type": "doctor".capitalize(),
                     "image": filename,
-                    "first_name": form.first_name.data,
-                    "last_name": form.last_name.data,
+                    "first_name": form.first_name.data.capitalize(),
+                    "last_name": form.last_name.data.capitalize(),
                     "phone": form.phone.data,
                     "birth": form.birth.data.strftime('%Y-%m-%d'),
                     "sex": form.sex.data,
@@ -216,7 +280,7 @@ def signUp_doctor():
                     "password": password_hash,
                     "address": form.address.data,
                     "hospital_name": form.hospital_name.data,
-                    "bio": form.bio.data,
+                    "bio": form.bio.data.capitalize(),
                     "operating_hours": json.loads(form.operating_hours.data) if form.operating_hours.data else [],
                     "created_at": datetime.now(),
                 }
@@ -224,16 +288,16 @@ def signUp_doctor():
                 existing_user = get_doctor_collection().find_one({"email": form.email.data})
                 if existing_user:
                     flash("This email address is already registered.", "alert-danger")
-                    return redirect(url_for('auth.signUp_doctor'))
+                    return render_template("signUp_doctor.html", form=form)
                 
                 existing_license = get_doctor_collection().find_one({"license_number": form.license_number.data})
                 if existing_license:
                     flash("This license number is already registered.", "alert-danger")
-                    return redirect(url_for('auth.signUp_doctor'))
+                    return render_template("signUp_doctor.html", form=form)
 
                 get_doctor_collection().insert_one(user)
                 flash("You have successfully signed up!", "alert-success")
-                return redirect(url_for("auth.login"))
+                return redirect(url_for("auth.login_doctor"))
 
             except Exception as e:
                 flash("An error occurred during registration. Please try again.", "alert-danger")
@@ -251,8 +315,8 @@ def signUp_patient():
         password_hash = generate_password_hash(form.password.data, method="pbkdf2:sha256")
         user = {
             "user_type": "patient",
-            "first_name": form.first_name.data,
-            "last_name": form.last_name.data,
+            "first_name": form.first_name.data.capitalize(),
+            "last_name": form.last_name.data.capitalize(),
             "phone": form.phone.data,
             "birth": form.birth.data.strftime('%Y-%m-%d'),
             "sex": form.sex.data,
@@ -269,16 +333,18 @@ def signUp_patient():
         existing_user = get_patient_collection().find_one({"email": form.email.data})
         if existing_user:
             flash("This email address is already registered.", "alert-danger")
-            return redirect(url_for('auth.signUp_patient'))
+            return render_template("signUp_patient.html", form=form)
         
         if form.password.data != form.confirm_password.data:
             flash('Password and confirmation do not match.', 'alert-danger')
-            return redirect(url_for('auth.signUp_patient'))
+            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+            print("Password and confirmation do not match.")
+            return render_template("signUp_patient.html", form=form)
         
         get_patient_collection().insert_one(user)
 
         flash("You have successfully signed up!", "alert-success")
-        return redirect(url_for("auth.login"))
+        return redirect(url_for("auth.login_patient"))
 
     return render_template("signUp_patient.html", form=form)
 
@@ -318,31 +384,66 @@ def check_login():
 
 
 
-@auth.route("/login", methods=["GET", "POST"])
-def login():
+@auth.route("/login/patient", methods=["GET", "POST"])
+def login_patient():
     form = LoginForm()
+    # 쿼리 파라미터를 세션에 저장
+    if request.method == "GET":
+        session['doctor_id'] = request.args.get("doctor_id")
+        session['appointment_date'] = request.args.get("date")
+        session['appointment_time'] = request.args.get("time")
+        session['appointment_day'] = request.args.get("day")
+        
+    
+
     if form.validate_on_submit():
         user = get_patient_collection().find_one({"email": form.email.data})
-        if not user:
-            user = get_doctor_collection().find_one({"email": form.email.data})
         
-        if user:
-            if check_password_hash(user["password"], form.password.data):
-                session['user'] = user['email']
-                session['user_id'] = str(user['_id'])
-                session['user_type'] = user['user_type']
-                session['user_name'] = f"{user.get('first_name', '')} {user.get('last_name', '')}".strip()
-                flash("Login successful", "alert-success")
-                
-                return redirect(url_for("views.landing_page"))
-            else:
-                flash("Incorrect password.", "alert-danger")
-        else:
-            flash("User not found.", "alert-danger")
+        if user and check_password_hash(user["password"], form.password.data):
+            session['user'] = user['email']
+            session['user_id'] = str(user['_id'])
+            session['user_type'] = 'patient'
+            session['user_name'] = f"{user.get('first_name', '')} {user.get('last_name', '')}".strip()
+            
+            # 세션에서 값 가져와서 리다이렉트
+            doctor_id = session.pop("doctor_id", None)
+            appointment_date = session.pop("appointment_date", None)
+            appointment_time = session.pop("appointment_time", None)
+            appointment_day = session.pop("appointment_day", None)
+            
+            if doctor_id and appointment_date and appointment_time and appointment_day:
+                return redirect(url_for('views.booking', doctor_id=doctor_id, date=appointment_date, day=appointment_day, time=appointment_time))
+            
+            flash("Patient login successful", "alert-success")
+            return redirect(url_for("views.landing_page"))
+        
+        flash("Invalid email or password for patient.", "alert-danger")
+    
+    return render_template("login_patient.html", form=form)
 
-        return redirect(url_for("auth.login"))
 
-    return render_template("login.html", form=form)
+
+
+
+@auth.route("/login/doctor", methods=["GET", "POST"])
+def login_doctor():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = get_doctor_collection().find_one({"email": form.email.data})
+        
+        if user and check_password_hash(user["password"], form.password.data):
+            session['user'] = user['email']
+            session['user_id'] = str(user['_id'])
+            session['user_type'] = 'doctor'
+            session['user_name'] = f"{user.get('first_name', '')} {user.get('last_name', '')}".strip()
+            flash("Doctor login successful", "alert-success")
+            return redirect(url_for("views.landing_page"))
+        
+        flash("Invalid email or password for doctor.", "alert-danger")
+    
+    return render_template("login_doctor.html", form=form)
+
+
 
 
 
@@ -350,4 +451,4 @@ def login():
 def logout():
     session.clear()
     flash("You have been logged out.", "alert-success")
-    return redirect(url_for("views.landing_page"))
+    return redirect(request.referrer or url_for("views.landing_page"))

@@ -211,11 +211,11 @@
                     <div class="two-column">
                         <div class="two-column-content">
                             <label>First Name</label>
-                            {{ user.first_name | upper }}
+                            {{ user.first_name }}
                         </div>
                         <div class="two-column-content">
                             <label>Last Name</label>
-                            {{ user.last_name | upper }}
+                            {{ user.last_name }}
                         </div>
                     </div>
         
@@ -257,7 +257,7 @@
                         <div class="two-column">
                             <div class="two-column-content">
                                 <label>Medical School</label>
-                                {{ user.medical_school | upper }}
+                                {{ user.medical_school }}
                             </div>
                             <div class="two-column-content">
                                 <label>Specialization</label>
@@ -280,17 +280,17 @@
                     <div class="one-column">
                         <div class="one-column-content">
                             <label>Address</label>
-                            {{ user.address | upper }}
+                            {{ user.address }}
                         </div>
                         
                         {% if user.user_type == 'patient' %}
                             <div class="one-column-content">
                                 <label>Medical History</label>
-                                {{ user.medical_history | upper }}
+                                {{ user.medical_history }}
                             </div>
                             <div class="one-column-content">
                                 <label>Comments for Doctor</label>
-                                {{ user.comments_for_doctor | upper }}
+                                {{ user.comments_for_doctor }}
                             </div>
                         {% endif %}
                         
@@ -301,7 +301,7 @@
                             </div>
                             <div class="one-column-content">
                                 <label>Bio</label>
-                                {{ user.bio | capitalize }}
+                                {{ user.bio }}
                             </div>
                             <div class="one-column-content">
                                 <label>Operating Hours</label>

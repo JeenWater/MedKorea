@@ -9,7 +9,7 @@ class HealthNews {
         this.currentIndex = 0;
         this.displayedArticles = [];
         this.articles = [];
-        this.count = 4; // Number of articles to display at a time
+        this.count = 3; // Number of articles to display at a time
     }
 
     init() {
@@ -37,28 +37,35 @@ class HealthNews {
 
     displayArticles() {
         const newsContainer = document.querySelector('.health-news-articles');
-        const articlesToShow = this.articles.slice(this.currentIndex, this.currentIndex + this.count);
-
-        articlesToShow.forEach(article => {
-            const articleDiv = this.createArticleElement(article);
-            newsContainer.appendChild(articleDiv);
-            this.displayedArticles.push(articleDiv);
-        });
-
-        this.currentIndex += this.count;
+        let articlesToShow = [];
+    
+        while (articlesToShow.length < this.count && this.currentIndex < this.articles.length) {
+            const article = this.articles[this.currentIndex];
+            this.currentIndex++;
+    
+            if (!article.title.includes("Removed") && !this.displayedArticles.some(a => a.dataset.url === article.url)) {
+                const articleDiv = this.createArticleElement(article);
+                articlesToShow.push(article);
+                this.displayedArticles.push(articleDiv);
+                newsContainer.appendChild(articleDiv);
+            }
+        }
+    
         this.updateButtons();
     }
 
     createArticleElement(article) {
         const articleDiv = document.createElement('li');
         articleDiv.classList.add('article');
-
+        
         const imageContent = article.urlToImage
             ? `<div class="article-img">
-                <img src="${article.urlToImage}" alt="Article Image" />
+                <img src="${article.urlToImage}" alt="Article Image" class="headline-img"/>
             </div>`
             : '';
-
+    
+        articleDiv.classList.toggle('article-no-img', !article.urlToImage);
+        
         articleDiv.innerHTML = `
             ${imageContent}
             <div class="article-txt">
@@ -67,8 +74,14 @@ class HealthNews {
                 <p><small>Published at: ${new Date(article.publishedAt).toLocaleString()}</small></p>
             </div>
         `;
-
+        
+        const imgElement = articleDiv.querySelector('.headline-img');
+        if (imgElement) {
+            imgElement.addEventListener('click', () => this.openModal(article));
+        }
+        
         articleDiv.querySelector('.headline').addEventListener('click', () => this.openModal(article));
+        
         return articleDiv;
     }
 
@@ -154,17 +167,26 @@ class HealthNews {
         readLessBtn.textContent = 'Read Less';
         readLessBtn.classList.add('read-less-Btn');
         container.appendChild(readLessBtn);
-
+    
         readLessBtn.addEventListener('click', () => {
             const articlesToHide = this.displayedArticles.slice(-this.count);
-            articlesToHide.forEach(article => article.remove());
+    
+            // 요소가 DOM 노드인지 확인하고 삭제
+            articlesToHide.forEach(article => {
+                if (article instanceof HTMLElement) {
+                    article.remove();
+                } else {
+                    console.warn("The item is not a DOM element:", article);
+                }
+            });
+    
             this.displayedArticles = this.displayedArticles.slice(0, -this.count);
             this.currentIndex -= this.count;
-
+    
             if (this.currentIndex <= this.count) {
                 readLessBtn.remove();
             }
-
+    
             this.updateButtons();
         });
     }

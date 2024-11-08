@@ -112,8 +112,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 15px;
-    margin-right: 22px;
 }
 
 .nav-mid-form {
@@ -152,6 +150,12 @@
     align-items: center;
 }
 
+.nav-right button{
+    cursor: pointer;
+    border: none;
+    font-size: 16px;
+}
+
 .btn {
     color: white;
     display: flex;
@@ -161,7 +165,7 @@
     padding: .625em 1.88em;
     text-decoration: none;
     border-radius: .3em;
-    transition: background-color 0.3s;
+    transition: background-color ease-in-out 0.3s;
 }
 
 .btn:hover {
@@ -177,12 +181,45 @@
     padding: .625em 1.88em;
     text-decoration: none;
     border-radius: .3em;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s ease-in-out;
 }
 
 .logout-btn:hover {
     background-color: #c94334;
 }
+
+
+
+.login-menu-content {
+    position: absolute;
+    right: 8.25%;
+    top: 11%;
+    border-radius: 0.3em;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.3s ease-in-out, opacity 0.4s ease-in-out, background-color 0.4s ease-in-out;
+    z-index: 100;
+}
+
+.login-menu-content.show {
+    max-height: 200px;
+    opacity: 1;
+}
+
+.login-menu-content .loginBtn{
+    padding: 0.625em;
+    margin: 0.3em;
+}
+
+.loginBtn{
+    background-color: #5DADE2;
+}
+
+.loginBtn:hover {
+    background-color: #66bbf3;
+}
+
 
 
 
@@ -240,7 +277,7 @@
 .hamburger-menu {
     position: fixed;
     top: 6.4%;
-    right: 8.5%;
+    right: 10.5%;
     z-index: 100;
 }
 
@@ -265,28 +302,31 @@
     max-height: 0;
     overflow: hidden;
     position: absolute;
-    right: -3.7em;
+    right: -4em;
     border-radius: .3em;
     transition: max-height 0.3s ease-in-out;
     z-index: 100;
 }
 
 .menu-content.show {
-    max-height: 556%;
+    max-height: 200px;
     background-color: rgba(0, 0, 0, 0);
 }
 
 .menu-content a{
-    margin-bottom: .3em;
+    margin: .3em;
     text-wrap: nowrap;
 }
 
 .menu-content a:last-child{
-    margin-bottom: 0;
+    margin: .3em;
 }
 
-.menu-content a:hover {
-    box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
+.menu-content h4{
+    text-align: center;
+    border-radius: .3em;
+    margin: .3em;
+    box-shadow: -.1em 0 .3em #1ABC9C, 0.1em 1px 0.3em 0px #1ABC9C;
 }
 
 .required {
