@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import HiddenField, StringField, PasswordField, SubmitField, EmailField, SelectField, DateField, TextAreaField, IntegerField, RadioField
+from wtforms import HiddenField, StringField, PasswordField, SubmitField, EmailField, SelectField, DateField, TextAreaField, IntegerField, TimeField
 from wtforms.validators import InputRequired, Length, Email, ValidationError
 from flask_wtf.file import FileField, FileRequired
 from datetime import datetime, timedelta
@@ -24,16 +24,17 @@ class AppointmentForm(FlaskForm):
     submit = SubmitField("Book Appointment")
     
     appointment_date = DateField("Select Date", format='%Y-%m-%d', validators=[InputRequired()])
-    appointment_time = StringField("Select Time", validators=[InputRequired()])
+    appointment_time = TimeField("Select Time", format='%H:%M', validators=[InputRequired()])
+    appointment_day = StringField("Day of the Week", validators=[InputRequired()])
 
     def validate_appointment_date(self, field):
-        if field.data is None:
+        if not field.data:
             raise ValidationError("Please select a valid appointment date")
-
+        
         today = datetime.today().date()
         if field.data < today:
             raise ValidationError("Cannot book appointments in the past")
-        
+
         max_date = today + timedelta(days=60)
         if field.data > max_date:
             raise ValidationError("Cannot book appointments more than 2 months in advance")

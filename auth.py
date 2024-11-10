@@ -26,20 +26,21 @@ def allowed_file(filename):
 def appointments():
     user_id = session.get("user_id")
     user_type = session.get("user_type")
+    doctor = get_doctor_collection().find_one({"_id": ObjectId(user_id)})
+    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+    print(doctor.get("image"))
 
     if not user_id or not user_type:
         flash("Please log in first.", "alert-danger")
         return redirect(url_for("auth.login"))
 
     if user_type == "patient":
-        # 환자의 예약 정보 불러오기
         user_data = get_patient_collection().find_one({"_id": ObjectId(user_id)})
         appointments = user_data.get("appointments", [])
         
-        # 의사 정보를 예약과 함께 병합하기
         enriched_appointments = []
         for a in appointments:
-            doctor = get_doctor_collection().find_one({"_id": ObjectId(a["doctor_id"])})
+            doctor = get_doctor_collection().find_one({"_id": ObjectId(["doctor_id"])})
             if doctor:
                 a["doctor_image"] = doctor.get("image")
                 a["doctor_name"] = f"{doctor['first_name']} {doctor['last_name']}"
@@ -55,11 +56,9 @@ def appointments():
         return render_template("appointments.html", appointments=enriched_appointments, user_type="patient")
 
     elif user_type == "doctor":
-        # 의사의 환자 예약 정보 불러오기
         doctor_data = get_doctor_collection().find_one({"_id": ObjectId(user_id)})
         appointments = doctor_data.get("appointments", [])
 
-        # 환자 정보를 예약과 함께 병합하기
         enriched_appointments = []
         for a in appointments:
             patient = get_patient_collection().find_one({"_id": ObjectId(a["patient_id"])})
@@ -94,14 +93,14 @@ def login_security():
 
     if not user_email:
         flash('Please log in first.', 'alert-danger')
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('views.landing_page'))
 
     user = get_patient_collection().find_one({"email": user_email}) if user_type == 'patient' else get_doctor_collection().find_one({"email": user_email})
     
     if request.method == 'POST' and form.validate_on_submit():
         if not user:
             flash('User not found.', 'alert-danger')
-            return redirect(url_for('auth.login'))
+            return redirect(url_for('auth.landing_page'))
 
         if not check_password_hash(user['password'], form.current_password.data):
             flash('Current password is incorrect.', 'alert-danger')
@@ -156,7 +155,7 @@ def myAccount():
 
     if not user:
         flash("Your account was not found. Please log in again.", "alert-danger")
-        return redirect(url_for('auth.login'))
+        return redirect(url_for('views.landing_page'))
 
     if request.method == 'GET':
         from_user_data(form, user)
@@ -387,7 +386,6 @@ def check_login():
 @auth.route("/login/patient", methods=["GET", "POST"])
 def login_patient():
     form = LoginForm()
-    # 쿼리 파라미터를 세션에 저장
     if request.method == "GET":
         session['doctor_id'] = request.args.get("doctor_id")
         session['appointment_date'] = request.args.get("date")
@@ -405,7 +403,6 @@ def login_patient():
             session['user_type'] = 'patient'
             session['user_name'] = f"{user.get('first_name', '')} {user.get('last_name', '')}".strip()
             
-            # 세션에서 값 가져와서 리다이렉트
             doctor_id = session.pop("doctor_id", None)
             appointment_date = session.pop("appointment_date", None)
             appointment_time = session.pop("appointment_time", None)

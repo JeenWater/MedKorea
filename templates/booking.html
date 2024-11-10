@@ -98,7 +98,8 @@
                     {{ form.hidden_tag() }}
                     <input type="hidden" name="doctor_id" value="{{ doctor['_id'] }}">
                     <input type="hidden" name="appointment_date" value="{{ appointment_date }}">
-                    <input type="hidden" name="appointment_time" value="{{ appointment_time }}">
+                    <input type="hidden" name="appointment_time" value="{{ appointment_time }}"> 
+                    <input type="hidden" name="appointment_day" value="{{ appointment_day }}">
 
                     <div class="one-column">
                         <div class="first-visit-buttons">
@@ -140,10 +141,11 @@
                         <div class="two-column-content">
                             <label for="insurance">Health Insurance</label>
                             <select id="insurance" name="insurance">
-                                <option value="y" {% if user.insurance == 'y' %}selected{% endif %}>Yes</option>
-                                <option value="n" {% if user.insurance == 'n' %}selected{% endif %}>No</option>
+                                <option value="y" {% if user.insurance == 'y' %} selected {% endif %}>Yes</option>
+                                <option value="n" {% if user.insurance == 'n' %} selected {% endif %}>No</option>
                             </select>
                         </div>
+                        
                     </div>
                     <label for="preferred_language">Preferred Language<sup class="required"></sup></label>
                     {{ form.preferred_language(class="form-control") }}

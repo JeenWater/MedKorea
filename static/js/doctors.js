@@ -1,11 +1,10 @@
 let offset = 0;
 
-function getAvailableTimes(start, end, day, isToday = false) {
+function getAvailableTimes(start, end, day, date, isToday = false) {
     const times = [];
     let currentTime = new Date(`1970-01-01T${start}:00`);
     const endTime = new Date(`1970-01-01T${end}:00`);
     
-    // 현재 시간 가져오기
     const now = new Date();
     const currentHour = now.getHours();
     const currentMinute = now.getMinutes();
@@ -14,7 +13,6 @@ function getAvailableTimes(start, end, day, isToday = false) {
         const hour = currentTime.getHours();
         const minutes = currentTime.getMinutes();
 
-        // 오늘인 경우 현재 시간 이전의 시간대는 건너뛰기
         if (isToday) {
             if (hour < currentHour || (hour === currentHour && minutes <= currentMinute)) {
                 currentTime.setMinutes(currentTime.getMinutes() + 30);
@@ -33,11 +31,15 @@ function getAvailableTimes(start, end, day, isToday = false) {
             break;
         }
 
-        times.push(currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-        
+        times.push({
+            time: currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            date: date,
+            day: day
+        });
+
         currentTime.setMinutes(currentTime.getMinutes() + 30);
     }
-
+    console.log(times)
     return times;
 }
 
@@ -45,11 +47,10 @@ function getAvailableTimes(start, end, day, isToday = false) {
 
 
 
-function selectTime(day, time, doctor_id) {
-    const bookingUrl = `/booking?doctor_id=${doctor_id}&date=${encodeURIComponent(day)}&time=${encodeURIComponent(time)}`;
+function selectTime(day, date, time, doctor_id) {
+    const bookingUrl = `/booking?doctor_id=${doctor_id}&date=${encodeURIComponent(date)}&day=${encodeURIComponent(day)}&time=${encodeURIComponent(time)}`;
     window.location.href = bookingUrl;
 }
-
 
 
 
@@ -61,6 +62,8 @@ function loadMoreDoctors() {
     const day = ('0' + today.getDate()).slice(-2);
     const currentTime = `${year}-${month}-${day}`;
     document.getElementById("date").value = currentTime;
+
+    console.log(`year: ${year}\nmonth: ${month}\nday: ${day}`);
 
     fetch(`/api/doctors?offset=${offset}`).then(response => response.json()).then(data => {
         const container = document.getElementById('doctor-container');
@@ -81,17 +84,20 @@ function loadMoreDoctors() {
                 const nextDate = new Date(today);
                 nextDate.setDate(today.getDate() + i);
                 const dayOfWeek = nextDate.toLocaleDateString('en-US', { weekday: 'long' });
-            
+                const fullDate = nextDate.toLocaleDateString('en-US', { year: 'numeric', month: 'numeric', day: 'numeric' });
+
                 const hours = doctor.operating_hours[dayOfWeek] || {};
                 
                 const isToday = i === 0;
                 
-                const displayDay = isToday ? "today" : dayOfWeek;
+                // const displayDay = isToday ? "today" : dayOfWeek;
+                
+                const availableTimes = getAvailableTimes(hours.start, hours.end, dayOfWeek, fullDate, isToday);
                 
                 datesToShow.push({
-                    date: nextDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'numeric', day: 'numeric' }),
-                    day: displayDay,
-                    hours: hours,
+                    date: fullDate,
+                    day: dayOfWeek,
+                    availableTimes: availableTimes,
                     isToday: isToday
                 });
             }
@@ -122,20 +128,19 @@ function loadMoreDoctors() {
                             <h3>Available Reservations</h3>
                         </div>
                         <div class="reservation-content">
-                        ${datesToShow.map(({ day, hours, isToday }) => {
-                            const availableTimes = getAvailableTimes(hours.start, hours.end, day, isToday);
-                            
-                            if (availableTimes.length === 0) {
-                                return '';
-                            }
+                            ${datesToShow.map(({ day, date, availableTimes }) => {
+                                if (availableTimes.length === 0) {
+                                    return '';
+                                }
 
                                 return `
                                     <span class="reservations">
-                                        <h4>${day}</h4>
-                                        <select onchange="selectTime('${day}', this.value, '${doctor.id}')">
+                                        <h4>${date}</h4>
+                                        <p style="margin: .5em 0;">${day}</p>
+                                        <select onchange="selectTime('${day}', '${date}', this.value, '${doctor.id}')">
                                             <option value="">Select a time</option>
                                             ${availableTimes.map(time => `
-                                                <option value="${time}">${time}</option>
+                                                <option value="${time.time}">${time.time}</option>
                                             `).join('')}
                                         </select>
                                     </span>

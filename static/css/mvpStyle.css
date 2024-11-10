@@ -163,10 +163,6 @@
     box-shadow: -.01em 0 .5em #1ABC9C, .01em 0 .1em #1ABC9C;
 }
 
-.reservations h4{
-    margin-bottom: .5em;
-}
-
 .reservations ul, li, a{
     list-style: none;
     text-decoration: none;

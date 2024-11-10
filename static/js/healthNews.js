@@ -9,7 +9,7 @@ class HealthNews {
         this.currentIndex = 0;
         this.displayedArticles = [];
         this.articles = [];
-        this.count = 3; // Number of articles to display at a time
+        this.count = 3;
     }
 
     init() {
@@ -171,7 +171,6 @@ class HealthNews {
         readLessBtn.addEventListener('click', () => {
             const articlesToHide = this.displayedArticles.slice(-this.count);
     
-            // 요소가 DOM 노드인지 확인하고 삭제
             articlesToHide.forEach(article => {
                 if (article instanceof HTMLElement) {
                     article.remove();
