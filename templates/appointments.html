@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mvpStyle.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/test.css') }}">
 </head>
 <body>
     <div class="preloader">
@@ -91,43 +92,45 @@
                                         <p>Appointment on {{ appointment['date'] }} at {{ appointment['time'] }}</p>
                                     </div>
                                 </div>
-                                <button class="btn-cancel" data-appointment-id="{{ appointment['_id'] }}">Cancel Appointment</button>
-                            </div>
-                
-                    {% elif user_type == 'doctor' %}
-                        <!-- 의사용 템플릿 -->
-                            <div class="details">
-                                <div class="doctor-profile">
-                                    <div class="doctor-img">
-                                    </div>
-                                    <span class="doctor-detail">
-                                        <h2 class="doctor-tit">{{ appointment['patient_name'] }}</h2>
-                                        <h3 class="doctor-speciality">Specialty: {{ appointment['patient_phone'] }}</h3>
-                                        <h4 class="hospital-address">{{ appointment['patient_birth'] }}</h4>
-                                        <h5>{{ appointment['patient_sex'] }}</h5>
-                                        <p class="doctor-description">{{ 'Yes' | upper if appointment[patient_insurance] == 'y' else 'No' | upper }}</p>
-                                        <p class="doctor-description">{{ appointment['patient_preferred_language'] }}</p>
-                                        <p class="doctor-description">{{ appointment['patient_medical_history'] }}</p>
-                                        <p class="doctor-description">{{ appointment['patient_comments_for_doctor'] }}</p>
-                                    </span>
-                                </div>
-                                <div class="reservation-container">
-                                    <div class="reservation-tit">
-                                        <h3>Time</h3>
-                                    </div>
-                                    <div class="reservation-content">
-                                        <p>Appointment on {{ appointment['date'] }} at {{ appointment['time'] }}</p>
-                                    </div>
-                                </div>
-                                <button class="btn-cancel" data-appointment-id="{{ appointment['_id'] }}">Cancel Appointment</button>
+                                <button class="btn-cancel" id="openModalBtn" data-appointment-id="{{ appointment['_id'] }}">Cancel Appointment</button>
                             </div>
                         </div>
+                    {% elif user_type == 'doctor' %}
+                        <!-- 의사용 템플릿 -->
+                        <div class="details">
+                            <div class="doctor-profile">
+                                <div class="doctor-img">
+                                </div>
+                                <span class="doctor-detail">
+                                    <h2 class="doctor-tit">{{ appointment['patient_name'] }}</h2>
+                                    <h3 class="doctor-speciality">Phone Number: {{ appointment['patient_phone'] }}</h3>
+                                    <h4 class="hospital-address">{{ appointment['patient_birth'] }}</h4>
+                                    <h5>{{ appointment['patient_sex'] }}</h5>
+                                    <p class="doctor-description">{{ 'Yes' | upper if appointment[patient_insurance] == 'y' else 'No' | upper }}</p>
+                                    <p class="doctor-description">{{ appointment['patient_preferred_language'] }}</p>
+                                    <p class="doctor-description">{{ appointment['patient_medical_history'] }}</p>
+                                    <p class="doctor-description">{{ appointment['patient_comments_for_doctor'] }}</p>
+                                </span>
+                            </div>
+                            <div class="reservation-container">
+                                <div class="reservation-tit">
+                                    <h3>Time</h3>
+                                </div>
+                                <div class="reservation-content">
+                                    <p>Appointment on {{ appointment['date'] }} at {{ appointment['time'] }}</p>
+                                </div>
+                            </div>
+                            <button class="btn-cancel" id="openModalBtn" data-appointment-id="{{ appointment['_id'] }}">Cancel Appointment</button>
+                        </div>
+                    {% else %}
+                        <h3>No appointments yet</h3>
                     {% endif %}
                 {% endfor %}
             {% endif %}
-            <h3>No appointments yet</h3>
+            
             <div id="myModal" class="modal">
                 <div class="modal-content">
+                    <span class="close">&times;</span>
                     <h4>Cancel Appointment</h4>
                     <p>Are you sure you want to cancel this appointment?</p>
                     <label for="cancel_reason">Cancellation Reason:</label>
@@ -183,5 +186,6 @@
 
     <script src="{{ url_for('static', filename='js/booking_modal.js') }}"></script>
     <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/test.js') }}"></script>
 </body>
 </html>

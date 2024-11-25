@@ -4,12 +4,169 @@
     margin: 0 1em;
     border-radius: 0.5em;
     position: relative;
+}
+
+/* .main-container:hover{
+    box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
+} */
+
+
+
+
+
+
+
+.head-line {
+    display: flex;
+    justify-content: center;
+}
+
+.head-line-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    padding: 1em 1.25em;
+    border-radius: 0.5em;
+    background-color: rgba(115, 180, 224, .4);
     transition: 0.3s ease-in-out;
 }
 
-.main-container:hover{
+.head-line-content:hover {
     box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
+    background-color: rgba(115, 180, 224, .8);
 }
+
+.head-line-title {
+    text-align: center;
+    margin-bottom: 1.25em;
+}
+
+
+.head-line h1 {
+    color: white;
+    -webkit-text-stroke: 1px rgb(26, 188, 156);
+    font-size: 1.5em;
+}
+
+
+.head-line h3 {
+    color: rgba(0, 0, 0, .6);
+}
+
+
+.head-line-img-box {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.head-line-img {
+    width: 50%;
+}
+
+.head-line-img img {
+    width: 100%;
+    margin-bottom: 1.25em;
+}
+
+.head-line-btn {
+    display: flex;
+    justify-content: center;
+}
+
+.head-line-btn .btn {
+    width: 50%;
+}
+
+
+
+
+
+
+
+
+
+
+.how-it-works-section {
+    background-color: rgba(115, 180, 224, .4);
+    padding: 1em 1.25em;
+    text-align: center;
+    border-radius: 0.5em;
+    transition: 0.3s ease-in-out;
+}
+
+.how-it-works-section:hover{
+    box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
+    background-color: rgba(115, 180, 224, .8);
+}
+
+.how-it-works-section h2 {
+    color: white;
+    -webkit-text-stroke: 1px rgb(26, 188, 156);
+    font-size: 1.5em;
+    margin-bottom: 1.25em;
+}
+
+.steps {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1.2em;
+}
+
+.locate{
+    width: 1em;
+    display: flex;
+    align-items: center;
+}
+
+.locate img{
+    width: 100%;
+    height: 1em;
+}
+
+.step {
+    flex: 1 1 200px;
+    max-width: 250px;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s;
+}
+
+.step:hover {
+    transform: translateY(-10px);
+}
+
+.step img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 15px;
+}
+
+.step h3 {
+    font-size: 1.2em;
+    color: #1ABC9C;
+    margin-bottom: 10px;
+}
+
+.step p {
+    font-size: 0.95em;
+    color: #555;
+}
+
+
+
+
+
+
+
+
+
 
 .icon {
     width: 100px;

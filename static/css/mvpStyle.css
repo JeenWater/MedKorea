@@ -193,7 +193,7 @@
     width: 60%;
     margin: 1.5em 0;
     padding: 0.5em 1.5em;
-    background-color: #5DADE2;
+    background-color: #1ABC9C;
     color: white;
     border: none;
     border-radius: 4px;
@@ -203,5 +203,5 @@
 }
 
 #load-more-btn:hover {
-    background-color: #1ABC9C;
+    background-color: #1edab4;
 }

@@ -188,7 +188,7 @@
 
 .book-btn{
     width: 100%;
-    background-color: #5DADE2;
+    background-color: #1ABC9C;
     color: white;
     padding: 0.6em;
     border: none;
@@ -199,7 +199,7 @@
 }
 
 .book-btn:hover {
-    background-color: #1ABC9C;
+    background-color: #1edab4;
 }
 
 .two-column {

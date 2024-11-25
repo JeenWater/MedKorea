@@ -103,12 +103,6 @@ def booking():
         if not doctor:
             flash("Doctor not found", "alert-danger")
             return redirect(url_for("views.search"))
-        
-        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ date @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        print(date)
-
-        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ time @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        print(time)
 
         try:
             first_name = form.first_name.data or user['first_name']

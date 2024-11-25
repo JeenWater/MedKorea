@@ -9,7 +9,7 @@ class HealthNews {
         this.currentIndex = 0;
         this.displayedArticles = [];
         this.articles = [];
-        this.count = 3;
+        this.count = 4;
     }
 
     init() {
@@ -122,12 +122,12 @@ class HealthNews {
         this.clearButtons();
         const btns = this.getOrCreateButtonsContainer();
 
-        if (this.displayedArticles.length > this.count) {
-            this.createReadLessButton(btns);
-        }
-
         if (this.currentIndex < this.articles.length) {
             this.createReadMoreButton(btns);
+        }
+
+        if (this.displayedArticles.length > this.count) {
+            this.createReadLessButton(btns);
         }
 
         this.updateButtonAlignment();

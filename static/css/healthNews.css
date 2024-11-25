@@ -6,8 +6,14 @@
 .health-news {
     width: 80%;
     padding: 1em 1.25em 2em;
-    background-color: rgba(115, 180, 224, .4);
     border-radius: .5em;
+    background-color: rgba(115, 180, 224, .4);
+    transition: 0.3s ease-in-out;
+}
+
+.health-news:hover{
+    box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
+    background-color: rgba(115, 180, 224, .8);
 }
 
 .health-news h1{
@@ -15,7 +21,8 @@
     justify-content: center;
     align-items: center;
     color: white;
-    -webkit-text-stroke: 1px rgb(20, 136, 237);
+    -webkit-text-stroke: 1px rgb(26, 188, 156);
+    font-size: 1.5em;
 }
 
 .health-news-articles {
@@ -23,12 +30,12 @@
     gap: 1em;
     margin-top: 1em;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: space-around;
     align-items: flex-start;
 }
 
 .article {
-    width: 80%;
+    width: 40%;
     height: 9.35em;
     display: flex;
     align-items: flex-start;

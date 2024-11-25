@@ -40,7 +40,7 @@ def appointments():
         
         enriched_appointments = []
         for a in appointments:
-            doctor = get_doctor_collection().find_one({"_id": ObjectId(["doctor_id"])})
+            doctor = get_doctor_collection().find_one({"_id": ObjectId(a["doctor_id"])})
             if doctor:
                 a["doctor_image"] = doctor.get("image")
                 a["doctor_name"] = f"{doctor['first_name']} {doctor['last_name']}"
@@ -78,6 +78,55 @@ def appointments():
     else:
         flash("Invalid user type.", "alert-danger")
         return redirect(url_for("views.landing_page"))
+
+
+
+# @auth.route("/api/user-info", methods=['GET'])
+# def user_info():
+#     user_id = session.get("user_id")
+#     user_type = session.get("user_type")
+
+#     if not user_id or not user_type:
+#         return jsonify({"error": "Unauthorized"}), 401
+
+#     if user_type == "patient":
+#         user_data = get_patient_collection().find_one({"_id": ObjectId(user_id)})
+#         appointments = user_data.get("appointments", [])
+#         enriched_appointments = []
+#         for a in appointments:
+#             doctor = get_doctor_collection().find_one({"_id": ObjectId(a["doctor_id"])})
+#             if doctor:
+#                 enriched_appointments.append({
+#                     "doctor_image": doctor.get("image"),
+#                     "doctor_name": f"{doctor['first_name']} {doctor['last_name']}",
+#                     "specialization": doctor.get("specialization"),
+#                     "hospital_name": doctor.get("hospital_name"),
+#                     "address": doctor.get("address"),
+#                     "date": a.get("date"),
+#                     "time": a.get("time"),
+#                     "status": a.get("status", "Pending")
+#                 })
+#         return jsonify({"user_type": "patient", "data": enriched_appointments})
+
+#     elif user_type == "doctor":
+#         doctor_data = get_doctor_collection().find_one({"_id": ObjectId(user_id)})
+#         appointments = doctor_data.get("appointments", [])
+#         enriched_appointments = []
+#         for a in appointments:
+#             patient = get_patient_collection().find_one({"_id": ObjectId(a["patient_id"])})
+#             if patient:
+#                 enriched_appointments.append({
+#                     "patient_name": f"{patient['first_name']} {patient['last_name']}",
+#                     "phone": patient.get("phone"),
+#                     "birth": patient.get("birth"),
+#                     "sex": patient.get("sex"),
+#                     "date": a.get("date"),
+#                     "time": a.get("time"),
+#                     "status": a.get("status", "Pending")
+#                 })
+#         return jsonify({"user_type": "doctor", "data": enriched_appointments})
+
+#     return jsonify({"error": "Invalid user type"}), 400
 
 
 

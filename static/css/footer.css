@@ -5,14 +5,14 @@
 }
 
 body{
-    width: 100%;
-    background: linear-gradient(to bottom right, #f0f8ff, #e6f7ff);
+    /* width: 100%;
+    background: linear-gradient(to bottom right, #f0f8ff, #e6f7ff); */
 }
 
 .footer{
     margin: 1em 0 0;
     border-radius: .5em;
-
+    transition: 0.3s ease-in-out;
 }
 
 .footer:hover{
