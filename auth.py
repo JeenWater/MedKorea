@@ -3,7 +3,7 @@ from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
-from db import get_patient_collection, get_doctor_collection
+from db import get_patient_collection, get_doctor_collection, get_appointment_collection
 from forms import SignUp_patient, LoginForm, EditProfile_patient, ChangePassword, SignUp_doctor, EditProfile_doctor
 from bson.objectid import ObjectId
 import os
@@ -22,62 +22,62 @@ def allowed_file(filename):
 
 
 
-@auth.route("/appointments", methods=['GET', 'POST'])
-def appointments():
-    user_id = session.get("user_id")
-    user_type = session.get("user_type")
-    doctor = get_doctor_collection().find_one({"_id": ObjectId(user_id)})
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    print(doctor.get("image"))
+# @auth.route("/appointments", methods=['GET', 'POST'])
+# def appointments():
+#     user_id = session.get("user_id")
+#     user_type = session.get("user_type")
+#     doctor = get_doctor_collection().find_one({"_id": ObjectId(user_id)})
+#     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+#     print(doctor)
 
-    if not user_id or not user_type:
-        flash("Please log in first.", "alert-danger")
-        return redirect(url_for("auth.login"))
+#     if not user_id or not user_type:
+#         flash("Please log in first.", "alert-danger")
+#         return redirect(url_for("auth.login"))
 
-    if user_type == "patient":
-        user_data = get_patient_collection().find_one({"_id": ObjectId(user_id)})
-        appointments = user_data.get("appointments", [])
+#     if user_type == "patient":
+#         user_data = get_patient_collection().find_one({"_id": ObjectId(user_id)})
+#         appointments = user_data.get("appointments", [])
         
-        enriched_appointments = []
-        for a in appointments:
-            doctor = get_doctor_collection().find_one({"_id": ObjectId(a["doctor_id"])})
-            if doctor:
-                a["doctor_image"] = doctor.get("image")
-                a["doctor_name"] = f"{doctor['first_name']} {doctor['last_name']}"
-                a["doctor_specialization"] = doctor.get("specialization")
-                a["doctor_hospital_name"] = doctor.get("hospital_name")
-                a["doctor_address"] = doctor.get("address")
-                a["doctor_preferred_language"] = doctor.get("preferred_language")
-                a["doctor_bio"] = doctor.get("bio")
-                a["doctor_phone"] = doctor.get("phone")
-                a["doctor_rating"] = doctor.get("rating")
-            enriched_appointments.append(a)
+#         enriched_appointments = []
+#         for a in appointments:
+#             doctor = get_doctor_collection().find_one({"_id": ObjectId(a["doctor_id"])})
+#             if doctor:
+#                 a["doctor_image"] = doctor.get("image")
+#                 a["doctor_name"] = f"{doctor['first_name']} {doctor['last_name']}"
+#                 a["doctor_specialty"] = doctor.get("specialty")
+#                 a["doctor_hospital_name"] = doctor.get("hospital_name")
+#                 a["doctor_address"] = doctor.get("address")
+#                 a["doctor_preferred_language"] = doctor.get("preferred_language")
+#                 a["doctor_bio"] = doctor.get("bio")
+#                 a["doctor_phone"] = doctor.get("phone")
+#                 a["doctor_rating"] = doctor.get("rating")
+#             enriched_appointments.append(a)
 
-        return render_template("appointments.html", appointments=enriched_appointments, user_type="patient")
+#         return render_template("appointments.html", appointments=enriched_appointments, user_type="patient")
 
-    elif user_type == "doctor":
-        doctor_data = get_doctor_collection().find_one({"_id": ObjectId(user_id)})
-        appointments = doctor_data.get("appointments", [])
+#     elif user_type == "doctor":
+#         doctor_data = get_doctor_collection().find_one({"_id": ObjectId(user_id)})
+#         appointments = doctor_data.get("appointments", [])
 
-        enriched_appointments = []
-        for a in appointments:
-            patient = get_patient_collection().find_one({"_id": ObjectId(a["patient_id"])})
-            if patient:
-                a["patient_name"] = f"{patient['first_name']} {patient['last_name']}"
-                a["patient_phone"] = patient.get("phone")
-                a["patient_birth"] = patient.get("birth")
-                a["patient_sex"] = patient.get("sex")
-                a["patient_insurance"] = patient.get("insurance")
-                a["patient_preferred_language"] = patient.get("preferred_language")
-                a["patient_medical_history"] = patient.get("medical_history")
-                a["patient_comments_for_doctor"] = patient.get("comments_for_doctor")
-            enriched_appointments.append(a)
+#         enriched_appointments = []
+#         for a in appointments:
+#             patient = get_patient_collection().find_one({"_id": ObjectId(a["patient_id"])})
+#             if patient:
+#                 a["patient_name"] = f"{patient['first_name']} {patient['last_name']}"
+#                 a["patient_phone"] = patient.get("phone")
+#                 a["patient_birth"] = patient.get("birth")
+#                 a["patient_sex"] = patient.get("sex")
+#                 a["patient_insurance"] = patient.get("insurance")
+#                 a["patient_preferred_language"] = patient.get("preferred_language")
+#                 a["patient_medical_history"] = patient.get("medical_history")
+#                 a["patient_comments_for_doctor"] = patient.get("comments_for_doctor")
+#             enriched_appointments.append(a)
 
-        return render_template("appointments.html", appointments=enriched_appointments, user_type="doctor")
+#         return render_template("appointments.html", appointments=enriched_appointments, user_type="doctor")
 
-    else:
-        flash("Invalid user type.", "alert-danger")
-        return redirect(url_for("views.landing_page"))
+#     else:
+#         flash("Invalid user type.", "alert-danger")
+#         return redirect(url_for("views.landing_page"))
 
 
 
@@ -99,7 +99,7 @@ def appointments():
 #                 enriched_appointments.append({
 #                     "doctor_image": doctor.get("image"),
 #                     "doctor_name": f"{doctor['first_name']} {doctor['last_name']}",
-#                     "specialization": doctor.get("specialization"),
+#                     "specialty": doctor.get("specialty"),
 #                     "hospital_name": doctor.get("hospital_name"),
 #                     "address": doctor.get("address"),
 #                     "date": a.get("date"),
@@ -213,12 +213,12 @@ def myAccount():
         if 'image' not in request.files:
             flash('No file part', 'alert-danger')
             return redirect(request.url)
-        
+
         file = request.files['image']
         if file.filename == '':
             flash('No selected file', 'alert-danger')
             return redirect(request.url)
-        
+
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
@@ -246,7 +246,7 @@ def myAccount():
                 update_data['image'] = filename
             update_data.update({
                 "medical_school": form.medical_school.data,
-                "specialization": form.specialization.data,
+                "specialty": form.specialty.data,
                 "graduation_year": form.graduation_year.data,
                 "license_number": form.license_number.data,
                 "address": form.address.data,
@@ -279,7 +279,7 @@ def from_user_data(form, user):
         form.comments_for_doctor.data = user.get('comments_for_doctor')
     else:
         form.image.data = user.get('image', 'default.png')
-        form.specialization.data = user.get('specialization')
+        form.specialty.data = user.get('specialty')
         form.license_number.data = user.get('license_number')
         form.medical_school.data = user.get('medical_school')
         form.graduation_year.data = user.get('graduation_year')
@@ -294,17 +294,17 @@ def from_user_data(form, user):
 @auth.route("/signup_doctor", methods=["GET", "POST"])
 def signUp_doctor():
     form = SignUp_doctor()
-    
+
     if form.validate_on_submit():
         if 'image' not in request.files:
             flash('No file part', 'alert-danger')
             return redirect(request.url)
-        
+
         file = request.files['image']
         if file.filename == '':
             flash('No selected file', 'alert-danger')
             return redirect(request.url)
-        
+
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
@@ -321,7 +321,7 @@ def signUp_doctor():
                     "sex": form.sex.data,
                     "preferred_language": form.preferred_language.data,
                     "medical_school": form.medical_school.data,
-                    "specialization": form.specialization.data,
+                    "specialty": form.specialty.data,
                     "graduation_year": form.graduation_year.data,
                     "license_number": form.license_number.data,
                     "email": form.email.data,
@@ -337,7 +337,7 @@ def signUp_doctor():
                 if existing_user:
                     flash("This email address is already registered.", "alert-danger")
                     return render_template("signUp_doctor.html", form=form)
-                
+
                 existing_license = get_doctor_collection().find_one({"license_number": form.license_number.data})
                 if existing_license:
                     flash("This license number is already registered.", "alert-danger")
@@ -350,7 +350,7 @@ def signUp_doctor():
             except Exception as e:
                 flash("An error occurred during registration. Please try again.", "alert-danger")
                 return redirect(url_for('auth.signUp_doctor'))
-    
+
     return render_template("signUp_doctor.html", form=form)
 
 
@@ -385,8 +385,6 @@ def signUp_patient():
         
         if form.password.data != form.confirm_password.data:
             flash('Password and confirmation do not match.', 'alert-danger')
-            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-            print("Password and confirmation do not match.")
             return render_template("signUp_patient.html", form=form)
         
         get_patient_collection().insert_one(user)
@@ -405,20 +403,20 @@ def check_login():
             'is_logged_in': False,
             'user_type': None
         })
-    
+
     user_id = session['user_id']
     user_type = session['user_type']
-    
+
     user_collection = get_patient_collection() if user_type == 'patient' else get_doctor_collection()
     user = user_collection.find_one({'_id': ObjectId(user_id)}) if user_collection else None
-    
+
     if not user:
         session.clear()
         return jsonify({
             'is_logged_in': False,
             'user_type': None
         })
-        
+
     return jsonify({
         'is_logged_in': True,
         'user_id': str(user.get('_id')),
@@ -497,4 +495,4 @@ def login_doctor():
 def logout():
     session.clear()
     flash("You have been logged out.", "alert-success")
-    return redirect(request.referrer or url_for("views.landing_page"))
+    return redirect(url_for("views.landing_page"))

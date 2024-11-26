@@ -115,7 +115,7 @@ function loadMoreDoctors() {
                         </div>
                         <span class="doctor-detail">
                             <h2 class="doctor-tit">Dr. ${doctor.first_name} ${doctor.last_name}</h2>
-                            <h3 class="doctor-specialization">Specialty: ${doctor.specialization}</h3>
+                            <h3 class="doctor-specialty">Specialty: ${doctor.specialty}</h3>
                             <h4 class="hospital-address">${doctor.hospital_name}</h4>
                             <h5>${doctor.address}</h5>
                             <h5>Preferred Language: ${doctor.preferred_language}</h5>

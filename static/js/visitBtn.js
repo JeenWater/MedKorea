@@ -1,6 +1,6 @@
 const Ybtn = document.getElementById("yes-btn");
 const Nbtn = document.getElementById("no-btn");
-const first_visit = document.getElementById("first-visit");
+const first_visit = document.getElementById("first_visit");
 
 Ybtn.addEventListener("click", function(){
     if (Ybtn.classList.contains("active")) {

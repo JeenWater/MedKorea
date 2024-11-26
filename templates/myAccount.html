@@ -47,7 +47,7 @@
                     <div class="menu-content" id="user-menu">
                         <a href="{{ url_for('auth.myAccount') }}" class="btn">Personal Information</a>
                         <a href="{{ url_for('auth.login_security') }}" class="btn">Login & Security</a>
-                        <a href="{{ url_for('auth.appointments') }}" class="btn">Appointments</a>
+                        <a href="{{ url_for('views.appointments') }}" class="btn">Appointments</a>
                         <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
                     </div>
                 </div>
@@ -109,8 +109,8 @@
                                 {{ form.medical_school(class="form-control", required=True) }}
                             </div>
                             <div class="two-column-content">
-                                <label for="specialization">Specialization<sup class="required">*</sup></label>
-                                {{ form.specialization(class="form-control", required=True) }}
+                                <label for="specialty">Specialization<sup class="required">*</sup></label>
+                                {{ form.specialty(class="form-control", required=True) }}
                             </div>
                             <div class="two-column-content">
                                 <label for="graduation_year">Graduation Year<sup class="required">*</sup></label>
@@ -179,7 +179,6 @@
                                 </div>
                             </div>
                             <input type="hidden" id="operating-hours-hidden" name="operating_hours" value="{{ form.operating_hours.data }}">
-
                         {% endif %}
                     </div>
         
@@ -261,7 +260,7 @@
                             </div>
                             <div class="two-column-content">
                                 <label>Specialization</label>
-                                {{ user.specialization | upper }}
+                                {{ user.specialty | upper }}
                             </div>
                         </div>
                         <div class="two-column">

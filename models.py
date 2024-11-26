@@ -39,7 +39,7 @@ class Doctor(db.doctor):
     phone = db.Column(db.String(15), nullable=False)
     birth = db.Column(db.Date, nullable=False)
     sex = db.Column(db.String(10), nullable=False)
-    specialization = db.Column(db.String(50), nullable=False)
+    specialty = db.Column(db.String(50), nullable=False)
     license_number = db.Column(db.String(10), unique=True, nullable=False)
     medical_school = db.Column(db.String(100), nullable=False)
     graduation_year = db.Column(db.Integer, nullable=False)

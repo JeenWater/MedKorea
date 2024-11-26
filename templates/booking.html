@@ -61,7 +61,7 @@
             {% endif %}
         </nav>
     </header>
-
+    {% block booking %}
     <main class="main">
         <section class="mid-top">
             <h1 class="back-btn">
@@ -79,7 +79,7 @@
                 </div>
                 <span class="doctor-detail">
                     <h2 class="doctor-tit">Dr. {{ doctor.first_name }} {{ doctor.last_name }}</h2>
-                    <h3 class="doctor-specialization">Specialty: {{ doctor.specialization }}</h3>
+                    <h3 class="doctor-specialty">Specialty: {{ doctor.specialty }}</h3>
                     <h4 class="hospital-address">{{ doctor.hospital_name }}</h4>
                     <h5>{{ doctor.address }}</h5>
                     <h5>Preferred Language: {{ doctor.preferred_language }}</h5>
@@ -106,7 +106,7 @@
                             <p>Is this your first visit?</p>
                             <button type="button" id="yes-btn" class="visit-btn" value="y">YES</button>
                             <button type="button" id="no-btn" class="visit-btn" value="n">NO</button>
-                            <input type="hidden" id="first-visit" name="first-visit" value="{{ form.first_visit.data }}">
+                            <input type="hidden" id="first_visit" name="first_visit" value="{{ form.first_visit.data }}">
                         </div>
                     </div>
 
@@ -166,14 +166,14 @@
                     {% else %}
                         {{ form.comments_for_doctor(class="form-control", placeholder="Describe your symptoms") }}
                     {% endif %}
-
+    {% endblock %}
                     <button type="submit" class="book-btn" id="openModalBtn">Book Appointment</button>
                 </form>
             </div>
             <!-- Modal -->
             <div id="myModal" class="modal">
                 <div class="modal-content">
-                    <span class="close">&times;</span>
+                    <span class="close"></span>
                     <h2 id="modalTitle">Booking Complete</h2>
                     <p id="modalDescription">Please check your email for your booking confirmation.</p>
                 </div>
