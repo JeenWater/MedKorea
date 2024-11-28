@@ -1,5 +1,3 @@
-let offset = 0;
-
 function getAvailableTimes(start, end, day, date, isToday = false) {
     const times = [];
     let currentTime = new Date(`1970-01-01T${start}:00`);
@@ -32,14 +30,13 @@ function getAvailableTimes(start, end, day, date, isToday = false) {
         }
 
         times.push({
-            time: currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            time: currentTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true}),
             date: date,
             day: day
         });
 
         currentTime.setMinutes(currentTime.getMinutes() + 30);
     }
-    console.log(times)
     return times;
 }
 
@@ -54,6 +51,7 @@ function selectTime(day, date, time, doctor_id) {
 
 
 
+let offset = 0;
 
 function loadMoreDoctors() {
     const today = new Date();
@@ -63,7 +61,8 @@ function loadMoreDoctors() {
     const currentTime = `${year}-${month}-${day}`;
     document.getElementById("date").value = currentTime;
 
-    console.log(`year: ${year}\nmonth: ${month}\nday: ${day}`);
+    // console.log(`today: ${today}\nyear: ${year}\nmonth: ${month}\nday: ${day}\ncurrentTime: ${currentTime}`);
+    // console.log(`year: ${year}\nmonth: ${month}\nday: ${day}`);
 
     fetch(`/api/doctors?offset=${offset}`).then(response => response.json()).then(data => {
         const container = document.getElementById('doctor-container');
@@ -80,20 +79,20 @@ function loadMoreDoctors() {
             const today = new Date();
             const datesToShow = [];
 
+            let availableTimesForDoctor = 0;
+
             for (let i = 0; i <= 7; i++) {
                 const nextDate = new Date(today);
                 nextDate.setDate(today.getDate() + i);
-                const dayOfWeek = nextDate.toLocaleDateString('en-US', { weekday: 'long' });
-                const fullDate = nextDate.toLocaleDateString('en-US', { year: 'numeric', month: 'numeric', day: 'numeric' });
 
+                const dayOfWeek = nextDate.toLocaleDateString('en-US', { weekday: 'long' });
+                const fullDate = nextDate.toDateString('en-US', { year: 'numeric', month: 'numeric', day: 'numeric' });
                 const hours = doctor.operating_hours[dayOfWeek] || {};
-                
                 const isToday = i === 0;
-                
-                // const displayDay = isToday ? "today" : dayOfWeek;
-                
                 const availableTimes = getAvailableTimes(hours.start, hours.end, dayOfWeek, fullDate, isToday);
-                
+
+                availableTimesForDoctor += availableTimes.length;
+
                 datesToShow.push({
                     date: fullDate,
                     day: dayOfWeek,
@@ -101,6 +100,15 @@ function loadMoreDoctors() {
                     isToday: isToday
                 });
             }
+
+            // bio 글자 줄이기
+            let bioText = '';
+            if (availableTimesForDoctor <= 42) {
+                bioText = `<p class="doctor-description" style="overflow: hidden; text-overflow: ellipsis; white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3;">${doctor.bio}</p>`;
+            } else {
+                bioText = `<p class="doctor-description">${doctor.bio}</p>`;
+            }
+
 
             const rating = doctor.rating ? `⭐ ${doctor.rating.toFixed(1)}` : "No ratings yet";
             const reviewsHtml = doctor.reviews.map(review => 
@@ -119,8 +127,8 @@ function loadMoreDoctors() {
                             <h4 class="hospital-address">${doctor.hospital_name}</h4>
                             <h5>${doctor.address}</h5>
                             <h5>Preferred Language: ${doctor.preferred_language}</h5>
-                            <p class="doctor-description">${doctor.bio}</p>
-                            <div class="reviews">${reviewsHtml}</div>
+                            ${bioText}
+                            <!-- <div class="reviews">${reviewsHtml}</div> -->
                         </span>
                     </div>
                     <div class="reservation-container">
@@ -135,9 +143,9 @@ function loadMoreDoctors() {
 
                                 return `
                                     <span class="reservations">
-                                        <h4>${date}</h4>
+                                        <h4>${date.slice(4)}</h4>
                                         <p style="margin: .5em 0;">${day}</p>
-                                        <select onchange="selectTime('${day}', '${date}', this.value, '${doctor.id}')">
+                                        <select onchange="selectTime('${day}', '${date.slice(4)}', this.value, '${doctor.id}')">
                                             <option value="">Select a time</option>
                                             ${availableTimes.map(time => `
                                                 <option value="${time.time}">${time.time}</option>

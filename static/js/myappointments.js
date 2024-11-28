@@ -24,11 +24,10 @@ document.addEventListener("DOMContentLoaded", function () {
     confirmCancel.addEventListener("click", () => {
         const reason = cancelReason.value.trim();
         if (!reason) {
-            alert("Please provide a reason for cancellation.");
             return;
         }
 
-        fetch(`/cancel_appointment/${currentAppointmentId}`, {
+        fetch(`/myappointments/${currentAppointmentId}`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ reason }),
@@ -36,10 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
             .then((response) => response.json())
             .then((data) => {
                 if (data.success) {
-                    alert("Appointment cancelled successfully.");
                     location.reload();
-                } else {
-                    alert("Failed to cancel appointment.");
                 }
             });
     });

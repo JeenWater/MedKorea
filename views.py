@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, jsonify, session, flash, redirect, url_for, request
+from pymongo import DESCENDING
 import requests
 import os
 
@@ -157,41 +158,13 @@ def booking():
 
 
 
-# @views.route("/myappointments")
-# def appointments():
-#     """View all appointments for the logged-in patient."""
-#     user_email = session.get("user")
-#     user_type = session.get("user_type")
-
-#     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-#     print(user_email)
-#     print(user_type)
-#     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-
-#     if not user_email:
-#         flash("Please log in to view your appointments.", "alert-danger")
-#         return redirect(url_for("views.landing_page"))
-
-#     appointments = []
-#     if user_type == "patient":
-#         appointments = list(get_appointment_collection().find({"email": user_email}))
-
-#     elif user_type == "doctor":
-#         doctor_id = session.get("doctor_id")
-#         appointments = list(get_appointment_collection().find({"doctor_id": doctor_id}))
-    
-#     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-#     print(appointments)
-#     print(user_type)
-#     print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-
-#     return render_template("myAppointments.html", appointments=appointments, user_type=user_type)
 
 
 
 
 
-@views.route("/myappointments", methods=["GET"])
+
+@views.route("/myappointments", methods=["GET", "POST"])
 def appointments():
     user_id = session.get('user_id')
     user_type = session.get('user_type')
@@ -200,64 +173,78 @@ def appointments():
         flash("Please log in to view your appointment history.", "alert-danger")
         return redirect(url_for("views.landing_page"))
     
-    appointments = []
-    if user_type == 'patient':
-        appointments = list(get_appointment_collection().find({"patient_id": user_id}))
-    elif user_type == 'doctor':
-        appointments = list(get_appointment_collection().find({"doctor_id": user_id}))
+    try:
+        # 기본 쿼리
+        query = {"patient_id": user_id} if user_type == 'patient' else {"doctor_id": user_id}
+        appointments = list(
+            get_appointment_collection().find(query).sort(
+                [("appointment_date", DESCENDING), ("appointment_time", DESCENDING)]
+            )
+        )
 
-    # 의사 정보 캐싱 딕셔너리
-    doctor_cache = {}
+        # 상태 업데이트
+        current_time = datetime.now()
+        for appt in appointments:
+            appt_date = appt.get('appointment_date')
+            appt_time = appt.get('appointment_time')
+            if isinstance(appt_date, str):
+                appt_date = datetime.strptime(appt_date, '%b %d %Y')
+            if isinstance(appt_time, str):
+                appt_time = datetime.strptime(appt_time, '%I:%M %p')
+            if appt_date and appt_time:
+                full_appt_time = datetime.combine(appt_date, appt_time.time())
+                if full_appt_time < current_time and appt['status'] == 'upcoming':
+                    get_appointment_collection().update_one(
+                        {"_id": appt['_id']}, {"$set": {"status": "completed"}}
+                    )
+                    appt['status'] = "completed"
 
-    # 예약 데이터에 의사 정보 추가
-    for appt in appointments:
-        doctor_id = appt.get('doctor_id')
-        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        print(get_doctor_collection().find_one({"_id": ObjectId(doctor_id)}))
-        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        if doctor_id and doctor_id not in doctor_cache:
-            doctor_info = get_doctor_collection().find_one({"_id": ObjectId(doctor_id)})
-            if doctor_info:
-                doctor_cache[doctor_id] = {
-                    "name": f"Dr. {doctor_info.get('first_name')} {doctor_info.get('last_name')}",
-                    "image": doctor_info.get('image', 'default.png'),
-                    "specialty": doctor_info.get('specialty'),
-                    "hospital_name": doctor_info.get('hospital_name', 'N/A'),
-                    "address": doctor_info.get('address', 'N/A'),
-                    "bio": doctor_info.get('bio', 'N/A'),
-                    "languages": doctor_info.get('languages', ['English'])
-                }
+        # 캐싱 및 최종 리스트 생성
+        doctor_cache = {}
+        for appt in appointments:
+            doctor_id = appt.get('doctor_id')
+            if doctor_id and doctor_id not in doctor_cache:
+                doctor_info = get_doctor_collection().find_one({"_id": ObjectId(doctor_id)})
+                doctor_cache[doctor_id] = doctor_info or {}
+            appt['doctor_info'] = doctor_cache.get(doctor_id, {})
         
-        # 예약 데이터에 의사 정보 추가
-        appt['doctor_info'] = doctor_cache.get(doctor_id, {})
+        # 정렬된 결과 분류
+        upcoming_appointments = [appt for appt in appointments if appt['status'] == 'upcoming']
+        past_appointments = [appt for appt in appointments if appt['status'] in ['completed', 'canceled']]
+        
+        return render_template(
+            "myAppointments.html",
+            upcoming_appointments=upcoming_appointments,
+            past_appointments=past_appointments,
+            user_type=user_type
+        )
+    except Exception as e:
+        print(f"Error in appointments route: {e}")
+        flash("An error occurred while loading appointments.", "alert-danger")
+        return redirect(url_for("views.landing_page"))
 
-    print("\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-    print(appt)
-    # print(appointments[0]['doctor_id'])
-    print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 
-    upcoming_appointments = [
-        appt for appt in appointments if appt['status'] == 'upcoming'
-    ]
-    past_appointments = [
-        appt for appt in appointments if appt['status'] in ['completed', 'canceled']
-    ]
 
-    # upcoming_appointments = list(get_appointment_collection().find({
-    #     "patient_id": user_id,
-    #     "status": "upcoming"
-    # }).sort("appointment_date", 1))
+def cancel_appointment():
+    appointment_id = request.json.get('appointment_id')
+    cancel_reason = request.json.get('cancel_reason')
 
-    # past_appointments = list(get_appointment_collection().find({
-    #     "patient_id": user_id,
-    #     "status": {"$in": ["completed", "canceled"]}
-    # }).sort("appointment_date", -1))
+    if not appointment_id or not cancel_reason:
+        flash("Something went wrong. Please try again.", "alert-danger")
+        return jsonify({"success": False}), 400
 
-    return render_template("myAppointments.html",
-                        upcoming_appointments=upcoming_appointments, 
-                        past_appointments=past_appointments,
-                        user_type=user_type
-                        )
+    # DB에서 예약 상태 업데이트
+    result = get_appointment_collection().update_one(
+        {"_id": ObjectId(appointment_id)},
+        {"$set": {"status": "canceled", "cancel_reason": cancel_reason}}
+    )
+
+    if result.matched_count:
+        flash("Appointment canceled successfully.", "alert-success")
+        return jsonify({"success": True}), 200
+    else:
+        flash("Failed to cancel appointment. Please try again.", "alert-danger")
+        return jsonify({"success": False}), 404
 
 
 
@@ -361,26 +348,7 @@ def from_user_data(form, appointment):
 
 
 
-@views.route("/myappointment/cancel/<appointment_id>", methods=["POST"])
-def cancel_appointment(appointment_id):
-    cancel_reason = request.json.get('reason', '')
 
-    result = get_appointment_collection().update_one(
-        {"_id": ObjectId(appointment_id)},
-        {"$set": {
-            "status": "canceled",
-            "cancel_reason": cancel_reason,
-            "updated_at": datetime.now()
-            }
-        }
-    )
-
-    if result.modified_count > 0:
-        flash("Appointment canceled successfully.", "alert-success")
-    else:
-        flash("Failed to cancel appointment. Please try again.", "alert-danger")
-
-    return redirect(url_for("views.myAppointments"))
 
 
 

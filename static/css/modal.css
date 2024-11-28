@@ -26,6 +26,7 @@
 }
 
 #modalTitle{
+    text-align: center;
     color: #1ABC9C;
     margin: 0 0 1em;
 }
@@ -49,8 +50,7 @@
     margin: -1.8em -1.8em 0 0;
 }
 
-.close:hover,
-.close:focus {
+.close:hover, .close:focus {
     color: #E74C3C;
     text-decoration: none;
     cursor: pointer;

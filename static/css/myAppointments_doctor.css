@@ -1,0 +1,22 @@
+*{
+    box-sizing: unset;
+}
+
+.main-mid{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.doctor-info{
+    width: auto;
+    margin: 2em 1em;
+}
+
+.doctor-description{
+    color: rgba(0, 0, 0, .8);
+}
+
+.btns{
+    display: block;
+}

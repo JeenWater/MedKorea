@@ -1,0 +1,77 @@
+<div class="doctor-info show">
+    {% if user_type == 'patient' %}
+        <div class="details">
+            <div class="doctor-img">
+                <img src="{{ url_for('static', filename='img/' + appt.doctor_info.get('image')) }}" alt="{{ appt.doctor_info.get('doctor_name') }}'s img" class="doctor-img" style="width: 100px; height: 100px;">
+                <div class="rating">
+                    <span>★</span> {{ appt.doctor_info.get('rating', 'No ratings yet') }}
+                </div>
+            </div>
+            <span class="doctor-detail">
+                <h2 class="doctor-tit">{{ appt.doctor_info.get('name') }}</h2>
+                <h3 class="doctor-specialty">{{ appt.doctor_info.get('specialty') }}</h3>
+                <h4 class="hospital-address">{{ appt.doctor_info.get('hospital_name') }}</h4>
+                <h5>{{ appt.doctor_info.get('address') }}</h5>
+                <h5 class="doctor-preferred_language">
+                    Preferred Language: {{ appt.doctor_info.get('preferred_language') }}
+                </h5>
+                <p class="doctor-description">{{ appt.doctor_info.get('bio') }}</p>
+            </span>
+            <div class="reservation-container">
+                <div class="reservation-tit">
+                    <h3>Time</h3>
+                </div>
+                <div class="reservation-content">
+                    <p class="reservations" appointment-date>
+                        {{ appt['appointment_date'] }}<br>{{ appt['appointment_day'] }}<br>{{ appt['appointment_time'] }}
+                    </p>
+                    <p class="reservations appointment-status">
+                        Status: {{ appt['status'].capitalize() }}
+                    </p>
+                    <div class="btns">
+                        <div>
+                            <button class="edit-btn" data-id="{{ appt['_id'] }}">Edit</button>
+                        </div>
+                        <div>
+                            <button class="cancel-btn" id="openModalBtn" data-id="{{ appt['_id'] }}">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% elif user_type == 'doctor' %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/myAppointments_doctor.css') }}">
+        <div class="details">
+            <span class="doctor-detail">
+                <h2 class="doctor-tit">Name: {{ appt.patient_name }}</h2>
+                <h3 class="doctor-speciality">Phone Number: {{ appt.phone }}</h3>
+                <h4 class="hospital-address">Birth: {{ appt.birth }}</h4>
+                <h5 class="doctor-description">Gender: {{ appt.sex }}</h5>
+                <h5 class="doctor-description">Insurance: 
+                    {{ 'Yes' | upper if appt.insurance == 'y' else 'No' | upper }}
+                </h5>
+                <h5 class="doctor-description">Preferred Language: {{ appt.preferred_language }}</h5>
+                <h5 class="doctor-description">Medical History: {{ appt.medical_history }}</h5>
+                <h5 class="doctor-description">Comments For Doctor: {{ appt.comments_for_doctor }}</h5>
+            </span>
+            <div class="reservation-container">
+                <div class="reservation-tit">
+                    <h3>Time</h3>
+                </div>
+                <div class="reservation-content">
+                    <p class="reservations" appointment-date>
+                        {{ appt['appointment_date'] }}<br>{{ appt['appointment_day'] }}<br>{{ appt['appointment_time'] }}
+                    </p>
+                    <p class="reservations appointment-status">
+                        Status: {{ appt['status'].capitalize() }}
+                    </p>
+                    <div class="btns">
+                        <div>
+                            <button class="cancel-btn" id="openModalBtn" data-id="{{ appt['_id'] }}">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>

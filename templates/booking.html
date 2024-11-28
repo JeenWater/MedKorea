@@ -155,7 +155,7 @@
 
                     <label for="medical_history">Medical History</label>
                     {% if user.medical_history %}
-                        <textarea class="form-control" placeholder="Include any allergies or past conditions" readonly>{{ user.medical_history }}</textarea>
+                        <textarea id="medical_history" class="form-control" placeholder="Include any allergies or past conditions" readonly>{{ user.medical_history }}</textarea>
                     {% else %}
                         {{ form.medical_history(class="form-control", placeholder="Include any allergies or past conditions") }}
                     {% endif %}

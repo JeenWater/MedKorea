@@ -1,0 +1,91 @@
+.main-mid-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: ease-in-out .3s;
+}
+
+.doctor-detail{
+    justify-content: flex-start;
+}
+
+.details{
+    float: left;
+    display: flex;
+    justify-content: unset;
+    align-items: unset;
+}
+
+.reservation-tit{
+    margin-bottom: 0;
+}
+
+.reservation-content{
+    display: table-column-group;
+    text-align: center;
+}
+
+.reservations:first-child{
+    padding: .2em;
+}
+
+.btns{
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-start;
+}
+
+.btns div{
+    margin: 0 .5em;
+}
+
+.edit-btn{
+    border: none;
+    cursor: pointer;
+    color: white;
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    background-color: #1ABC9C;
+    padding: .625em 1.88em;
+    text-decoration: none;
+    border-radius: .3em;
+    transition:  ease-in-out 0.3s;
+    text-wrap: nowrap;
+}
+
+.edit-btn:hover {
+    background-color: #1edab4;
+}
+
+.cancel-btn{
+    border: none;
+    cursor: pointer;
+    color: white;
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    background-color: #E74C3C;
+    padding: .625em 1.88em;
+    text-decoration: none;
+    border-radius: .3em;
+    transition: ease-in-out 0.3s;
+    text-wrap: nowrap;
+}
+
+.cancel-btn:hover {
+    background-color: #c94334;
+}
+
+/* Modal */
+#cancelReason{
+    width: 100%;
+    padding: .5em;
+}
+
+.modal-actions{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
