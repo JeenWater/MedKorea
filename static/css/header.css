@@ -192,7 +192,7 @@ body::after {
 
 .login-menu-content {
     position: absolute;
-    right: 8.25%;
+    right: 7.95%;
     top: 11%;
     border-radius: 0.3em;
     overflow: hidden;
@@ -340,7 +340,7 @@ body::after {
 
 
 
-
+/* 
 section{
     margin-bottom: 5em;
-}
+} */

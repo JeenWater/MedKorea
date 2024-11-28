@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mvpStyle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/myAppointments.css') }}">
 </head>
@@ -57,9 +58,9 @@
     </header>
 
     <main class="main">
-        <section class="container myappointments">
+        <section class="myappointments">
             <div class="main-mid-content">
-            <h2>Upcoming Appointments</h2>
+            <h2 class="main-mid-content-tit">Upcoming Appointments</h2>
                 <div class="main-mid" id="doctor-container">
                     {% if upcoming_appointments %}
                         {% for appt in upcoming_appointments %}
@@ -73,10 +74,10 @@
     
             <div class="main-mid-content">
                 <br>
-                <h2>Past Appointments</h2>
-                    <div class="main-mid">
-                    {% if past_appts %}
-                        {% for appt in past_appts %}
+                <h2 class="main-mid-content-tit">Past Appointments</h2>
+                <div class="main-mid" id="doctor-container">
+                    {% if past_appointments %}
+                        {% for appt in past_appointments %}
                             {% include 'appointment_details.html' %}
                         {% endfor %}
                     {% else %}
@@ -86,12 +87,12 @@
             </div>
         </section>
     
-        <div id="cancelModal" class="modal" style="display: none;">
+        <div id="cancelModal" class="modal">
             <div class="modal-content">
-                <span class="close"></span>
                 <h3 id="modalTitle">Cancel Appointment</h3>
                 <p>Are you sure you want to cancel this appointment?</p>
                 <label for="cancelReason">Cancellation Reason:</label>
+                <p id="errorText" style="color: red; text-align: center;"></p>
                 <textarea id="cancelReason" placeholder="Enter reason for cancellation"></textarea>
                 <div class="modal-actions">
                     <button id="confirmCancel" class="edit-btn">Confirm Cancel</button>

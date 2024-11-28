@@ -3,8 +3,48 @@
     border-radius: .5em;
 }
 
+.doctor-myaccount-profile{
+    display: flex;
+    border-radius: .5em;
+    transition: 0.3s ease-in-out;
+    padding: .5em;
+    margin: .1em;
+}
+
+.doctor-myaccount-profile:hover{
+    box-shadow: -.01em 0 .5em #1edab4, .01em 0 .1em #1edab4;
+}
+
+.doctor-myaccount-profile .one-column .one-column-content:hover, .doctor-myaccount-profile .two-column .two-column-content:hover{
+    box-shadow: none;
+}
+
+.doctor-profile-content{
+    width: 100%;
+}
+
+.doctor-profile-img{
+    float: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-right: 1em;
+}
+
+.doctor-profile-detail .two-column:nth-child(){
+    width: 100%;
+}
+
+.doctor-profile-name{
+    display: flex;
+}
+
+
+
+
 .menu-content{
-    right: -5.5em;
+    right: -6.0em;
 }
 
 .two-column .two-column-content{

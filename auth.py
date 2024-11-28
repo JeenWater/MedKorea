@@ -327,36 +327,51 @@ def check_login():
 @auth.route("/login/patient", methods=["GET", "POST"])
 def login_patient():
     form = LoginForm()
+
     if request.method == "GET":
-        session['doctor_id'] = request.args.get("doctor_id")
-        session['appointment_date'] = request.args.get("date")
-        session['appointment_time'] = request.args.get("time")
-        session['appointment_day'] = request.args.get("day")
-        
-    
+        doctor_id = request.args.get("doctor_id")
+        appointment_date = request.args.get("date")
+        appointment_time = request.args.get("time")
+        appointment_day = request.args.get("day")
+
+        # Save the information only if there is data of information
+        if doctor_id and appointment_date and appointment_time and appointment_day:
+            session['doctor_id'] = doctor_id
+            session['appointment_date'] = appointment_date
+            session['appointment_time'] = appointment_time
+            session['appointment_day'] = appointment_day
 
     if form.validate_on_submit():
         user = get_patient_collection().find_one({"email": form.email.data})
-        
+
         if user and check_password_hash(user["password"], form.password.data):
             session['user'] = user['email']
             session['user_id'] = str(user['_id'])
             session['user_type'] = 'patient'
             session['user_name'] = f"{user.get('first_name', '')} {user.get('last_name', '')}".strip()
-            
+
+            # Redirect to the booking page if the session has information for appointment
             doctor_id = session.pop("doctor_id", None)
             appointment_date = session.pop("appointment_date", None)
             appointment_time = session.pop("appointment_time", None)
             appointment_day = session.pop("appointment_day", None)
-            
+            print(doctor_id)
+            print(appointment_date)
+            print(appointment_time)
+            print(appointment_day)
+
             if doctor_id and appointment_date and appointment_time and appointment_day:
-                return redirect(url_for('views.booking', doctor_id=doctor_id, date=appointment_date, day=appointment_day, time=appointment_time))
+                return redirect(url_for('views.booking', 
+                                        doctor_id=doctor_id, 
+                                        date=appointment_date, 
+                                        day=appointment_day, 
+                                        time=appointment_time))
             
             flash("Patient login successful", "alert-success")
             return redirect(url_for("views.landing_page"))
-        
+
         flash("Invalid email or password for patient.", "alert-danger")
-    
+
     return render_template("login_patient.html", form=form)
 
 

@@ -9,8 +9,18 @@
 }
 
 .doctor-info{
-    width: auto;
-    margin: 2em 1em;
+    width: 40%;
+    margin: 1em 1em;
+}
+
+.doctor-tit{
+    color: rgba(0, 0, 0, .8);
+    margin: 0;
+}
+
+.doctor-specialty{
+    color: rgba(0, 0, 0, .8);
+    margin: 0;
 }
 
 .doctor-description{

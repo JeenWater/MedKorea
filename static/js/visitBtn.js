@@ -1,3 +1,4 @@
+// For sign up page
 const Ybtn = document.getElementById("yes-btn");
 const Nbtn = document.getElementById("no-btn");
 const first_visit = document.getElementById("first_visit");

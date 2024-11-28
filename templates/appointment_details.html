@@ -16,6 +16,9 @@
                     Preferred Language: {{ appt.doctor_info.get('preferred_language') }}
                 </h5>
                 <p class="doctor-description">{{ appt.doctor_info.get('bio') }}</p>
+                {% if appt['status'] == 'canceled'%}
+                    <h5>Reason: <span style="color: #E74C3C;">{{ appt['cancel_reason'] }}</span></h5>
+                {% endif%}
             </span>
             <div class="reservation-container">
                 <div class="reservation-tit">
@@ -26,15 +29,22 @@
                         {{ appt['appointment_date'] }}<br>{{ appt['appointment_day'] }}<br>{{ appt['appointment_time'] }}
                     </p>
                     <p class="reservations appointment-status">
-                        Status: {{ appt['status'].capitalize() }}
+                        Status: 
+                        {% if appt['status'] == 'canceled'%}
+                            <span style="color: #E74C3C;">{{ appt['status'].capitalize() }}</span>
+                        {% else %}
+                            {{ appt['status'].capitalize() }}
+                        {% endif%}
                     </p>
                     <div class="btns">
-                        <div>
-                            <button class="edit-btn" data-id="{{ appt['_id'] }}">Edit</button>
-                        </div>
-                        <div>
-                            <button class="cancel-btn" id="openModalBtn" data-id="{{ appt['_id'] }}">Cancel</button>
-                        </div>
+                        {% if appt['status'] not in ['completed', 'canceled'] %}
+                            <div>
+                                <button class="edit-btn" data-id="{{ appt['_id'] }}">Edit</button>
+                            </div>
+                            <div>
+                                <button class="cancel-btn" id="openModalBtn" data-id="{{ appt['_id'] }}">Cancel</button>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -44,7 +54,7 @@
         <div class="details">
             <span class="doctor-detail">
                 <h2 class="doctor-tit">Name: {{ appt.patient_name }}</h2>
-                <h3 class="doctor-speciality">Phone Number: {{ appt.phone }}</h3>
+                <h3 class="doctor-specialty">Phone: {{ appt.phone }}</h3>
                 <h4 class="hospital-address">Birth: {{ appt.birth }}</h4>
                 <h5 class="doctor-description">Gender: {{ appt.sex }}</h5>
                 <h5 class="doctor-description">Insurance: 
@@ -53,6 +63,9 @@
                 <h5 class="doctor-description">Preferred Language: {{ appt.preferred_language }}</h5>
                 <h5 class="doctor-description">Medical History: {{ appt.medical_history }}</h5>
                 <h5 class="doctor-description">Comments For Doctor: {{ appt.comments_for_doctor }}</h5>
+                {% if appt['status'] == 'canceled'%}
+                    <h5>Reason: <span style="color: #E74C3C;">{{ appt['cancel_reason'] }}</span></h5>
+                {% endif%}
             </span>
             <div class="reservation-container">
                 <div class="reservation-tit">
@@ -63,12 +76,19 @@
                         {{ appt['appointment_date'] }}<br>{{ appt['appointment_day'] }}<br>{{ appt['appointment_time'] }}
                     </p>
                     <p class="reservations appointment-status">
-                        Status: {{ appt['status'].capitalize() }}
+                        Status: 
+                        {% if appt['status'] == 'canceled'%}
+                            <span style="color: #E74C3C;">{{ appt['status'].capitalize() }}</span>
+                        {% else %}
+                            {{ appt['status'].capitalize() }}
+                        {% endif%}
                     </p>
                     <div class="btns">
-                        <div>
-                            <button class="cancel-btn" id="openModalBtn" data-id="{{ appt['_id'] }}">Cancel</button>
-                        </div>
+                        {% if appt['status'] not in ['completed', 'canceled'] %}
+                            <div>
+                                <button class="cancel-btn" id="openModalBtn" data-id="{{ appt['_id'] }}">Cancel</button>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>

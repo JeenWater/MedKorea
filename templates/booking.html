@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mvpStyle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
-    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}"> -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 </head>
 
@@ -72,7 +71,7 @@
                     </span>
                 </a>
             </h1>
-            <div class="doctor-profile">
+            <div class="doctor-profile" id="booking-doctor-profile">
                 <div class="doctor-img">
                     <img src="{{ url_for('static', filename='img/' + doctor.image) }}" alt="{{ doctor.first_name }} {{ doctor.last_name }}'s img" class="doctor-img" style="width: 100px; height: 100px;">
                     <div class="rating"><span>★</span>{% if doctor.rating %}{{ doctor.rating }} {% else %} 'No ratings yet' {% endif %}</div>

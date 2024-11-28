@@ -1,15 +1,17 @@
+// For cancel on myappointments
 document.querySelectorAll(".cancel-btn").forEach(button => {
     button.addEventListener("click", () => {
         const appointmentId = button.getAttribute("data-id");
-        console.log(appointmentId)
         
         // Open the modal
         const cancelModal = document.getElementById("cancelModal");
         const cancelReasonInput = document.getElementById("cancelReason");
+        const confirmCancelBtn = document.getElementById("confirmCancel");
+        const errorText = document.getElementById("errorText"); // 에러 메시지 표시 영역 추가
         
-        // Clear any previous input
+        // Clear any previous input or error
         cancelReasonInput.value = '';
-
+        errorText.textContent = '';
         cancelModal.style.display = "block";
 
         // Close the modal when the close button is clicked
@@ -17,11 +19,14 @@ document.querySelectorAll(".cancel-btn").forEach(button => {
             cancelModal.style.display = "none";
         });
 
-        document.getElementById("confirmCancel").addEventListener("click", () => {
-            const cancelReason = cancelReasonInput.value;
+        // Remove previous event listener to avoid duplication
+        confirmCancelBtn.replaceWith(confirmCancelBtn.cloneNode(true));
+        const newConfirmCancelBtn = document.getElementById("confirmCancel");
+        newConfirmCancelBtn.addEventListener("click", () => {
+            const cancelReason = cancelReasonInput.value.trim();
 
             if (cancelReason) {
-                fetch("/myappointment/" + appointmentId, {
+                fetch("/myappointments/cancel", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
@@ -39,12 +44,15 @@ document.querySelectorAll(".cancel-btn").forEach(button => {
                     } else {
                         alert("Failed to cancel appointment: " + data.message);
                     }
-                });
+                })
+                .catch(error => console.error("Error:", error));
 
                 // Close the modal after submission
                 cancelModal.style.display = "none";
             } else {
-                alert("Please provide a reason for cancellation.");
+                // Display error message
+                errorText.textContent = "Please provide a reason for cancellation.";
+                errorText.style.color = "red";
             }
         });
     });

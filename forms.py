@@ -23,8 +23,8 @@ class AppointmentForm(FlaskForm):
     comments_for_doctor = TextAreaField("Comments for Doctor")
     submit = SubmitField("Book Appointment")
     
-    appointment_date = DateField("Select Date", format='%b/%d/%Y', validators=[InputRequired()])
-    appointment_time = TimeField("Select Time", format='%H:%M %p', validators=[InputRequired()])
+    appointment_date = DateField("Select Date", format='%Y-%m-%d', validators=[InputRequired()])
+    appointment_time = TimeField("Select Time", format='%H:%M:%S', validators=[InputRequired()])
     appointment_day = StringField("Day of the Week", validators=[InputRequired()])
 
     def validate_appointment_date(self, field):

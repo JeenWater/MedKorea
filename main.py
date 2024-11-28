@@ -21,5 +21,7 @@ app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER')
 app.register_blueprint(views, url_prefix='/')
 app.register_blueprint(auth, url_prefix='/auth')
 
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=9119)

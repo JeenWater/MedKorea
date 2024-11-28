@@ -1,3 +1,5 @@
+// For MVP page
+
 function getAvailableTimes(start, end, day, date, isToday = false) {
     const times = [];
     let currentTime = new Date(`1970-01-01T${start}:00`);
