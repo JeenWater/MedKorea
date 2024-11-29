@@ -9,6 +9,32 @@ from validators import password_strength_check
 load_dotenv()
 
 
+
+
+
+
+
+
+
+
+class Edit_AppointmentForm(FlaskForm):
+    og_date = DateField("Select Date", format='%Y-%m-%d', validators=[InputRequired()])
+    og_time = TimeField("Select Time", format='%H:%M:%S', validators=[InputRequired()])
+    og_day = StringField("Day of the Week", validators=[InputRequired()])
+
+    new_date = DateField("Select Date", format='%Y-%m-%d', validators=[InputRequired()])
+    new_time = TimeField("Select Time", format='%H:%M:%S', validators=[InputRequired()])
+    new_day = StringField("Day of the Week", validators=[InputRequired()])
+
+    submit = SubmitField("Save Appointment")
+
+
+
+
+
+
+
+
 class AppointmentForm(FlaskForm):
     first_name = StringField("First Name", validators=[InputRequired(), Length(min=2, max=30)])
     last_name = StringField("Last Name", validators=[InputRequired(), Length(min=2, max=30)])

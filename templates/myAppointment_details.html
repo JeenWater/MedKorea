@@ -8,7 +8,7 @@
                 </div>
             </div>
             <span class="doctor-detail">
-                <h2 class="doctor-tit">{{ appt.doctor_info.get('name') }}</h2>
+                <h2 class="doctor-tit">Dr. {{ appt.doctor_info.get('first_name') }} {{ appt.doctor_info.get('last_name') }}</h2>
                 <h3 class="doctor-specialty">{{ appt.doctor_info.get('specialty') }}</h3>
                 <h4 class="hospital-address">{{ appt.doctor_info.get('hospital_name') }}</h4>
                 <h5>{{ appt.doctor_info.get('address') }}</h5>
@@ -39,7 +39,10 @@
                     <div class="btns">
                         {% if appt['status'] not in ['completed', 'canceled'] %}
                             <div>
-                                <button class="edit-btn" data-id="{{ appt['_id'] }}">Edit</button>
+                                <button 
+                                    class="edit-btn" date="{{ appt['appointment_date'] }}" time="{{ appt['appointment_time'] }}" day="{{ appt['appointment_day'] }}" data-id="{{ appt['_id'] }}">
+                                    Edit
+                                </button>
                             </div>
                             <div>
                                 <button class="cancel-btn" id="openModalBtn" data-id="{{ appt['_id'] }}">Cancel</button>

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mvpStyle.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/test.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_myAppointment.css') }}">
 </head>
 <body>
     <div class="preloader">
@@ -57,12 +57,7 @@
         </nav>
     </header>
 
-
-    {% extends 'booking.html' %}
-
-    {% block booking %}
-    <script src="{{ url_for('static', filename='js/booking_modal.js') }}"></script>
-    {% endblock %}
+    
 
     <footer class="footer">
         <div class="footer-top">
@@ -107,5 +102,6 @@
     </footer>
 
     <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/edit_appointment.js') }}"></script>
 </body>
 </html>

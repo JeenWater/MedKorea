@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_myAccount.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mvpStyle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/myAppointments.css') }}">
 </head>
@@ -64,10 +64,10 @@
                 <div class="main-mid" id="doctor-container">
                     {% if upcoming_appointments %}
                         {% for appt in upcoming_appointments %}
-                            {% include 'appointment_details.html' %}
+                            {% include 'myAppointment_details.html' %}
                         {% endfor %}
                     {% else %}
-                        <h3>No upcoming appointments</h3>
+                        <h3 style="margin-bottom: 2em;">No upcoming appointments</h3>
                     {% endif %}
                 </div>
             </div>
@@ -78,19 +78,19 @@
                 <div class="main-mid" id="doctor-container">
                     {% if past_appointments %}
                         {% for appt in past_appointments %}
-                            {% include 'appointment_details.html' %}
+                            {% include 'myAppointment_details.html' %}
                         {% endfor %}
                     {% else %}
-                        <h3>No past appointments</h3>
+                        <h3 style="margin-bottom: 2em;">No past appointments</h3>
                     {% endif %}
                 </div>
             </div>
         </section>
     
-        <div id="cancelModal" class="modal">
+        <!-- <div id="cancelModal" class="modal">
             <div class="modal-content">
                 <h3 id="modalTitle">Cancel Appointment</h3>
-                <p>Are you sure you want to cancel this appointment?</p>
+                <p>Are you sure you want to cancel this appointment?</p><br>
                 <label for="cancelReason">Cancellation Reason:</label>
                 <p id="errorText" style="color: red; text-align: center;"></p>
                 <textarea id="cancelReason" placeholder="Enter reason for cancellation"></textarea>
@@ -98,6 +98,65 @@
                     <button id="confirmCancel" class="edit-btn">Confirm Cancel</button>
                     <button id="closeModal" class="cancel-btn">Close</button>
                 </div>
+            </div>
+        </div> -->
+        <div id="cancelModal" class="modal">
+            <div class="modal-content">
+                <h3 id="modalTitle">Cancel Appointment</h3>
+                <p>Are you sure you want to cancel this appointment?</p><br>
+                <label for="cancelReason">Cancellation Reason:</label>
+                <p id="errorText" style="color: red; text-align: center;"></p>
+                <textarea id="cancelReason" placeholder="Enter reason for cancellation"></textarea>
+                <div class="modal-actions">
+                    <button id="confirmCancel" class="edit-btn">Confirm Cancel</button>
+                    <button id="closeModal" class="close-btn">Close</button>
+                </div>
+            </div>
+        </div>
+
+        
+        <!-- <div id="editModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>Update Reservation</h3>
+                <form id="reservationForm">
+                    <label for="newDate">New Date:</label>
+                    <input type="date" id="newDate" name="newDate" required>
+
+                    <label for="newTime">New Time:</label>
+                    <select id="newTime" name="newTime" required>
+                        <option value="">Select a time</option>
+                    </select>
+
+                    <button type="submit" class="btn">Update Reservation</button>
+                    <button id="closeModal" class="close-btn cancel-btn">Close</button>
+                </form>
+            </div>
+        </div> -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <h2>Edit Appointment</h2>
+                <!-- Form to change the appointment -->
+                <form id="editAppointmentForm">
+                    <div class="form-group">
+                        <label for="newDate">New Appointment Date:</label>
+                        <input type="date" id="newDate" name="newDate" required>
+                    </div>
+        
+                    <div class="form-group">
+                        <label for="newTime">New Appointment Time:</label>
+                        <select id="newTime" name="newTime" required>
+                            <option value="">Select a time</option>
+                            <!-- Available times will be inserted here -->
+                        </select>
+                    </div>
+        
+                    
+                    <div class="modal-actions">
+                        <button type="submit" id="confirmChange" class="edit-save-btn btn">Save</button>
+                        <button id="closeModal" class="close-btn">Close</button>
+                    </div>
+                </form>
             </div>
         </div>
     </main>
@@ -144,7 +203,7 @@
         </div>
     </footer>
 
-    <script src="{{ url_for('static', filename='js/cancel.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
     <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
 </body>
 </html>

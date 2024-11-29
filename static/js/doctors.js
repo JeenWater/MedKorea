@@ -1,4 +1,4 @@
-// For MVP page
+// for MVP page
 
 function getAvailableTimes(start, end, day, date, isToday = false) {
     const times = [];
@@ -95,10 +95,18 @@ function loadMoreDoctors() {
 
                 availableTimesForDoctor += availableTimes.length;
 
+                const filteredAvailableTimes = availableTimes.filter(time => {
+                    const isBooked = doctor.booked_times.some(booked => 
+                        booked.date === fullDate.slice(4) && 
+                        booked.time === time.time
+                    );
+                    return !isBooked;
+                });
+
                 datesToShow.push({
                     date: fullDate,
                     day: dayOfWeek,
-                    availableTimes: availableTimes,
+                    availableTimes: filteredAvailableTimes,
                     isToday: isToday
                 });
             }
@@ -139,6 +147,7 @@ function loadMoreDoctors() {
                         </div>
                         <div class="reservation-content">
                             ${datesToShow.map(({ day, date, availableTimes }) => {
+
                                 if (availableTimes.length === 0) {
                                     return '';
                                 }
@@ -149,9 +158,18 @@ function loadMoreDoctors() {
                                         <p style="margin: .5em 0;">${day}</p>
                                         <select onchange="selectTime('${day}', '${date.slice(4)}', this.value, '${doctor.id}')">
                                             <option value="">Select a time</option>
-                                            ${availableTimes.map(time => `
-                                                <option value="${time.time}">${time.time}</option>
-                                            `).join('')}
+                                            ${availableTimes.map(time => {
+                                                const isBooked = doctor.booked_times.some(booked => 
+                                                    booked.date === date.slice(4) && 
+                                                    booked.time === time.time
+                                                );
+                                                const optionClass = isBooked ? 'disabled-time' : '';
+                                                return `
+                                                    <option value="${time.time}" class="${optionClass}">
+                                                        ${time.time}
+                                                    </option>
+                                                `;
+                                            }).join('')}
                                         </select>
                                     </span>
                                 `;

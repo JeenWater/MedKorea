@@ -1,4 +1,4 @@
-// For health news in landing page
+// for health news in landing page
 document.addEventListener('DOMContentLoaded', () => {
     const healthNewsApp = new HealthNews('http://localhost:9119/api/health-news');
     healthNewsApp.init();

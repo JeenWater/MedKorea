@@ -1,4 +1,4 @@
-// For MVP time
+// for MVP time
 document.addEventListener('DOMContentLoaded', function() {
     const operatingHoursHidden = document.getElementById('operating-hours-hidden');
     if (operatingHoursHidden) {

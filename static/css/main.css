@@ -14,12 +14,13 @@
 
 
 
-
+.main-container section{
+    margin-bottom: 5em;
+}
 
 .head-line {
     display: flex;
     justify-content: center;
-    margin-bottom: 5em;
 }
 
 .head-line-content{

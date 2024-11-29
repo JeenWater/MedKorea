@@ -334,7 +334,7 @@ def login_patient():
         appointment_time = request.args.get("time")
         appointment_day = request.args.get("day")
 
-        # Save the information only if there is data of information
+        # save the information only if there is data of information
         if doctor_id and appointment_date and appointment_time and appointment_day:
             session['doctor_id'] = doctor_id
             session['appointment_date'] = appointment_date
@@ -350,7 +350,7 @@ def login_patient():
             session['user_type'] = 'patient'
             session['user_name'] = f"{user.get('first_name', '')} {user.get('last_name', '')}".strip()
 
-            # Redirect to the booking page if the session has information for appointment
+            # redirect to the booking page if the session has information for appointment
             doctor_id = session.pop("doctor_id", None)
             appointment_date = session.pop("appointment_date", None)
             appointment_time = session.pop("appointment_time", None)
