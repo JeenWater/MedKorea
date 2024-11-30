@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mvpStyle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/myAppointments.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
 </head>
 
@@ -60,7 +61,7 @@
             {% endif %}
         </nav>
     </header>
-    {% block booking %}
+
     <main class="main">
         <section class="mid-top">
             <h1 class="back-btn">
@@ -111,23 +112,23 @@
 
                     <div class="two-column">
                         <div class="two-column-content">
-                            <label for="first-name">First Name</label>
+                            <label for="first-name">First Name<sup class="required">*</sup></label>
                             <input type="text" id="first-name" name="first-name" autocomplete="off" value="{{ user.first_name }}" required>
                         </div>
                         <div class="two-column-content">
-                            <label for="last-name">Last Name</label>
+                            <label for="last-name">Last Name<sup class="required">*</sup></label>
                             <input type="text" id="last-name" name="last-name" autocomplete="off" value="{{ user.last_name }}" required>
                         </div>
                         <div class="two-column-content">
-                            <label for="phone">Phone Number</label>
+                            <label for="phone">Phone Number<sup class="required">*</sup></label>
                             <input type="tel" id="phone" name="phone" autocomplete="off" value="{{ user.phone }}" required>
                         </div>
                         <div class="two-column-content">
-                            <label for="birth">Date of Birth</label>
+                            <label for="birth">Date of Birth<sup class="required">*</sup></label>
                             <input type="date" id="birth" name="birth" value="{{ user.birth }}" required>
                         </div>
                         <div class="two-column-content">
-                            <label for="sex">Sex</label>
+                            <label for="sex">Sex<sup class="required">*</sup></label>
                             <select id="sex" name="sex" required>
                                 <option value="{{ user.sex }}">{{ user.sex }}</option>
                                 {% if user.sex == "Male" %}
@@ -138,7 +139,7 @@
                             </select>
                         </div>
                         <div class="two-column-content">
-                            <label for="insurance">Health Insurance</label>
+                            <label for="insurance">Health Insurance<sup class="required">*</sup></label>
                             <select id="insurance" name="insurance">
                                 <option value="y" {% if user.insurance == 'y' %} selected {% endif %}>Yes</option>
                                 <option value="n" {% if user.insurance == 'n' %} selected {% endif %}>No</option>
@@ -146,10 +147,10 @@
                         </div>
                         
                     </div>
-                    <label for="preferred_language">Preferred Language<sup class="required"></sup></label>
+                    <label for="preferred_language">Preferred Language<sup class="required">*</sup><sup class="required"></sup></label>
                     {{ form.preferred_language(class="form-control") }}
 
-                    <label for="email">Email</label>
+                    <label for="email">Email<sup class="required">*</sup></label>
                     <input type="email" id="email" name="email" value="{{ user.email }}" required>
 
                     <label for="medical_history">Medical History</label>
@@ -165,16 +166,23 @@
                     {% else %}
                         {{ form.comments_for_doctor(class="form-control", placeholder="Describe your symptoms") }}
                     {% endif %}
-    {% endblock %}
-                    <button type="submit" class="book-btn" id="openModalBtn">Book Appointment</button>
+
+                    <button type="button" class="book-btn" id="openBookingModalBtn">Book Appointment</button>
                 </form>
             </div>
-            <!-- Modal -->
             <div id="myModal" class="modal">
                 <div class="modal-content">
-                    <span class="close"></span>
                     <h2 id="modalTitle">Booking Complete</h2>
-                    <p id="modalDescription">Please check your email for your booking confirmation.</p>
+                    <p>
+                        Please check your email for your booking confirmation.
+                    </p>
+                    <p class="required">
+                        ( You cannot modify this appointment. )
+                    </p>
+                    <div class="modal-actions">
+                        <button type="submit" id="confirmBooking" class="book-confirm-btn">Confirm</button>
+                        <button id="closeModal" class="close-btn">Close</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -248,9 +256,9 @@
             </div>
         </div>
     </footer>
-    <script src="{{ url_for('static', filename='js/booking_modal.js') }}"></script>
     <script src="{{ url_for('static', filename='js/visitBtn.js') }}"></script>
     <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
 </body>
 
 </html>

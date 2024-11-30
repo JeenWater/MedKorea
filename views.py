@@ -3,7 +3,7 @@ from pymongo import ASCENDING
 import requests
 import os
 
-from forms import AppointmentForm, Edit_AppointmentForm
+from forms import AppointmentForm
 from db import get_patient_collection, get_doctor_collection, get_appointment_collection
 from datetime import datetime, timedelta
 from bson.objectid import ObjectId
@@ -105,6 +105,7 @@ def booking():
 
     user_id = session.get("user_id")
     doctor_id = request.args.get("doctor_id") or request.form.get("doctor_id")
+    # get date data as '%b %d %Y', '%I:%M %p' formation('Nov 28 2024', '09:00 AM', 'Thursday') from js
     date = request.args.get("date") or request.form.get("appointment_date")
     time = request.args.get("time") or request.form.get("appointment_time")
     day = request.args.get("day") or request.form.get("appointment_day")
@@ -129,6 +130,7 @@ def booking():
         return render_template("booking.html", doctor=doctor, user=user, form=form, appointment_date=date, appointment_time=time, appointment_day=day)
 
     if request.method == 'POST':
+        # and these codes alter formats to '%Y-%m-%d' and '%H:%M:%S'('2024-11-28', '09:00:00') for db
         date = datetime.strptime(date, '%b %d %Y').strftime('%Y-%m-%d')
         time = datetime.strptime(time, '%I:%M %p').strftime('%H:%M:%S')
         # prevent to trip stacking
@@ -226,7 +228,6 @@ def appointments():
         return redirect(url_for("views.landing_page"))
 
     try:
-        
         query = {"patient_id": user_id} if user_type == 'patient' else {"doctor_id": user_id}
         appointments = list(
             get_appointment_collection().find(query).sort(
@@ -238,6 +239,7 @@ def appointments():
         current_date = datetime.now()
 
         for appt in appointments:
+            
             appt_date = appt.get('appointment_date')
             appt_time = appt.get('appointment_time')
 
@@ -307,6 +309,7 @@ def check_availability():
     doctor_id = data.get('doctor_id')
     date = datetime.strptime(data.get('date'), '%Y-%m-%d').strftime('%b %d %Y')
     time = datetime.strptime(data.get('time'), '%H:%M:%S').strftime('%I:%M %p')
+    day = request.args.get('day')
 
     existing_appointment = get_appointment_collection().find_one({
         "doctor_id": doctor_id,
@@ -322,53 +325,7 @@ def check_availability():
 
 
 
-# edit the appointment with the new date and time
-@views.route('/myappointments/edit', methods=['POST'])
-def edit_appointment():
-    data = request.get_json()
-    doctor_id = data.get('doctor_id')
-    appointment_id = data.get('appointment_id')
-    new_date = datetime.strptime(data.get('new_date'), '%Y-%m-%d').strftime('%b %d %Y')
-    new_time = datetime.strptime(data.get('new_time'), '%H:%M:%S').strftime('%I:%M %p')
 
-    existing_appointment = get_appointment_collection().find_one({
-        "_id": ObjectId(appointment_id),
-        "doctor_id": doctor_id,
-        "status": "upcoming"
-    })
-
-    if existing_appointment:
-        result = get_appointment_collection().update_one(
-            {"_id": ObjectId(appointment_id)},
-            {
-                "$set": {
-                    "appointment_date": new_date,
-                    "appointment_time": new_time
-                }
-            }
-        )
-
-        get_doctor_collection().update_one(
-                {"_id": ObjectId(doctor_id)},
-                {
-                    "$push": {
-                        "booked_times": {
-                            "date": new_date,
-                            "time": new_time
-                        }
-                    }
-                }
-            )
-
-        if result.modified_count == 1:
-            flash("Appointment updated successfully.", "alert-success")
-            return jsonify({"success": True})
-        else:
-            flash("Failed to update appointment.", "alert-danger")
-            return jsonify({"success": False, "message": "Update failed."})
-    else:
-        flash("Appointment not found.", "alert-danger")
-        return jsonify({"success": False, "message": "Appointment not found."})
 
 
 

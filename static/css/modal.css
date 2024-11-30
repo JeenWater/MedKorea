@@ -56,3 +56,10 @@
     text-decoration: none;
     cursor: pointer;
 }
+
+.modal-actions{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 1.25em;
+}

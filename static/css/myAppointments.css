@@ -61,14 +61,14 @@
 .btns{
     display: flex;
     align-items: flex-end;
-    justify-content: flex-start;
+    justify-content: center;
 }
 
 .btns div{
     margin: 0 .5em;
 }
 
-.edit-btn{
+.book-confirm-btn, .confirm-btn{
     border: none;
     cursor: pointer;
     color: white;
@@ -76,14 +76,14 @@
     justify-content: center;
     align-items: center;
     background-color: #1ABC9C;
-    padding: .427em 1.88em;
+    padding: .625em 1.88em;
     text-decoration: none;
     border-radius: .3em;
     transition:  ease-in-out 0.3s;
     text-wrap: nowrap;
 }
 
-.edit-btn:hover {
+.book-confirm-btn:hover, .confirm-btn:hover{
     background-color: #1edab4;
 }
 
@@ -112,11 +112,6 @@
     padding: .5em;
 }
 
-.modal-actions{
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-}
 
 /* .close-btn{
     border: none;

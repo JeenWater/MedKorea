@@ -2,16 +2,18 @@
 class BaseModal {
     constructor(modalId) {
         this.modal = document.getElementById(modalId);
+        if (!this.modal) {
+            console.error(`Modal with ID "${modalId}" not found.`);
+            return; // Exit the constructor if modal is not found
+        }
         this.closeButton = this.modal.querySelector('.close-btn');
         this.initListeners();
     }
-
     initListeners() {
         // close modal when clicking close button
         if (this.closeButton){
             this.closeButton.addEventListener('click', () => this.close());
         }
-
         // close modal when clicking outside the modal content
         window.addEventListener('click', (event) => {
             if (event.target === this.modal) {
@@ -19,12 +21,11 @@ class BaseModal {
             }
         });
     }
-
     open() {
         this.modal.style.display = 'block';
     }
-
     close() {
+        console.log("It's working!");
         this.modal.style.display = 'none';
     }
 }
@@ -34,107 +35,24 @@ class BaseModal {
 
 
 // Booking modal
-
-
-
-
-
-class EditModal extends BaseModal {
-    constructor(modalId, formId) {
+class BookingModal extends BaseModal {
+    constructor(modalId){
         super(modalId);
-        this.form = document.getElementById(formId);
-        this.newDateInput = this.form.querySelector('#newDate');
-        this.newTimeSelect = this.form.querySelector('#newTime');
-        this.doctorId = null;
-        this.appointmentId = null;
+        this.confirmButton = this.modal.querySelector('#confirmBooking');
 
-        this.form.addEventListener('submit', (event) => this.submitForm(event));
+        this.confirmButton.addEventListener('click', () => this.submitBooking());
     }
 
-    open(date, time, day, appointmentId) {
+    open(){
         super.open();
-        this.newDateInput.value = date;
-        this.appointmentId = appointmentId;
-        this.fetchAvailableTimes(date, appointmentId, time, day);
     }
 
-    fetchAvailableTimes(date, appointmentId, selectedTime, day) {
-        fetch(`myappointments/edit?doctor_id=${appointmentId}&date=${date}&day=${day}`)
-            .then(response => response.json())
-            .then(times => {
-                this.newTimeSelect.innerHTML = `<option value="">Select a time</option>`;
-                times.forEach(time => {
-                    const option = document.createElement('option');
-                    option.value = time;
-                    option.textContent = time;
-                    if (time === selectedTime) {
-                        option.selected = true;
-                    }
-                    this.newTimeSelect.appendChild(option);
-                });
-            })
-            .catch(err => console.error('Error fetching times:', err));
+    submitBooking(){
+        const bookingForm = document.getElementById("booking-form");
+        bookingForm.submit();
+        this.close();
     }
 
-    submitForm(event) {
-        event.preventDefault();
-        const newDate = this.newDateInput.value;
-        const newTime = this.newTimeSelect.value;
-
-        if (!newDate || !newTime) {
-            alert('Please select a new date and time.');
-            return;
-        }
-
-        // Prevent date and time conflicts with existing appointments
-        fetch('/myappointments/check-availability', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                doctor_id: this.doctorId,
-                date: newDate,
-                time: newTime,
-            }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Proceed to update appointment
-                this.updateAppointment(newDate, newTime);
-            } else {
-                alert('The selected time is already booked. Please choose a different time.');
-            }
-        })
-        .catch(err => console.error('Error checking availability:', err));
-    }
-
-    updateAppointment(newDate, newTime) {
-        fetch('/myappointments/edit', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                doctor_id: this.doctorId,
-                appointment_id: this.appointmentId,
-                new_date: newDate,
-                new_time: newTime,
-            }),
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Reservation updated successfully!');
-                this.close();
-                location.reload();
-            } else {
-                alert('Failed to update reservation: ' + data.message);
-            }
-        })
-        .catch(err => console.error('Error updating reservation:', err));
-    }
 }
 
 
@@ -160,7 +78,6 @@ class CancelModal extends BaseModal {
     }
 
     submitCancel() {
-        preventDefault();
         const cancelReason = this.reasonInput.value.trim();
 
         if (cancelReason) {
@@ -178,7 +95,6 @@ class CancelModal extends BaseModal {
                 .then(data => {
                     console.log(data);
                     if (data.success) {
-                        alert('Appointment canceled successfully!');
                         this.close();
                         location.reload();
                     } else {
@@ -193,29 +109,22 @@ class CancelModal extends BaseModal {
     }
 }
 
-
-
-
-
 document.addEventListener('DOMContentLoaded', () => {
-    const editModal = new EditModal('editModal', 'editAppointmentForm');
-    const cancelModal = new CancelModal('cancelModal');
-
-    // open edit modal
-    document.querySelectorAll('.edit-btn').forEach(button => {
+    const bookButtons = document.querySelectorAll('.book-btn');
+    bookButtons.forEach(button => {
         button.addEventListener('click', () => {
-            const date = button.getAttribute('date');
-            const time = button.getAttribute('time');
-            const day = button.getAttribute('day');
-            const appointmentId = button.getAttribute('data-id');
-            editModal.open(date, time, day, appointmentId);
+            // For booking modal
+            const bookingModal = new BookingModal('myModal');
+            bookingModal.open();
         });
     });
 
-    // Open cancel modal
-    document.querySelectorAll('.cancel-btn').forEach(button => {
+    const cancelButtons = document.querySelectorAll('.cancel-btn');
+    cancelButtons.forEach(button => {
         button.addEventListener('click', () => {
             const appointmentId = button.getAttribute('data-id');
+            // For cancel modal
+            const cancelModal = new CancelModal('cancelModal');
             cancelModal.open(appointmentId);
         });
     });

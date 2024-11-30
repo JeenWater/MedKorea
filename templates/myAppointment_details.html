@@ -39,13 +39,7 @@
                     <div class="btns">
                         {% if appt['status'] not in ['completed', 'canceled'] %}
                             <div>
-                                <button 
-                                    class="edit-btn" date="{{ appt['appointment_date'] }}" time="{{ appt['appointment_time'] }}" day="{{ appt['appointment_day'] }}" data-id="{{ appt['_id'] }}">
-                                    Edit
-                                </button>
-                            </div>
-                            <div>
-                                <button class="cancel-btn" id="openModalBtn" data-id="{{ appt['_id'] }}">Cancel</button>
+                                <button class="cancel-btn" id="openCancelModalBtn" data-id="{{ appt['_id'] }}">Cancel</button>
                             </div>
                         {% endif %}
                     </div>
@@ -89,7 +83,7 @@
                     <div class="btns">
                         {% if appt['status'] not in ['completed', 'canceled'] %}
                             <div>
-                                <button class="cancel-btn" id="openModalBtn" data-id="{{ appt['_id'] }}">Cancel</button>
+                                <button class="cancel-btn" id="openCancelModalBtn" data-id="{{ appt['_id'] }}">Cancel</button>
                             </div>
                         {% endif %}
                     </div>
