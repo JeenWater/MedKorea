@@ -52,7 +52,7 @@ body::after {
 .fade-out {
     opacity: 0;
     visibility: hidden;
-    transition: opacity .5s ease-in-out, visibility .5s;
+    transition: opacity .1s ease-in-out, visibility .1s;
 }
 
 
@@ -165,6 +165,8 @@ body::after {
     padding: .625em 1.88em;
     text-decoration: none;
     border-radius: .3em;
+    border: none;
+    cursor: pointer;
     transition: background-color ease-in-out 0.3s;
 }
 

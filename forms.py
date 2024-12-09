@@ -17,7 +17,11 @@ load_dotenv()
 
 
 
-
+class SearchDoctorsForm(FlaskForm):
+    condition = StringField("Condition", validators=[Length(min=2, max=30)])
+    location = StringField("Location", validators=[Length(max=100)])
+    date = DateField("Select Date", format='%Y-%m-%d', validators=[InputRequired()])
+    submit = SubmitField("Search")
 
 
 
@@ -41,18 +45,6 @@ class AppointmentForm(FlaskForm):
     appointment_date = DateField("Select Date", format='%Y-%m-%d', validators=[InputRequired()])
     appointment_time = TimeField("Select Time", format='%H:%M:%S', validators=[InputRequired()])
     appointment_day = StringField("Day of the Week", validators=[InputRequired()])
-
-    def validate_appointment_date(self, field):
-        if not field.data:
-            raise ValidationError("Please select a valid appointment date")
-        
-        today = datetime.today().date()
-        if field.data < today:
-            raise ValidationError("Cannot book appointments in the past")
-
-        max_date = today + timedelta(days=60)
-        if field.data > max_date:
-            raise ValidationError("Cannot book appointments more than 2 months in advance")
 
 
 class ChangePassword(FlaskForm):

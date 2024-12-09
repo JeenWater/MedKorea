@@ -113,21 +113,11 @@
 }
 
 
-/* .close-btn{
-    border: none;
-    cursor: pointer;
-    color: white;
-    display: inline-block;
-    justify-content: center;
-    align-items: center;
-    background-color: #E74C3C;
-    padding: .625em 1.88em;
-    text-decoration: none;
-    border-radius: .3em;
-    transition: ease-in-out 0.3s;
-    text-wrap: nowrap;
+
+.reservations:hover{
+    transform: none;
 }
 
-.close-btn:hover {
-    background-color: #c94334;
-} */
+.load-more-btn-area{
+    margin-bottom: 1em;
+}
