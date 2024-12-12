@@ -41,10 +41,19 @@ class AppointmentForm(FlaskForm):
     medical_history = TextAreaField("Medical History")
     comments_for_doctor = TextAreaField("Comments for Doctor")
     submit = SubmitField("Book Appointment")
-    
+
     appointment_date = DateField("Select Date", format='%Y-%m-%d', validators=[InputRequired()])
     appointment_time = TimeField("Select Time", format='%H:%M:%S', validators=[InputRequired()])
     appointment_day = StringField("Day of the Week", validators=[InputRequired()])
+
+
+
+class VerifyEmail(FlaskForm):
+    email = EmailField("Email", validators=[InputRequired(), Email()])
+    code = StringField("Verification Code", validators=[InputRequired(), Length(min=6, max=6)])
+    submit = SubmitField('Verify')
+
+
 
 
 class ChangePassword(FlaskForm):

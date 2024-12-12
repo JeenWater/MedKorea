@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>{% block title %}Login{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+    {% block extra_css %}
+    {% endblock %}
 
 </head>
+
 <body>
     {% include 'preloader_msg.html' %}
 
@@ -17,7 +21,8 @@
         <nav class="nav-bar">
             <div class="nav-left">
                 <div class="logo">
-                    <a href="/"><img src="{{ url_for('static', filename='img/fixedIconMain(blue).png') }}" alt="MedKorea logo"/></a>
+                    <a href="/"><img src="{{ url_for('static', filename='img/fixedIconMain(blue).png') }}"
+                            alt="MedKorea logo" /></a>
                     <a href="/">
                         <h1>MedKorea</h1>
                     </a>
@@ -27,38 +32,49 @@
     </header>
 
     <main>
+        {% block content %}
         <section class="login-section">
-            <h2>Login to Your Account<br>(as a Patient)</h2>
-            <form id="login-form" method="POST" action="{{ url_for('auth.login_patient') }}" >
+            <h3>Login to Your Account<br>(as a Patient)</h3>
+            <form id="login-form" method="POST" action="{{ url_for('auth.login_patient') }}">
                 {{ form.hidden_tag() }}
                 <label for="email">Email</label>
                 {{ form.email() }}
-            
+
                 <label for="password">Password</label>
                 {{ form.password() }}
-        
+
                 <button type="submit">Login</button>
+
+                <div class="signup-link">
+                    <a href="{{ url_for('auth.forgot_password') }}" id="forget-password-link">
+                        <p>Forgot password?</p>
+                    </a>
+                </div>
             </form>
-        
+
             <div class="separator">
                 <span>or</span>
             </div>
             <div class="social-login">
                 <button class="google-login">
-                    <span class="google-img"><img src="{{ url_for('static', filename='img/google-img.png') }}" alt="google-icon"></span>
+                    <span class="google-img"><img src="{{ url_for('static', filename='img/google-img.png') }}"
+                            alt="google-icon"></span>
                     <span>Sign in with Google</span>
                 </button>
             </div>
-            
-        
+
             <div class="signup-link">
-                <p>Don't have an account? <a href="{{ url_for('auth.signUp_patient') }}" id="signup-link-patient">Sign up now</a></p>
+                <p>Don't have an account? <a href="{{ url_for('auth.signUp_patient') }}" id="signup-link-patient">Sign
+                        up now</a></p>
             </div>
         </section>
+        {% endblock %}
     </main>
 
     {% include 'footer.html' %}
 
     <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
+    {% block extra_js %}{% endblock %}
 </body>
+
 </html>

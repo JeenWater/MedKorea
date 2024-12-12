@@ -1,7 +1,9 @@
-from flask import Blueprint, render_template, jsonify, session, flash, redirect, url_for, request
-from pymongo import ASCENDING, DESCENDING
+from flask import Blueprint, render_template, jsonify, session, flash, redirect, url_for, request, current_app
+from flask_mail import Message
+from pymongo import DESCENDING
 import requests
 import os
+from flask_mail import Message, Mail
 
 from forms import AppointmentForm, SearchDoctorsForm
 from db import get_patient_collection, get_doctor_collection, get_appointment_collection
@@ -21,8 +23,12 @@ load_dotenv()
 
 
 
+
 @views.route("/")
 def landing_page():
+    user_status = session.get('user_status')
+    if user_status:
+        session.clear()
     return render_template("index.html")
 
 
@@ -35,7 +41,8 @@ def mvp():
     form = SearchDoctorsForm()
     today = datetime.today().strftime('%Y-%m-%d')
     page = int(request.args.get('page', 1))
-    per_page = 3  # 한 페이지에 보여줄 의사 수
+    # 한 페이지에 보여줄 의사 수
+    per_page = 3
 
     condition = request.args.get("condition")
     location = request.args.get("location")
@@ -57,10 +64,8 @@ def mvp():
         # location filtering
         filter["address"] = {"$regex": location, "$options": "i"}
 
-    doctors = get_doctor_collection().find(filter).skip((page - 1) * per_page).limit(per_page)
+    doctors = get_doctor_collection().find(filter)
     doctors_availabilities = []
-    total_doctors = get_doctor_collection().count_documents(filter)
-    total_pages = (total_doctors // per_page) + (1 if total_doctors % per_page > 0 else 0)
 
     for doctor in doctors:
         doctor_id = str(doctor["_id"])
@@ -103,37 +108,48 @@ def mvp():
             "booked_times": booked_times,
             "available_times": available_times
         })
-    return render_template("MVP.html", doctors=doctors_availabilities, form=form, page=page, total_pages=total_pages, condition=condition, location=location, date=date, today=today)
+    doctors_availabilities = [
+        doctor for doctor in doctors_availabilities if doctor["available_times"]
+    ]
+    total_doctors = len(doctors_availabilities)
+    total_pages = (total_doctors // per_page) + (1 if total_doctors % per_page > 0 else 0)
+
+    page = max(1, min(page, total_pages))
+
+    start_index = (page - 1) * per_page
+    end_index = start_index + per_page
+    doctors_list = doctors_availabilities[start_index:end_index]
+
+    return render_template("MVP.html", doctors=doctors_list, form=form, page=page, total_pages=total_pages, condition=condition, location=location, date=date, today=today)
 
 
 
 def get_available_times_for_doctor(doctor, date):
     available_dates = []
-    date = datetime.strptime(date, "%Y-%m-%d").date()
-    # if I did not insert the date then from today
-    today = date or datetime.today()
-    # get doctor's operating hours (start & end time for the each day)
-    operating_hours = doctor.get('operating_hours', {})
+    selected_date = datetime.strptime(date, "%Y-%m-%d").date()
+    today = selected_date
+    operating_hours = doctor.get('operating_hours', {})  # get doctor's operating hours (start & end time for the each day)
 
-    for i in range(7):  # for 7days
+    for i in range(4):  # appears 4 days
         # from today or inserted date
         next_date = today + timedelta(days=i)
         day_of_week = next_date.strftime('%A')  # day: Monday
         date_str = next_date.strftime("%Y-%m-%d") # date: 2024-12-10
-        is_today = i == 0
-        
+        is_today = (next_date == datetime.today().date())
+
         # get start & end time for the each day from operating hours
         if day_of_week in operating_hours:
             start_time_str = operating_hours[day_of_week]['start']
             end_time_str = operating_hours[day_of_week]['end']
-            
-            # 해당 날짜에 예약 가능한 시간대 계산
+
+            # available dates
             available_times = get_available_times(start_time_str, end_time_str, date_str, day_of_week, is_today)
-            
-            # 예약된 시간대 필터링 (이미 예약된 시간 제외)
+
+            # except the booked times
             booked_times = doctor.get('booked_times', [])
             available_times = [time for time in available_times if time not in booked_times]
 
+            # Filter out booked times
             filtered_available_times = [
                 time for time in available_times
                 if not any(
@@ -141,9 +157,9 @@ def get_available_times_for_doctor(doctor, date):
                     for booked in booked_times
                 )
             ]
+
             # return filtered_available_times
-            
-            if available_times:
+            if filtered_available_times:
                 available_dates.append({
                     'date': datetime.strptime(date_str, '%Y-%m-%d').strftime('%b %d %Y'),
                     'times': available_times,
@@ -151,80 +167,51 @@ def get_available_times_for_doctor(doctor, date):
                     'availableTimes': filtered_available_times,
                     'isToday': is_today
                 })
-    
+
     return available_dates
 
 
 
 def get_available_times(start, end, date, day, isToday=False):
     times = []
-    
-    # 기본 시간 설정
+
+    # make start and end of the day
     current_time = datetime.strptime(start, "%H:%M")
     end_time = datetime.strptime(end, "%H:%M")
-    
-    # 현재 시간이 없다면 현재 시간으로 설정
-    
-    now = datetime.now()
 
-    # 하루의 시작 시간과 끝 시간 설정
+    # make a current time
+    now = datetime.now()
     current_hour = now.hour
     current_minute = now.minute
     
-    # 시간 리스트 생성
     while current_time <= end_time:
         hour = current_time.hour
         minute = current_time.minute
         
-        # 오늘과 비교해서 지나간 시간은 넘어가게 설정
-        if isToday and (hour < current_hour or (hour == current_hour and minute <= current_minute)):
-            current_time += timedelta(minutes=30)
-            continue
+        # pass the past time
+        if isToday and datetime.strptime(date, "%Y-%m-%d").date() == datetime.today().date():
+            if hour < current_hour or (hour == current_hour and minute <= current_minute):
+                current_time += timedelta(minutes=30)
+                continue
 
-        # 특정 조건에 따라 시간을 넘어가게 설정
+        # pass for lunch time ect.
         if day != 'Saturday' and (hour == 13 or (hour == 14 and minute == 0)):
             current_time += timedelta(minutes=30)
             continue
 
-        # 토요일 14시 이후는 중지
+        # if the hospital works over 2pm, break
         if day == 'Saturday' and hour >= 14:
             break
 
-        # 30분 간격으로 예약 가능한 시간 추가
         times.append({
             'time': current_time.strftime("%I:%M %p"),
             'date': date,
             'day': day
         })
         
-        # 30분 후로 시간 증가
         current_time += timedelta(minutes=30)
 
     return times
-
-
-
-@views.route('/load_more_providers')
-def load_more_providers():
-    try:
-        offset = int(request.args.get('offset', 0))
-        limit = 3  # 의사 수
-
-        doctors_cursor = get_doctor_collection().find().skip(offset).limit(limit)
-        doctors = []
-        for doctor in doctors_cursor:
-            doctor["_id"] = str(doctor["_id"])
-            doctors.append(doctor)
-
-        total_doctors = get_doctor_collection().count_documents({})
-        has_more = offset + limit < total_doctors
-
-        return jsonify({"doctors": doctors, "has_more": has_more})
-    except Exception as e:
-        print(f"Error: {e}")
-        return jsonify({"error": "An error occurred"}), 500
-
-
 
 
 
@@ -250,12 +237,13 @@ def booking():
     print(f"date: {date}")
     print(f"time: {time}")
     print(f"day: {day}")
+    
 
     today = datetime.today().date()
 
     try:
-        appointment_date = datetime.strptime(date, "%b %d %Y").date()  # 문자열을 datetime 객체로 변환
-        print(appointment_date)
+        # string object to datetime object
+        appointment_date = datetime.strptime(date, "%b %d %Y").date()
     except ValueError:
         flash("Invalid date format.", "alert-danger")
         return redirect(url_for("views.mvp"))
@@ -270,6 +258,7 @@ def booking():
         return redirect(url_for("views.mvp"))
 
     doctor = get_doctor_collection().find_one({"_id": ObjectId(doctor_id)})
+    print(f"doctor Email: {doctor['email']}")
 
     if not doctor:
         flash("Doctor not found.", "alert-danger")
@@ -284,7 +273,7 @@ def booking():
 
         return render_template("booking.html", doctor=doctor, user=user, form=form, appointment_date=date, appointment_time=time, appointment_day=day)
 
-    if request.method == 'POST':
+    if request.method == 'POST' and form.validate_on_submit():
         # and these codes alter formats to '%Y-%m-%d' and '%H:%M:%S'('2024-11-28', '09:00:00') for db
         date = datetime.strptime(date, '%b %d %Y').strftime('%Y-%m-%d')
         time = datetime.strptime(time, '%I:%M %p').strftime('%H:%M:%S')
@@ -348,6 +337,47 @@ def booking():
             if result.inserted_id is None:
                 flash("Failed to book appointment. Please try again.", "alert-danger")
                 return redirect(url_for("views.mvp"))
+            
+            # send an email
+            subject_patient = "Appointment Confirmation"
+            body_patient = (
+                f"Dear {first_name} {last_name},\n\n"
+                f"Your appointment with Dr. {doctor['first_name']} {doctor['last_name']} "
+                f"has been successfully booked.\n\n"
+                f"Date: {date}\nTime: {time}\nDay: {day}\n\n"
+                f"Thank you for using MedKorea.\n\n"
+                f"Best regards,\nThe MedKorea Team"
+            )
+
+            # to a patient
+            email_sent_patient = send_email(email, subject_patient, body_patient)
+
+            if email_sent_patient:
+                flash("Appointment booked successfully. A confirmation email has been sent.", "alert-success")
+            else:
+                flash("Appointment booked, but failed to send confirmation email to patient.", "alert-warning")
+
+            # to a doctor
+            subject_doctor = "New Appointment Confirmation"
+            body_doctor = (
+                f"Dear Dr. {doctor['first_name']} {doctor['last_name']},\n\n"
+                f"You have a new appointment with {first_name} {last_name}.\n\n"
+                f"Patient Details:\n"
+                f"Name: {first_name} {last_name}\n"
+                f"Phone: {phone}\n"
+                f"Email: {email}\n\n"
+                f"Appointment Details:\n"
+                f"Date: {date}\nTime: {time}\nDay: {day}\n\n"
+                f"Thank you for using MedKorea.\n\n"
+                f"Best regards,\nThe MedKorea Team"
+            )
+
+            email_sent_doctor = send_email(doctor['email'], subject_doctor, body_doctor)
+
+            if email_sent_doctor:
+                flash("Appointment booked successfully. Confirmation emails have been sent.", "alert-success")
+            else:
+                flash("Appointment booked, but failed to send confirmation email to the doctor.", "alert-warning")
 
             flash("Appointment booked successfully.", "alert-success")
             return redirect(url_for("views.landing_page"))
@@ -530,12 +560,16 @@ def cancel_appointment():
 
 
 
-
-def send_email_notification(user_id, message):
-    user = get_patient_collection().find_one({"_id": ObjectId(user_id)})
-    if user:
-        email = user.get("email")
-        print(f"Email sent to {email}: {message}")
+def send_email(recipient, subject, body):
+    import main
+    mail = main.mail
+    msg = Message(subject, recipients=[recipient], body=body)
+    try:
+        mail.send(msg)
+        return True
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+        return False
 
 
 

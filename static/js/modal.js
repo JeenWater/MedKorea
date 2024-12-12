@@ -11,7 +11,7 @@ class BaseModal {
     }
     initListeners() {
         // close modal when clicking close button
-        if (this.closeButton){
+        if (this.closeButton) {
             this.closeButton.addEventListener('click', () => this.close());
         }
         // close modal when clicking outside the modal content
@@ -25,7 +25,6 @@ class BaseModal {
         this.modal.style.display = 'block';
     }
     close() {
-        console.log("It's working!");
         this.modal.style.display = 'none';
     }
 }
@@ -36,23 +35,22 @@ class BaseModal {
 
 // Booking modal
 class BookingModal extends BaseModal {
-    constructor(modalId){
+    constructor(modalId) {
         super(modalId);
         this.confirmButton = this.modal.querySelector('#confirmBooking');
 
         this.confirmButton.addEventListener('click', () => this.submitBooking());
     }
 
-    open(){
+    open() {
         super.open();
     }
 
-    submitBooking(){
+    submitBooking() {
         const bookingForm = document.getElementById("booking-form");
         bookingForm.submit();
         this.close();
     }
-
 }
 
 
@@ -110,9 +108,9 @@ class CancelModal extends BaseModal {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    const bookButtons = document.querySelectorAll('.book-btn');
-    bookButtons.forEach(button => {
-        button.addEventListener('click', () => {
+    const bookButton = document.querySelectorAll('.book-btn');
+    bookButton.forEach(btn => {
+        btn.addEventListener('click', () => {
             // For booking modal
             const bookingModal = new BookingModal('myModal');
             bookingModal.open();
@@ -120,9 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const cancelButtons = document.querySelectorAll('.cancel-btn');
-    cancelButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const appointmentId = button.getAttribute('data-id');
+    cancelButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const appointmentId = btn.getAttribute('data-id');
             // For cancel modal
             const cancelModal = new CancelModal('cancelModal');
             cancelModal.open(appointmentId);

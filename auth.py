@@ -1,12 +1,14 @@
 from flask import Blueprint, request, render_template, redirect, url_for, flash, session, jsonify, json, current_app
-from datetime import datetime
+from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
-from db import get_patient_collection, get_doctor_collection, get_appointment_collection
-from forms import SignUp_patient, LoginForm, EditProfile_patient, ChangePassword, SignUp_doctor, EditProfile_doctor
+from db import get_patient_collection, get_doctor_collection
+from forms import SignUp_patient, LoginForm, EditProfile_patient, ChangePassword, SignUp_doctor, EditProfile_doctor, VerifyEmail
 from bson.objectid import ObjectId
-import os
+import os, random, string
+
+from itsdangerous import URLSafeTimedSerializer
 
 
 
@@ -27,11 +29,139 @@ def allowed_file(filename):
 
 
 
+
+
+
+# @auth.route("/send_verification_code", methods=["POST", "GET"])
+# def send_verification_code():
+#     import views
+#     data = request.get_json()  # POST 데이터에서 JSON 가져오기
+#     recipient = data.get("email")  # 이메일 주소
+
+#     code = generate_verification_code()
+
+#     subject = "Your Verification Code"
+#     body = (
+#         f"Dear User,\n\n"
+#         f"Your verification code is: {code}\n\n"
+#         f"Please enter this code to complete the process.\n\n"
+#         f"Thank you for using MedKorea.\n\n"
+#         f"Best regards,\nThe MedKorea Team"
+#     )
+#     email_sent = views.send_email(recipient, subject, body)
+#     if email_sent:
+#         session['verification_code'] = code
+#         session['verification_time'] = datetime.now().isoformat()
+#         return jsonify({"success": True, "redirect_url": url_for("auth.verify_code")})
+#     else:
+#         return jsonify({"success": False, "message": "Failed to send verification code."})
+
+
+
+def generate_verification_code(length=6):
+    # generate verification code only with numbers
+    num = string.digits
+    code = ''.join(random.choice(num) for _ in range(length))
+    return code
+
+
+
+
+@auth.route("/forgotpassword", methods=["POST", "GET"])
+def forgot_password():
+    import views
+
+    form = VerifyEmail()
+    if request.method == "GET":
+        if session.get('user'):
+            form.email.data = session['user']
+        return render_template('forgot_password.html', form=form)
+
+    if request.method == "POST":
+        email = form.email.data
+        user = get_patient_collection().find_one({"email": email}) or get_doctor_collection().find_one({"email": email})
+
+        if not email or not user:
+            flash("Your account was not found. Please try again.", "alert-danger")
+            return render_template('forgot_password.html', form=form)
+        
+        user_type = user.get("user_type")
+
+        # Generate and send verification code
+        code = generate_verification_code()
+        
+        subject = "Your Verification Code"
+        body = (
+            f"Dear User,\n\n"
+            f"Your verification code is: {code}\n\n"
+            f"Please enter this code to complete the process.\n\n"
+            f"Thank you for using MedKorea.\n\n"
+            f"Best regards,\nThe MedKorea Team"
+        )
+        email_sent = views.send_email(email, subject, body)
+        
+        if email_sent:
+            # Store verification details in session
+            session['verification_code'] = code
+            session['verification_time'] = datetime.now().isoformat()
+            session['user'] = email
+            session['user_type'] = user_type
+            session['user_status'] = 'action'
+
+            flash("Verification code has been sent to your email.", "alert-success")
+            return redirect(url_for("auth.verify_code"))
+        else:
+            flash("Failed to send verification code. Please try again.", "alert-danger")
+            return render_template('forgot_password.html', form=form)
+    else:
+        flash("Please provide a valid email.", "alert-danger")
+        return render_template('forgot_password.html', form=form)
+
+@auth.route("/verifycode", methods=["POST", "GET"])
+def verify_code():
+    form = VerifyEmail()
+    if request.method == "GET":
+        return render_template('forgot_password.html', form=form, action='yes')
+
+    # Check if verification details exist in session
+    if 'verification_code' not in session:
+        session.clear()
+        flash("No verification code was sent. Please start over.", "alert-danger")
+        return redirect(url_for("auth.forgot_password"))
+
+    # Check code expiration
+    sent_time = datetime.fromisoformat(session['verification_time'])
+    if datetime.now() - sent_time > timedelta(minutes=5):
+        for key in ['verification_code', 'verification_time', 'user', 'user_type']:
+            session.pop(key, None)
+        flash("The verification code has expired. Please request a new code.", "alert-danger")
+        return redirect(url_for("auth.forgot_password"))
+
+    # Verify the code
+    if form.code.data == session['verification_code']:
+        for key in ['verification_code', 'verification_time']:
+            session.pop(key, None)
+
+        # Redirect to password reset page
+        return redirect(url_for("auth.login_security"))
+    else:
+        flash("Invalid verification code.", "alert-danger")
+        return render_template('forgot_password.html', form=form, action='yes')
+
+
+
+
+
+
+
+
+
 @auth.route('/login_security', methods=['GET', 'POST'])
 def login_security():
     form = ChangePassword()
 
     user_type = session.get('user_type')
+    user_status = session.get('user_status')
     user_email = session.get('user')
 
     if not user_email:
@@ -39,16 +169,18 @@ def login_security():
         return redirect(url_for('views.landing_page'))
 
     user = get_patient_collection().find_one({"email": user_email}) if user_type == 'patient' else get_doctor_collection().find_one({"email": user_email})
-    
+
     if request.method == 'POST' and form.validate_on_submit():
         if not user:
             flash('User not found.', 'alert-danger')
+            session.clear()
             return redirect(url_for('auth.landing_page'))
 
-        if not check_password_hash(user['password'], form.current_password.data):
-            flash('Current password is incorrect.', 'alert-danger')
-            return render_template('login_security.html', form=form, user=user)
-        
+        if not user_status:
+            if not check_password_hash(user['password'], form.current_password.data):
+                flash('Current password is incorrect.', 'alert-danger')
+                return render_template('login_security.html', form=form, user=user)
+
         if user['password'] == form.current_password.data:
             flash('New password must be different from the current password.', 'alert-danger')
             return render_template('login_security.html', form=form, user=user)
@@ -70,11 +202,11 @@ def login_security():
             }
         )
 
+        session.clear()
         flash('Password has been updated.', 'alert-success')
+        return redirect(url_for('views.landing_page'))
 
-        return redirect(url_for('auth.login_security'))
-
-    return render_template('login_security.html', form=form, user=user)
+    return render_template('login_security.html', form=form, user=user, user_status=user_status)
 
 
 
@@ -255,6 +387,7 @@ def signUp_patient():
 
     if form.validate_on_submit():
         password_hash = generate_password_hash(form.password.data, method="pbkdf2:sha256")
+        email = form.email.data
         user = {
             "user_type": "patient",
             "first_name": form.first_name.data.capitalize(),
@@ -264,7 +397,7 @@ def signUp_patient():
             "sex": form.sex.data,
             "insurance": form.insurance.data,
             "address": form.address.data,
-            "email": form.email.data,
+            "email": email,
             "password": password_hash,
             "preferred_language": form.preferred_language.data,
             "medical_history": form.medical_history.data,
@@ -272,15 +405,15 @@ def signUp_patient():
             "created_at": datetime.now(),
         }
 
-        existing_user = get_patient_collection().find_one({"email": form.email.data})
+        existing_user = get_patient_collection().find_one({"email": email})
         if existing_user:
             flash("This email address is already registered.", "alert-danger")
             return render_template("signUp_patient.html", form=form)
-        
+
         if form.password.data != form.confirm_password.data:
             flash('Password and confirmation do not match.', 'alert-danger')
             return render_template("signUp_patient.html", form=form)
-        
+
         get_patient_collection().insert_one(user)
 
         flash("You have successfully signed up!", "alert-success")
@@ -355,10 +488,6 @@ def login_patient():
             appointment_date = session.pop("appointment_date", None)
             appointment_time = session.pop("appointment_time", None)
             appointment_day = session.pop("appointment_day", None)
-            print(doctor_id)
-            print(appointment_date)
-            print(appointment_time)
-            print(appointment_day)
 
             if doctor_id and appointment_date and appointment_time and appointment_day:
                 return redirect(url_for('views.booking', 

@@ -72,7 +72,7 @@
                         {% if form.date %}
                             {{ form.date(type="date", id="date", class="nav-mid-search", required=True, value=request.args.get('date')) }}
                         {% else %}
-                            {{ form.date(type="date", id="date", class="nav-mid-search", required=True, value=today) }}
+                            {{ form.date(type="date", id="date", class="nav-mid-search", required=True, value=today.today) }}
                         {% endif %}
                     </div>
                     <div class="nav-right">
@@ -85,54 +85,56 @@
         <!-- <h1>Doctor's Schedule</h1> -->
         <div class="main-mid" id="doctor-container">
             {% for doctor in doctors %}
-            <div class="doctor-info">
-                <div class="details">
-                    <div class="doctor-profile">
-                        <div class="doctor-img">
-                            <img src="/static/img/{{ doctor.image }}"
-                                alt="{{ doctor.first_name }} {{ doctor.last_name }}'s img" class="doctor-img"
-                                style="width: 100px; height: 100px;">
-                            <div class="rating">
-                                <span>⭐</span>
-                                {{ doctor.rating or 'No ratings yet' }}
+                {% if doctor.available_times %}
+                    <div class="doctor-info">
+                        <div class="details">
+                            <div class="doctor-profile">
+                                <div class="doctor-img">
+                                    <img src="/static/img/{{ doctor.image }}"
+                                        alt="{{ doctor.first_name }} {{ doctor.last_name }}'s img" class="doctor-img"
+                                        style="width: 100px; height: 100px;">
+                                    <div class="rating">
+                                        <span>⭐</span>
+                                        {{ doctor.rating or 'No ratings yet' }}
+                                    </div>
+                                </div>
+                                <span class="doctor-detail">
+                                    <h2 class="doctor-tit">Dr. {{ doctor.first_name }} {{ doctor.last_name }}</h2>
+                                    <h3 class="doctor-specialty">Specialty: {{ doctor.specialty }}</h3>
+                                    <h4 class="hospital-address">{{ doctor.hospital_name }}</h4>
+                                    <h5>{{ doctor.address }}</h5>
+                                    <h5>Preferred Language: {{ doctor.preferred_language }}</h5>
+                                    <p class="doctor-description">{{ doctor.bio | truncate(120, end='...') }}</p>
+                                </span>
+                            </div>
+                            <div class="reservation-container">
+                                <div class="reservation-tit">
+                                    <h3>Available Reservations</h3>
+                                </div>
+                                <div class="reservation-content">
+                                    {% for date_info in doctor.available_times %}
+                                    {% if date_info.availableTimes %}
+                                    <span class="reservations">
+                                        <h4>{{ date_info.date }}</h4> <!-- Show date without year -->
+                                        <p style="margin: .5em 0;">{{ date_info.day }}</p>
+                                        <select data-day="{{ date_info.day }}" data-date="{{ date_info.date }}"
+                                            data-doctor-id="{{ doctor.id }}"
+                                            onchange="DoctorManager.selectTime(this.dataset.day, this.dataset.date, this.value, this.dataset.doctorId)">
+                                            <option value="">Select a time</option>
+                                            {% for time in date_info.times %}
+                                            <option value="{{ time.time }}">
+                                                {{ time.time }}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </span>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
                             </div>
                         </div>
-                        <span class="doctor-detail">
-                            <h2 class="doctor-tit">Dr. {{ doctor.first_name }} {{ doctor.last_name }}</h2>
-                            <h3 class="doctor-specialty">Specialty: {{ doctor.specialty }}</h3>
-                            <h4 class="hospital-address">{{ doctor.hospital_name }}</h4>
-                            <h5>{{ doctor.address }}</h5>
-                            <h5>Preferred Language: {{ doctor.preferred_language }}</h5>
-                            <p class="doctor-description">{{ doctor.bio | truncate(120, end='...') }}</p>
-                        </span>
                     </div>
-                    <div class="reservation-container">
-                        <div class="reservation-tit">
-                            <h3>Available Reservations</h3>
-                        </div>
-                        <div class="reservation-content">
-                            {% for date_info in doctor.available_times %}
-                            {% if date_info.availableTimes %}
-                            <span class="reservations">
-                                <h4>{{ date_info.date }}</h4> <!-- Show date without year -->
-                                <p style="margin: .5em 0;">{{ date_info.day }}</p>
-                                <select data-day="{{ date_info.day }}" data-date="{{ date_info.date }}"
-                                    data-doctor-id="{{ doctor.id }}"
-                                    onchange="DoctorManager.selectTime(this.dataset.day, this.dataset.date, this.value, this.dataset.doctorId)">
-                                    <option value="">Select a time</option>
-                                    {% for time in date_info.times %}
-                                    <option value="{{ time.time }}">
-                                        {{ time.time }}
-                                    </option>
-                                    {% endfor %}
-                                </select>
-                            </span>
-                            {% endif %}
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    {% endif %}
             {% endfor %}
         </div>
         <div class="load-more-btn-area">

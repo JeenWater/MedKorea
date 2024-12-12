@@ -28,7 +28,7 @@
 
     <main>
         <section class="login-section">
-            <h2>Login to Your Account<br>(As a Doctor)</h2>
+            <h3>Login to Your Account<br>(As a Doctor)</h3>
             <form id="login-form" method="POST" action="{{ url_for('auth.login_doctor') }}" >
                 {{ form.hidden_tag() }}
                 <label for="email">Email</label>
@@ -39,6 +39,11 @@
         
                 <button type="submit">Login</button>
             </form>
+            <div class="signup-link">
+                <a href="{{ url_for('auth.forgot_password') }}" id="forget-password-link">
+                    <p>Forgot password?</p>
+                </a>
+            </div>
             <div class="signup-link">
                 <p>Don't have an account? <a href="{{ url_for('auth.signUp_doctor') }}" id="signup-link-doctor">Sign up now</a></p>
             </div>

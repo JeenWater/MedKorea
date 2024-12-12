@@ -71,3 +71,11 @@
 .signup-link a:hover {
     text-decoration: underline;
 }
+
+.text-center{
+    margin-bottom: 1.7094em;
+}
+
+.text-muted{
+    margin: 2em;
+}
