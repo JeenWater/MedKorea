@@ -24,12 +24,11 @@
 }
 
 .doctor-profile-img{
-    float: left;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-right: 1em;
+    margin-bottom: 1em;
 }
 
 .doctor-profile-detail .two-column:nth-child(){
@@ -43,8 +42,10 @@
 
 
 
-.menu-content{
-    right: -6.0em;
+
+
+.menu-content-doctor, .menu-content-patient{
+    right: -6em;
 }
 
 .two-column .two-column-content{
@@ -57,8 +58,8 @@
 .one-column{
     display: grid;
     grid-template-columns: repeat(1, 1fr);
-    gap: .5em;
-    margin: .5em;
+    gap: 1em;
+    margin: 1em 0;
 }
 
 .one-column .one-column-content{
@@ -137,4 +138,11 @@
     font-size: 16px;
     margin-top: 1em;
     padding: 0.6em;
+}
+
+@media (max-width: 620px) {
+    .two-column {
+        display: grid;
+        flex-direction: column;
+    }
 }

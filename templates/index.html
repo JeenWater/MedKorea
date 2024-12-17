@@ -7,6 +7,7 @@
   <title>MedKorea</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/preloader.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/healthNews.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
@@ -20,46 +21,55 @@
 
   <header class="header">
     <nav class="nav-bar">
-        <div class="nav-left">
-          <div class="logo">
-              <a href="/"><img src="{{ url_for('static', filename='img/fixedIconMain(blue).png') }}" alt="MedKorea logo"/></a>
-              <a href="/"><h1>MedKorea</h1></a>
+      <div class="nav-left">
+        <div class="logo">
+          <a href="/"><img src="{{ url_for('static', filename='img/fixedIconMain(blue).png') }}"
+              alt="MedKorea logo"/></a>
+          <a href="/">
+            <h1>MedKorea</h1>
+          </a>
+        </div>
+      </div>
+      <div class="nav-mid">
+      </div>
+      {% if session['user'] %}
+        <div class="nav-right">
+          <div class="hamburger-menu">
+            <div class="menu-icon" onclick="toggleMenu()">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            {% if session['user_type'] == 'patient' %}
+              <div class="menu-content-patient" id="user-menu">
+                <h4>Hello<br>{{ session['user_name'] }}</h4>
+                <a href="{{ url_for('views.mvp') }}" class="btn">Appointment</a>
+                <a href="{{ url_for('auth.myAccount') }}" class="btn">My Account</a>
+                <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
+              </div>
+            {% else %}
+              <div class="menu-content-doctor" id="user-menu">
+                <h4>Hello<br>Dr.{{ session['user_name'] }}</h4>
+                <a href="{{ url_for('auth.myAccount') }}" class="btn">My Account</a>
+                <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
+              </div>
+            {% endif %}
           </div>
         </div>
-        <div class="nav-mid">
+      {% else %}
+        <div class="nav-right">
+          <button type="button" class="btn" id="openloginModalBtn">Login</button>
         </div>
-        {% if session['user'] %}
-          <div class="nav-right">
-            {% if session['user_type'] == 'patient' %}
-              <a href="{{ url_for('views.mvp') }}" class="btn" style="width: 45%;">Appointment</a>
-            {% endif %}
-              <div class="hamburger-menu">
-                  <div class="menu-icon" onclick="toggleMenu()">
-                      <span></span>
-                      <span></span>
-                      <span></span>
-                  </div>
-                  <div class="menu-content" id="user-menu">
-                      {% if session['user_type'] == 'patient' %}
-                          <h4>Hello<br>{{ session['user_name'] }}</h4>
-                      {% else %}
-                          <h4>Hello<br>Dr.{{ session['user_name'] }}</h4>
-                      {% endif %}
-                      <a href="{{ url_for('auth.myAccount') }}" class="btn">My Account</a>
-                      <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
-                  </div>
+        <div id="LoginModal" class="modal">
+          <div class="modal-content">
+              <h2 id="modalTitle">Login</h2>
+              <div class="modal-actions">
+                <a href="{{ url_for('auth.login_patient') }}" class="btn loginBtn">Login as Patient</a>
+                <a href="{{ url_for('auth.login_doctor') }}" class="btn loginBtn">Login as Doctor</a>
               </div>
           </div>
-        {% else %}
-          <div class="nav-right">
-            <a href="{{ url_for('views.mvp') }}" class="btn" style="width: 45%;">Appointment</a>
-            <a href="#" class="btn" style="width: 45%;" onclick="loginMenu()">Login</a>
-            <div class="login-menu-content" id="login-menu">
-              <a href="{{ url_for('auth.login_patient') }}" class="btn loginBtn">Login as Patient</a>
-              <a href="{{ url_for('auth.login_doctor') }}" class="btn loginBtn">Login as Doctor</a>
-            </div>
-          </div>
-        {% endif %}
+      </div>
+      {% endif %}
     </nav>
   </header>
 
@@ -73,7 +83,7 @@
         </div>
         <div class="head-line-img-box">
           <div class="head-line-img">
-            <img src="{{ url_for('static', filename='img/team-doctors(bg).jpg') }}" alt="team doctors image" >
+            <img src="{{ url_for('static', filename='img/team-doctors(bg).jpg') }}" alt="team doctors image">
           </div>
         </div>
         <div class="main-btn">
@@ -83,8 +93,8 @@
     </section>
 
     <section id="how-it-works" class="how-it-works-section">
+      <h2>How It Works</h2>
       <div class="container">
-        <h2>How It Works</h2>
         <div class="steps">
           <div class="step">
             <img src="{{ url_for('static', filename='img/search-icon.png') }}" alt="Search Icon">
@@ -92,7 +102,7 @@
             <p>Find doctors near you.</p>
           </div>
           <div class="locate">
-            <img src="{{ url_for('static', filename='img/right-arrow.png') }}" alt="right-arrow" >
+            <div class="right-arrow"></div>
           </div>
           <div class="step">
             <img src="{{ url_for('static', filename='img/chooes-icon.png') }}" alt="Choose Icon">
@@ -100,7 +110,7 @@
             <p>Compare ratings and reviews.</p>
           </div>
           <div class="locate">
-            <img src="{{ url_for('static', filename='img/right-arrow.png') }}" alt="right-arrow" >
+            <div class="right-arrow"></div>
           </div>
           <div class="step">
             <img src="{{ url_for('static', filename='img/book-icon.png') }}" alt="Book Icon">
@@ -108,7 +118,7 @@
             <p>Schedule your visit.</p>
           </div>
           <div class="locate">
-            <img src="{{ url_for('static', filename='img/right-arrow.png') }}" alt="right-arrow" >
+            <div class="right-arrow"></div>
           </div>
           <div class="step">
             <img src="{{ url_for('static', filename='img/done-icon.png') }}" alt="Relax Icon">
@@ -138,16 +148,21 @@
     </section>
 
     <section>
-      <img src="{{ url_for('static', filename='img/imgMain.png') }}" alt="a" style="height: 100px; width: 100px; visibility: hidden;">
-      <img src="{{ url_for('static', filename='img/imgMain.png') }}" alt="a" style="height: 100px; width: 100px; visibility: hidden;">
-      <img src="{{ url_for('static', filename='img/imgMain.png') }}" alt="a" style="height: 100px; width: 100px; visibility: hidden;">
-      <img src="{{ url_for('static', filename='img/imgMain.png') }}" alt="a" style="height: 100px; width: 100px; visibility: hidden;">
+      <img src="{{ url_for('static', filename='img/imgMain.png') }}" alt="a"
+        style="height: 100px; width: 100px; visibility: hidden;">
+      <img src="{{ url_for('static', filename='img/imgMain.png') }}" alt="a"
+        style="height: 100px; width: 100px; visibility: hidden;">
+      <img src="{{ url_for('static', filename='img/imgMain.png') }}" alt="a"
+        style="height: 100px; width: 100px; visibility: hidden;">
+      <img src="{{ url_for('static', filename='img/imgMain.png') }}" alt="a"
+        style="height: 100px; width: 100px; visibility: hidden;">
     </section>
   </main>
 
   {% include 'footer.html' %}
-  
+
   <script src="{{ url_for('static', filename='js/healthNews.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
   <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
 </body>
 

@@ -29,6 +29,8 @@ def landing_page():
     user_status = session.get('user_status')
     if user_status:
         session.clear()
+    session['today'] = datetime.today().strftime('%Y-%m-%d')
+
     return render_template("index.html")
 
 
@@ -74,21 +76,20 @@ def mvp():
             "doctor_id": doctor_id,
             "status": "upcoming"
         })
-        
+        # date = datetime.strptime(date, '%b %d %Y').strftime('%Y-%m-%d')
+        # time = datetime.strptime(time, '%I:%M %p').strftime('%H:%M:%S')
         booked_times = [
-            {
-                "date": datetime.strptime(appt["appointment_date"], '%Y-%m-%d'),
-                "time": datetime.strptime(appt["appointment_time"], '%H:%M:%S')
-            }
-            for appt in booked_appointments
-        ]
-        
+                {"date": appt["appointment_date"], "time": appt["appointment_time"]} for appt in booked_appointments
+            ]
+
         # review and rating
         reviews = doctor.get("reviews", [])
         avg_rating = sum([review["rating"] for review in reviews]) / len(reviews) if reviews else None
         
         # available time
-        available_times = get_available_times_for_doctor(doctor, date)
+        available_times = get_available_times_for_doctor(doctor, date, booked_times)
+
+        # print(available_times[0]['availableTimes'][0]['time'])
         
         doctors_availabilities.append({
             "id": doctor_id,
@@ -111,6 +112,7 @@ def mvp():
     doctors_availabilities = [
         doctor for doctor in doctors_availabilities if doctor["available_times"]
     ]
+
     total_doctors = len(doctors_availabilities)
     total_pages = (total_doctors // per_page) + (1 if total_doctors % per_page > 0 else 0)
 
@@ -120,19 +122,18 @@ def mvp():
     end_index = start_index + per_page
     doctors_list = doctors_availabilities[start_index:end_index]
 
-    return render_template("MVP.html", doctors=doctors_list, form=form, page=page, total_pages=total_pages, condition=condition, location=location, date=date, today=today)
+    return render_template("MVP.html", doctors=doctors_list, form=form, page=page, total_pages=total_pages, condition=condition, location=location, date=date)
 
 
 
-def get_available_times_for_doctor(doctor, date):
+def get_available_times_for_doctor(doctor, date, booked_times):
     available_dates = []
     selected_date = datetime.strptime(date, "%Y-%m-%d").date()
-    today = selected_date
     operating_hours = doctor.get('operating_hours', {})  # get doctor's operating hours (start & end time for the each day)
 
     for i in range(4):  # appears 4 days
         # from today or inserted date
-        next_date = today + timedelta(days=i)
+        next_date = selected_date + timedelta(days=i)
         day_of_week = next_date.strftime('%A')  # day: Monday
         date_str = next_date.strftime("%Y-%m-%d") # date: 2024-12-10
         is_today = (next_date == datetime.today().date())
@@ -142,14 +143,10 @@ def get_available_times_for_doctor(doctor, date):
             start_time_str = operating_hours[day_of_week]['start']
             end_time_str = operating_hours[day_of_week]['end']
 
-            # available dates
+            # generate available times
             available_times = get_available_times(start_time_str, end_time_str, date_str, day_of_week, is_today)
 
-            # except the booked times
-            booked_times = doctor.get('booked_times', [])
-            available_times = [time for time in available_times if time not in booked_times]
-
-            # Filter out booked times
+            # exclude booked times
             filtered_available_times = [
                 time for time in available_times
                 if not any(
@@ -158,13 +155,17 @@ def get_available_times_for_doctor(doctor, date):
                 )
             ]
 
+            for i in range(len(filtered_available_times)):
+                time = filtered_available_times[i]['time']
+                time = datetime.strptime(time, "%H:%M:%S").strftime('%I:%M %p')
+                filtered_available_times[i]['time'] = time
+
             # return filtered_available_times
             if filtered_available_times:
                 available_dates.append({
                     'date': datetime.strptime(date_str, '%Y-%m-%d').strftime('%b %d %Y'),
-                    'times': available_times,
-                    'day': day_of_week,
                     'availableTimes': filtered_available_times,
+                    'day': day_of_week,
                     'isToday': is_today
                 })
 
@@ -204,8 +205,8 @@ def get_available_times(start, end, date, day, isToday=False):
             break
 
         times.append({
-            'time': current_time.strftime("%I:%M %p"),
             'date': date,
+            'time': current_time.strftime("%H:%M:%S"),
             'day': day
         })
         
@@ -233,12 +234,6 @@ def booking():
     day = request.args.get("day") or request.form.get("appointment_day")
     user = get_patient_collection().find_one({"_id": ObjectId(user_id)})
 
-    # date = datetime.strptime(date, '%b %d %Y').strftime('%Y-%m-%d')
-    print(f"date: {date}")
-    print(f"time: {time}")
-    print(f"day: {day}")
-    
-
     today = datetime.today().date()
 
     try:
@@ -258,7 +253,6 @@ def booking():
         return redirect(url_for("views.mvp"))
 
     doctor = get_doctor_collection().find_one({"_id": ObjectId(doctor_id)})
-    print(f"doctor Email: {doctor['email']}")
 
     if not doctor:
         flash("Doctor not found.", "alert-danger")
@@ -268,15 +262,14 @@ def booking():
         if not user_id:
             flash("Please log in first.", "alert-danger")
             return redirect(url_for("auth.login_patient", doctor_id=doctor_id, date=date, time=time, day=day))
-        
-
 
         return render_template("booking.html", doctor=doctor, user=user, form=form, appointment_date=date, appointment_time=time, appointment_day=day)
 
-    if request.method == 'POST' and form.validate_on_submit():
-        # and these codes alter formats to '%Y-%m-%d' and '%H:%M:%S'('2024-11-28', '09:00:00') for db
+    if request.method == 'POST':
+        # and alter these codes' formats to '%Y-%m-%d' and '%H:%M:%S'('2024-11-28', '09:00:00') for db
         date = datetime.strptime(date, '%b %d %Y').strftime('%Y-%m-%d')
         time = datetime.strptime(time, '%I:%M %p').strftime('%H:%M:%S')
+
         # prevent to trip stacking
         existing_appointment = get_appointment_collection().find_one({
             "doctor_id": doctor_id,
@@ -352,9 +345,7 @@ def booking():
             # to a patient
             email_sent_patient = send_email(email, subject_patient, body_patient)
 
-            if email_sent_patient:
-                flash("Appointment booked successfully. A confirmation email has been sent.", "alert-success")
-            else:
+            if not email_sent_patient:
                 flash("Appointment booked, but failed to send confirmation email to patient.", "alert-warning")
 
             # to a doctor
@@ -374,12 +365,10 @@ def booking():
 
             email_sent_doctor = send_email(doctor['email'], subject_doctor, body_doctor)
 
-            if email_sent_doctor:
-                flash("Appointment booked successfully. Confirmation emails have been sent.", "alert-success")
-            else:
+            if not email_sent_doctor:
                 flash("Appointment booked, but failed to send confirmation email to the doctor.", "alert-warning")
 
-            flash("Appointment booked successfully.", "alert-success")
+            flash("Appointment booked successfully. Confirmation email has been sent.", "alert-success")
             return redirect(url_for("views.landing_page"))
 
         except Exception as e:
@@ -419,13 +408,10 @@ def appointments():
             )
         )
 
-        
-
         # update status
         current_date = datetime.now()
 
         for appt in appointments:
-            
             appt_date = appt.get('appointment_date')
             appt_time = appt.get('appointment_time')
 
@@ -520,7 +506,7 @@ def check_availability():
 
 @views.route("/myappointments/cancel", methods=["POST"])
 def cancel_appointment():
-    appointment_id = request.json.get('appointment_id')
+    appointment_id = request.json.get('appointment_id') if request.json.get('appointment_id') else "67615ed5d8027ab285d935ac"
     cancel_reason = request.json.get('cancel_reason')
 
     if not appointment_id:
@@ -538,6 +524,7 @@ def cancel_appointment():
     if result.modified_count > 0:
         # retrieve the appointment details
         appt = get_appointment_collection().find_one({"_id": ObjectId(appointment_id)})
+        email = ''
 
         # update the doctor's booked_times by removing the canceled appointment time
         get_doctor_collection().update_one(
@@ -545,8 +532,39 @@ def cancel_appointment():
             {"$pull": {"booked_times": {"date": appt['appointment_date'], "time": appt['appointment_time']}}}
         )
 
+        # send an email to a patient
+        email = appt['email']
+        subject_patient = "Cancellation Confirmation"
+        body_patient = (
+            f"Dear {appt['patient_name']},\n\n"
+            f"Your appointment with {appt['doctor_name']} "
+            f"has been successfully canceled.\n\n"
+            f"Date: {appt['appointment_date']}\nTime: {appt['appointment_time']}\nDay: {appt['appointment_day']}\n\n"
+            f"Thank you for using MedKorea.\n\n"
+            f"Best regards,\nThe MedKorea Team"
+        )
+        email_sent_patient = send_email(email, subject_patient, body_patient)
+        if not email_sent_patient:
+                print("Appointment canceled, but failed to send confirmation email to the patient.", "alert-warning")
+
+        # send an email to a doctor
+        doctor = get_doctor_collection().find_one({"_id": ObjectId(appt['doctor_id'])})
+        email = doctor['email']
+        subject_doctor = "Cancellation Confirmation"
+        body_doctor = (
+            f"Dear {doctor['first_name']} {doctor['last_name']},\n\n"
+            f"Your appointment with {appt['patient_name']} "
+            f"has been successfully canceled.\n\n"
+            f"Date: {appt['appointment_date']}\nTime: {appt['appointment_time']}\nDay: {appt['appointment_day']}\n\n"
+            f"Thank you for using MedKorea.\n\n"
+            f"Best regards,\nThe MedKorea Team"
+        )
+        email_sent_doctor = send_email(email, subject_doctor, body_doctor)
+        if not email_sent_doctor:
+                print("Appointment canceled, but failed to send confirmation email to the doctor.", "alert-warning")
+
     if result.matched_count:
-        flash("Appointment canceled successfully.", "alert-success")
+        flash("Appointment canceled successfully. Confirmation email has been sent.", "alert-success")
         return jsonify({"success": True}), 200
     else:
         return flash("Failed to cancel the appointment. Please try again.", "alert-danger")

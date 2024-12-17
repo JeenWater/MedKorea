@@ -29,8 +29,8 @@ class SearchDoctorsForm(FlaskForm):
 
 
 class AppointmentForm(FlaskForm):
-    first_name = StringField("First Name", validators=[InputRequired(), Length(min=2, max=30)])
-    last_name = StringField("Last Name", validators=[InputRequired(), Length(min=2, max=30)])
+    first_name = StringField("First Name", validators=[InputRequired(), Length(min=1, max=30)])
+    last_name = StringField("Last Name", validators=[InputRequired(), Length(min=1, max=30)])
     first_visit = SelectField("Is this your first visit?", choices=[('Male', 'Male'), ('Female', 'Female')], validators=[InputRequired()])
     phone = StringField("Phone Number", validators=[InputRequired(), Length(min=10, max=15)])
     birth = DateField("Date of Birth", format='%Y-%m-%d', validators=[InputRequired()])
@@ -65,8 +65,8 @@ class ChangePassword(FlaskForm):
 
 
 class EditProfile_patient(FlaskForm):
-    first_name = StringField("First Name", validators=[InputRequired(), Length(min=2, max=30)])
-    last_name = StringField("Last Name", validators=[InputRequired(), Length(min=2, max=30)])
+    first_name = StringField("First Name", validators=[InputRequired(), Length(min=1, max=30)])
+    last_name = StringField("Last Name", validators=[InputRequired(), Length(min=1, max=30)])
     phone = StringField("Phone Number", validators=[InputRequired(), Length(min=10, max=15)])
     birth = DateField("Date of Birth", format='%Y-%m-%d', validators=[InputRequired()])
     sex = SelectField("Sex", choices=[('Male', 'Male'), ('Female', 'Female')], validators=[InputRequired()])
@@ -80,8 +80,8 @@ class EditProfile_patient(FlaskForm):
 
 
 class SignUp_patient(FlaskForm):
-    first_name = StringField("First Name", validators=[InputRequired(), Length(min=2, max=30)])
-    last_name = StringField("Last Name", validators=[InputRequired(), Length(min=2, max=30)])
+    first_name = StringField("First Name", validators=[InputRequired(), Length(min=1, max=30)])
+    last_name = StringField("Last Name", validators=[InputRequired(), Length(min=1, max=30)])
     email = EmailField("Email", validators=[InputRequired(), Email()])
     password = PasswordField("Password", validators=[InputRequired(), Length(min=6, max=20), password_strength_check])
     confirm_password = PasswordField("Confirm Password", validators=[InputRequired()])

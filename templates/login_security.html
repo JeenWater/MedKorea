@@ -6,6 +6,7 @@
     <title>Change Password</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/preloader.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_myAccount.css') }}">
@@ -31,12 +32,21 @@
                         <span></span>
                         <span></span>
                     </div>
-                    <div class="menu-content" id="user-menu">
-                        <a href="{{ url_for('auth.myAccount') }}" class="btn">Personal Information</a>
-                        <a href="{{ url_for('auth.login_security') }}" class="btn">Login & Security</a>
-                        <a href="{{ url_for('views.appointments') }}" class="btn">Appointments</a>
-                        <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
-                    </div>
+                    {% if user.user_type == 'doctor' %}
+                        <div class="menu-content-doctor" id="user-menu">
+                            <a href="{{ url_for('auth.myAccount') }}" class="btn">Personal Information</a>
+                            <a href="{{ url_for('auth.login_security') }}" class="btn">Login & Security</a>
+                            <a href="{{ url_for('views.appointments') }}" class="btn">Appointments History</a>
+                            <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
+                        </div>
+                    {% elif user.user_type == 'patient' %}
+                        <div class="menu-content-patient" id="user-menu">
+                            <a href="{{ url_for('auth.myAccount') }}" class="btn">Personal Information</a>
+                            <a href="{{ url_for('auth.login_security') }}" class="btn">Login & Security</a>
+                            <a href="{{ url_for('views.appointments') }}" class="btn">Appointments History</a>
+                            <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </nav>

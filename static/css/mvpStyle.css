@@ -1,6 +1,6 @@
 .nav-mid-search:last-child {
     width: 25%;
-    padding: .675em;
+    padding: 0.675em;
 }
 
 .main{
@@ -50,13 +50,8 @@
     margin: 1em 3em;
     background-color: #f0f8ff;
     border-radius: 1em;
-    /* opacity: 0; */
     transition: box-shadow 0.3s ease-in-out;
 }
-
-/* .doctor-info.show {
-    opacity: 1;
-} */
 
 .doctor-info:hover{
     box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
@@ -73,6 +68,7 @@
     float: left;
     display: flex;
     justify-content: flex-start;
+    background-color: #f0f8ff;
 }
 
 .rating{
@@ -129,7 +125,7 @@
 
 
 .reservation-container{
-    /* width: 50%; */
+    width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -209,4 +205,76 @@
 
 .page{
     margin: 0 .5em;
+}
+
+
+@media (max-width: 1250px){
+    .doctor-info{
+        width: unset;
+    }
+}
+
+@media (max-width: 1023px){
+    .details{
+        flex-direction: column;
+    }
+
+    .reservation-container{
+        width: 100%;
+        flex-direction: unset;
+        justify-content: space-around;
+        margin: 1em 0 0 1em;
+    }
+
+    .reservation-tit{
+        width: 30%;
+        text-overflow: clip;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 .5em .5em;
+    }
+
+    .reservation-tit h3{
+        text-align: center;
+    }
+
+    .reservation-content{
+        display: flex;
+        width: 70%;
+    }
+}
+
+@media (max-width: 768px){
+    .reservation-tit h3{
+        text-align: unset;
+        text-wrap: nowrap;
+    }
+
+    .reservation-container{
+        flex-direction:column
+    }
+
+    .reservation-content{
+        width: unset;
+    }
+}
+
+@media (max-width: 650px) {
+    .main-top-nav{
+        margin: 1em 0;
+    }
+
+    .nav-mid{
+        flex-wrap: wrap;
+    }
+
+    .nav-mid-search:first-child{
+        width: 100%;
+    }
+
+    .nav-mid-search:nth-child(2), .nav-mid-search:last-child{
+        width: 50%;
+        margin-top: .5em;
+    }
 }

@@ -7,6 +7,7 @@
     <title>Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/preloader.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mvpStyle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/myAppointments.css') }}">
@@ -36,7 +37,9 @@
                             <span></span>
                             <span></span>
                         </div>
-                        <div class="menu-content" id="user-menu">
+                        <div class="menu-content-patient" id="user-menu">
+                            <h4>Hello<br>{{ session['user_name'] }}</h4>
+                            <a href="{{ url_for('views.mvp') }}" class="btn">Appointment</a>
                             <a href="{{ url_for('auth.myAccount') }}" class="btn">My Account</a>
                             <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
                         </div>
@@ -63,7 +66,13 @@
             <div class="doctor-profile" id="booking-doctor-profile">
                 <div class="doctor-img">
                     <img src="{{ url_for('static', filename='img/' + doctor.image) }}" alt="{{ doctor.first_name }} {{ doctor.last_name }}'s img" class="doctor-img" style="width: 100px; height: 100px;">
-                    <div class="rating"><span>★</span>{% if doctor.rating %}{{ doctor.rating }} {% else %} 'No ratings yet' {% endif %}</div>
+                    <div class="rating"><span>★</span>
+                        {% if doctor.rating %}
+                            {{ doctor.rating }}
+                        {% else %}
+                            No ratings yet
+                        {% endif %}
+                    </div>
                 </div>
                 <span class="doctor-detail">
                     <h2 class="doctor-tit">Dr. {{ doctor.first_name }} {{ doctor.last_name }}</h2>
@@ -71,7 +80,7 @@
                     <h4 class="hospital-address">{{ doctor.hospital_name }}</h4>
                     <h5>{{ doctor.address }}</h5>
                     <h5>Preferred Language: {{ doctor.preferred_language }}</h5>
-                    <p class="doctor-description">{{ doctor.bio }}</p>
+                    <p class="doctor-description">{{ doctor.bio | truncate(120, end='...') }}</p>
                 </span>
             </div>
         </section>
@@ -80,7 +89,6 @@
                 <h2>Book Your Appointment</h2>
                 <div class="booking-top">
                     <h3>Please confirm the below information to book your appointment.</h3>
-                    
                 </div>
                 <form action="{{ url_for('views.booking') }}" id="booking-form" method="POST">
                     {{ form.hidden_tag() }}
@@ -91,10 +99,14 @@
 
                     <div class="one-column">
                         <div class="first-visit-buttons">
-                            <p>Is this your first visit?</p>
-                            <button type="button" id="yes-btn" class="visit-btn" value="y">YES</button>
-                            <button type="button" id="no-btn" class="visit-btn" value="n">NO</button>
-                            <input type="hidden" id="first_visit" name="first_visit" value="{{ form.first_visit.data }}">
+                            <div class="first-visit-tit">
+                                <p>Is this your first visit?</p>
+                            </div>
+                            <div class="btns">
+                                <button type="button" id="yes-btn" class="visit-btn" value="y">YES</button>
+                                <button type="button" id="no-btn" class="visit-btn" value="n">NO</button>
+                                <input type="hidden" id="first_visit" name="first_visit" value="{{ form.first_visit.data }}">
+                            </div>
                         </div>
                     </div>
 
@@ -135,25 +147,35 @@
                         </div>
                         
                     </div>
-                    <label for="preferred_language">Preferred Language<sup class="required">*</sup><sup class="required"></sup></label>
-                    {{ form.preferred_language(class="form-control") }}
-
-                    <label for="email">Email<sup class="required">*</sup></label>
-                    <input type="email" id="email" name="email" value="{{ user.email }}" required>
-
-                    <label for="medical_history">Medical History</label>
-                    {% if user.medical_history %}
-                        <textarea id="medical_history" class="form-control" placeholder="Include any allergies or past conditions" readonly>{{ user.medical_history }}</textarea>
-                    {% else %}
-                        {{ form.medical_history(class="form-control", placeholder="Include any allergies or past conditions") }}
-                    {% endif %}
-
-                    <label for="comments_for_doctor">Comments for Doctor (optional)</label>
-                    {% if user.comments_for_doctor %}
-                        <textarea name="comments_for_doctor" id="comments_for_doctor" placeholder="Describe your symptoms" readonly>{{ user.comments_for_doctor }}</textarea>
-                    {% else %}
-                        {{ form.comments_for_doctor(class="form-control", placeholder="Describe your symptoms") }}
-                    {% endif %}
+                    <div class="one-column">
+                        <div class="one-column-content">
+                            <label for="preferred_language">Preferred Language<sup class="required">*</sup><sup class="required"></sup></label>
+                            {{ form.preferred_language(class="form-control") }}
+                        </div>
+    
+                        <div class="one-column-content">
+                            <label for="email">Email<sup class="required">*</sup></label>
+                            <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                        </div>
+    
+                        <div class="one-column-content">
+                            <label for="medical_history">Medical History</label>
+                            {% if user.medical_history %}
+                                <textarea id="medical_history" class="form-control" placeholder="Include any allergies or past conditions" readonly>{{ user.medical_history }}</textarea>
+                            {% else %}
+                                {{ form.medical_history(class="form-control", placeholder="Include any allergies or past conditions") }}
+                            {% endif %}
+                        </div>
+    
+                        <div class="one-column-content">
+                            <label for="comments_for_doctor">Comments for Doctor (optional)</label>
+                            {% if user.comments_for_doctor %}
+                                <textarea name="comments_for_doctor" id="comments_for_doctor" placeholder="Describe your symptoms" readonly>{{ user.comments_for_doctor }}</textarea>
+                            {% else %}
+                                {{ form.comments_for_doctor(class="form-control", placeholder="Describe your symptoms") }}
+                            {% endif %}
+                        </div>
+                    </div>
 
                     <button type="button" class="book-btn" id="openBookingModalBtn">Book Appointment</button>
                 </form>

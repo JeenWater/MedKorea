@@ -7,6 +7,8 @@
     <title>MVP</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/preloader.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mvpStyle.css') }}">
 </head>
 
@@ -21,43 +23,52 @@
             <div class="nav-left">
                 <div class="logo">
                     <a href="/"><img src="{{ url_for('static', filename='img/fixedIconMain(blue).png') }}"
-                            alt="MedKorea logo" /></a>
+                        alt="MedKorea logo"/></a>
                     <a href="/">
-                        <h1>MedKorea</h1>
+                    <h1>MedKorea</h1>
                     </a>
                 </div>
             </div>
-            {% if session['user'] %}
-            <div class="nav-right" style="justify-content: flex-start;">
-                <div class="hamburger-menu">
-                    <div class="menu-icon" onclick="toggleMenu()">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </div>
-                    <div class="menu-content" id="user-menu">
-                        {% if session['user_type'] == 'patient' %}
-                        <h4>Hello<br>{{ session['user_name'] }}</h4>
-                        {% else %}
-                        <h4>Hello<br>Dr.{{ session['user_name'] }}</h4>
-                        {% endif %}
-                        <a href="{{ url_for('auth.myAccount') }}" class="btn">My Account</a>
-                        <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
-                    </div>
-                </div>
-            </div>
-            {% else %}
+
             <div class="nav-mid"></div>
-            <div class="nav-right">
-                <!-- Hidden button -->
-                <button type="submit" id="search-btn" class="btn"
-                    style="width: 45%; visibility: hidden;">Search</button>
-                <a href="#" class="btn" style="width: 45%;" onclick="loginMenu()">Login</a>
-                <div class="login-menu-content" id="login-menu">
-                    <a href="{{ url_for('auth.login_patient') }}" class="btn loginBtn">Login as Patient</a>
-                    <a href="{{ url_for('auth.login_doctor') }}" class="btn loginBtn">Login as Doctor</a>
+
+            {% if session['user'] %}
+                <div class="nav-right">
+                    <div class="hamburger-menu">
+                        <div class="menu-icon" onclick="toggleMenu()">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        </div>
+                        {% if session['user_type'] == 'patient' %}
+                            <div class="menu-content-patient" id="user-menu">
+                                <h4>Hello<br>{{ session['user_name'] }}</h4>
+                                <a href="{{ url_for('views.mvp') }}" class="btn">Appointment</a>
+                                <a href="{{ url_for('auth.myAccount') }}" class="btn">My Account</a>
+                                <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
+                            </div>
+                        {% else %}
+                            <div class="menu-content-doctor" id="user-menu">
+                                <h4>Hello<br>Dr.{{ session['user_name'] }}</h4>
+                                <a href="{{ url_for('auth.myAccount') }}" class="btn">My Account</a>
+                                <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
+                            </div>
+                        {% endif %}
+                    </div>
                 </div>
-            </div>
+            {% else %}
+                <div class="nav-right">
+                    <button type="button" class="btn" id="openloginModalBtn">Login</button>
+                </div>
+                <div id="LoginModal" class="modal">
+                    <div class="modal-content">
+                        <h2 id="modalTitle">Login</h2>
+                        <div class="modal-actions">
+                            <a href="{{ url_for('auth.login_patient') }}" class="btn loginBtn">Login as Patient</a>
+                            <a href="{{ url_for('auth.login_doctor') }}" class="btn loginBtn">Login as Doctor</a>
+                        </div>
+                    </div>
+                </div>
             {% endif %}
         </nav>
     </header>
@@ -67,16 +78,16 @@
             <div class="main-top-nav">
                 <form id="search-form" role="search" class="nav-mid-form">
                     <div class="nav-mid">
-                        {{ form.condition(type="text", class="nav-mid-search", placeholder="Condition, procedure, doctor...", autocomplete="off", value="") }}
-                        {{ form.location(type="text", class="nav-mid-search", placeholder="Location", autocomplete="off", value="") }}
-                        {% if form.date %}
+                        {{ form.condition(type="text", class="nav-mid-search", placeholder="Condition, procedure, doctor...", value="") }}
+                        {{ form.location(type="text", class="nav-mid-search", placeholder="Location", value="") }}
+                        {% if request.args.get('date') %}
                             {{ form.date(type="date", id="date", class="nav-mid-search", required=True, value=request.args.get('date')) }}
                         {% else %}
-                            {{ form.date(type="date", id="date", class="nav-mid-search", required=True, value=today.today) }}
+                            {{ form.date(type="date", id="today", class="nav-mid-search", required=True, value=session['today']) }}
                         {% endif %}
                     </div>
                     <div class="nav-right">
-                        {{ form.submit(id="search-btn", class="btn", style="width: 45%;") }}
+                        {{ form.submit(id="search-btn", class="btn") }}
                     </div>
                 </form>
             </div>
@@ -121,7 +132,7 @@
                                             data-doctor-id="{{ doctor.id }}"
                                             onchange="DoctorManager.selectTime(this.dataset.day, this.dataset.date, this.value, this.dataset.doctorId)">
                                             <option value="">Select a time</option>
-                                            {% for time in date_info.times %}
+                                            {% for time in date_info.availableTimes %}
                                             <option value="{{ time.time }}">
                                                 {{ time.time }}
                                             </option>
@@ -134,23 +145,26 @@
                             </div>
                         </div>
                     </div>
-                    {% endif %}
+                {% endif %}
             {% endfor %}
         </div>
         <div class="load-more-btn-area">
             {% if page > 1 %}
-            <a href="{{ url_for('views.mvp', page=page-1, condition=form.condition.data, location=form.location.data, date=request.args.get('date')) }}" class="btn">Previous</a>
+            <a href="{{ url_for('views.mvp', page=page-1, condition=form.condition.data, location=form.location.data, date=request.args.get('date')) }}"
+                class="btn">Previous</a>
             {% endif %}
             <span class="page"> Page {{ page }} of {{ total_pages }}</span>
-            {% if page < total_pages %}
-            <a href="{{ url_for('views.mvp', page=page+1, condition=form.condition.data, location=form.location.data, date=request.args.get('date')) }}" class="btn">Next</a>
-            {% endif %}
+            {% if page < total_pages %} <a
+                href="{{ url_for('views.mvp', page=page+1, condition=form.condition.data, location=form.location.data, date=request.args.get('date')) }}"
+                class="btn">Next</a>
+                {% endif %}
         </div>
     </main>
 
     {% include 'footer.html' %}
 
     <script src="{{ url_for('static', filename='js/preloader.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
     <script src="{{ url_for('static', filename='js/book.js') }}"></script>
 </body>
 

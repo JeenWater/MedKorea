@@ -34,6 +34,22 @@ class BaseModal {
 
 
 // Booking modal
+class LoginModal extends BaseModal {
+    constructor(modalId) {
+        super(modalId);
+    }
+
+    open() {
+        super.open();
+    }
+
+}
+
+
+
+
+
+// Booking modal
 class BookingModal extends BaseModal {
     constructor(modalId) {
         super(modalId);
@@ -114,6 +130,15 @@ document.addEventListener('DOMContentLoaded', () => {
             // For booking modal
             const bookingModal = new BookingModal('myModal');
             bookingModal.open();
+        });
+    });
+
+    const loginButton = document.querySelectorAll('#openloginModalBtn');
+    loginButton.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // For login modal
+            const loginModal = new LoginModal('LoginModal');
+            loginModal.open();
         });
     });
 

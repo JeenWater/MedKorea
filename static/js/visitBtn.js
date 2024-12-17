@@ -1,4 +1,4 @@
-// for buttons on the sign up page
+// for buttons on the sign up page (first visit)
 const Ybtn = document.getElementById("yes-btn");
 const Nbtn = document.getElementById("no-btn");
 const first_visit = document.getElementById("first_visit");

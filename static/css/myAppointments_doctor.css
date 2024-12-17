@@ -9,7 +9,7 @@
 }
 
 .doctor-info{
-    width: 42%;
+    width: 40%;
     margin: 1em 1em;
     padding: 1em;
 }
@@ -17,6 +17,7 @@
 .doctor-tit{
     color: rgba(0, 0, 0, .8);
     margin: 0;
+    text-wrap: nowrap;
 }
 
 .doctor-specialty{
@@ -30,4 +31,31 @@
 
 .btns{
     display: block;
+}
+
+@media (max-width: 1023px){
+    .doctor-info{
+        width: unset;
+    }
+
+    .reservations:first-child {
+        padding: .5em 1.5em;
+    }
+
+    .reservation-container {
+        justify-content: space-around;
+    }
+
+    .btns{
+        display: flex;
+    }
+}
+
+@media (max-width: 950px){
+    .doctor-info{
+        width: unset;
+    }
+}
+@media (max-width: 768px){
+
 }

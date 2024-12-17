@@ -6,6 +6,7 @@
     <title>Sign Up For Patient</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/preloader.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
 </head>
@@ -58,11 +59,15 @@
                     </div>
                 </div>
 
-                <label for="address">Address<sup class="required">*</sup></label>
-                {{ form.address(class="form-control", placeholder="123 gil Yanghwa-ro, Mapo-gu, Seoul", required=True) }}
-            
-                <label for="email">Email<sup class="required">*</sup></label>
-                {{ form.email(class="form-control", autocomplete="off", required=True) }}
+                <div class="one-column">
+                    <label for="address">Address<sup class="required">*</sup></label>
+                    {{ form.address(class="form-control", placeholder="123 gil Yanghwa-ro, Mapo-gu, Seoul", required=True) }}
+                </div>
+
+                <div class="one-column">
+                    <label for="email">Email<sup class="required">*</sup></label>
+                    {{ form.email(class="form-control", autocomplete="off", required=True) }}
+                </div>
                 
                 <div class="two-column">
                     <div>
@@ -75,14 +80,21 @@
                     </div>
                 </div>
 
-                <label for="preferred_language">Preferred Language</label>
-                {{ form.preferred_language(class="form-control") }}
+                <div class="one-column">
+                    <label for="preferred_language">Preferred Language</label>
+                    {{ form.preferred_language(class="form-control") }}
+                    
+                </div>
 
-                <label for="medical_history">Medical History</label>
-                {{ form.medical_history(class="form-control", placeholder="Include any allergies or past conditions") }}
+                <div class="one-column">
+                    <label for="medical_history">Medical History</label>
+                    {{ form.medical_history(class="form-control", placeholder="Include any allergies or past conditions") }}
+                </div>
 
-                <label for="comments_for_doctor">Comments for Doctor</label>
-                {{ form.comments_for_doctor(class="form-control", placeholder="Describe your symptoms") }}
+                <div class="one-column">
+                    <label for="comments_for_doctor">Comments for Doctor</label>
+                    {{ form.comments_for_doctor(class="form-control", placeholder="Describe your symptoms") }}
+                </div>
             
                 <button type="submit">Sign Up</button>
             </form>

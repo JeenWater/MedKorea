@@ -319,6 +319,7 @@ def from_user_data(form, user):
 
 @auth.route("/signup_doctor", methods=["GET", "POST"])
 def signUp_doctor():
+    import views
     form = SignUp_doctor()
 
     if form.validate_on_submit():
@@ -336,6 +337,7 @@ def signUp_doctor():
             file.save(os.path.join(current_app.config['UPLOAD_FOLDER'], filename))
 
             try:
+                email = form.email.data
                 password_hash = generate_password_hash(form.password.data, method="pbkdf2:sha256")
                 user = {
                     "user_type": "doctor".capitalize(),
@@ -350,7 +352,7 @@ def signUp_doctor():
                     "specialty": form.specialty.data,
                     "graduation_year": form.graduation_year.data,
                     "license_number": form.license_number.data,
-                    "email": form.email.data,
+                    "email": email,
                     "password": password_hash,
                     "address": form.address.data,
                     "hospital_name": form.hospital_name.data,
@@ -359,7 +361,7 @@ def signUp_doctor():
                     "created_at": datetime.now(),
                 }
 
-                existing_user = get_doctor_collection().find_one({"email": form.email.data})
+                existing_user = get_doctor_collection().find_one({"email": email}) and get_patient_collection().find_one({"email": email})
                 if existing_user:
                     flash("This email address is already registered.", "alert-danger")
                     return render_template("signUp_doctor.html", form=form)
@@ -370,6 +372,23 @@ def signUp_doctor():
                     return render_template("signUp_doctor.html", form=form)
 
                 get_doctor_collection().insert_one(user)
+
+                # send an email to a patient
+                subject_doctor = "Welcome to MedKorea Professional Network"
+                body_doctor = (
+                    f"Welcome to MedKorea - Your Account is Ready!\n\n"
+                    f"Dear Dr. {form.last_name.data.capitalize()},\n\n"
+                    f"We are pleased to confirm your registration with the MedKorea Healthcare Professional Platform.\n\n"
+                    f"Your account has been successfully created, providing you access to:\n- Comprehensive patient management system\n- Advanced medical scheduling tools\n- Secure electronic health record integration\n- Professional networking opportunities\n\n"
+                    f"If you require any assistance, our support team is available to help.\n\n"
+                    f"Best regards,\nThe MedKorea Team"
+                )
+
+                email_sent_doctor = views.send_email(email, subject_doctor, body_doctor)
+
+                if not email_sent_doctor:
+                    print("Signed up, but failed to send confirmation email to the doctor.")
+
                 flash("You have successfully signed up!", "alert-success")
                 return redirect(url_for("auth.login_doctor"))
 
@@ -383,6 +402,7 @@ def signUp_doctor():
 
 @auth.route("/signup_patient", methods=["GET", "POST"])
 def signUp_patient():
+    import views
     form = SignUp_patient()
 
     if form.validate_on_submit():
@@ -405,7 +425,7 @@ def signUp_patient():
             "created_at": datetime.now(),
         }
 
-        existing_user = get_patient_collection().find_one({"email": email})
+        existing_user = get_doctor_collection().find_one({"email": email}) and get_patient_collection().find_one({"email": email})
         if existing_user:
             flash("This email address is already registered.", "alert-danger")
             return render_template("signUp_patient.html", form=form)
@@ -415,6 +435,21 @@ def signUp_patient():
             return render_template("signUp_patient.html", form=form)
 
         get_patient_collection().insert_one(user)
+
+        # send an email to a patient
+        subject_patient = "Welcome to MedKorea - Your Account is Ready!"
+        body_patient = (
+            f"Welcome to MedKorea - Your Account is Ready!\n\n"
+            f"Dear {form.first_name.data.capitalize()},\n\n"
+            f"Thank you for creating an account with MedKorea.\nWe're excited to have you join our community!\n\n"
+            f"Your account has been successfully registered. You can now access all of our services and features.\n\n"
+            f"To get started:\n- Log in at our website\n- Complete your Medical History and Comments for Doctor\n- Explore our services\n\n"
+            f"If you have any questions, please don't hesitate to contact our support team.\n\n"
+            f"Best regards,\nThe MedKorea Team"
+        )
+        email_sent_patient = views.send_email(email, subject_patient, body_patient)
+        if not email_sent_patient:
+                print("Signed up, but failed to send confirmation email to the patient.")
 
         flash("You have successfully signed up!", "alert-success")
         return redirect(url_for("auth.login_patient"))

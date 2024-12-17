@@ -6,7 +6,7 @@
 }
 
 .main-mid-content{
-    width: 70%;
+    width: 80%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -121,3 +121,47 @@
 .load-more-btn-area{
     margin-bottom: 1em;
 }
+
+
+
+@media (max-width: 1250px){
+    .main-mid-content{
+        width: unset;
+    }
+}
+
+@media (max-width: 1023px){
+    .reservation-content{
+        display: flex;
+    }
+    
+    .reservation-tit {
+        width: 10%;
+    }
+
+    .reservations:first-child{
+        padding: 1em;
+    }
+
+    .btns {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 768px){
+    .myappointments{
+        margin: unset;
+    }
+    .main-mid{
+        width: 100%;
+    }
+    .main-mid-content{
+        width: 100%;
+    }
+
+    .doctor-info{
+        margin: 1em;
+    }
+}   

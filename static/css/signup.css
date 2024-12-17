@@ -3,7 +3,7 @@
     max-width: 35em;
     margin: 2em auto;
     padding: 2em;
-    background-color: #fff;
+    background-color: #f0f8ff;
     box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
     border-radius: .5em;
     transition: box-shadow 0.3s ease-in-out;
@@ -20,6 +20,10 @@
     color: #333;
 }
 
+.one-column, .two-column{
+    margin-bottom: 1em;
+}
+
 #signup-form {
     display: flex;
     flex-direction: column;
@@ -29,17 +33,21 @@
 
 #signup-form input, #signup-form textarea, #signup-form select {
     padding: 0.8em .1em;
-    margin-bottom: 1.5em;
+    /* margin-bottom: 1.5em; */
     border: 1px solid #ddd;
     border-radius: .3em;
     width: 100%;
     font-size: .9em;
 }
 
-/* .doctor-img{
-    display: flex;
-    flex-direction: column;
-} */
+.doctor-img{
+    width: unset;
+    margin: 0 0 1em;
+}
+
+.form-control{
+    background-color: #fff;
+}
 
 #birth{
     padding: 0.7303em .1em !important;
@@ -67,10 +75,6 @@
 
 
 
-
-.operating-hours-section {
-    margin-top: 30px;
-}
 
 .operating-hours-container {
     display: grid;

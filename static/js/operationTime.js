@@ -1,4 +1,4 @@
-// for MVP time
+// for doctors' operating times
 document.addEventListener('DOMContentLoaded', function() {
     const operatingHoursHidden = document.getElementById('operating-hours-hidden');
     if (operatingHoursHidden) {

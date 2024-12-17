@@ -6,6 +6,7 @@
     <title>My Account</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/preloader.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/signup.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_myAccount.css') }}">
@@ -31,12 +32,21 @@
                         <span></span>
                         <span></span>
                     </div>
-                    <div class="menu-content" id="user-menu">
-                        <a href="{{ url_for('auth.myAccount') }}" class="btn">Personal Information</a>
-                        <a href="{{ url_for('auth.login_security') }}" class="btn">Login & Security</a>
-                        <a href="{{ url_for('views.appointments') }}" class="btn">Appointments</a>
-                        <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
-                    </div>
+                    {% if user.user_type == 'doctor' %}
+                        <div class="menu-content-doctor" id="user-menu">
+                            <a href="{{ url_for('auth.myAccount') }}" class="btn">Personal Information</a>
+                            <a href="{{ url_for('auth.login_security') }}" class="btn">Login & Security</a>
+                            <a href="{{ url_for('views.appointments') }}" class="btn">Appointments History</a>
+                            <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
+                        </div>
+                    {% elif user.user_type == 'patient' %}
+                        <div class="menu-content-patient" id="user-menu">
+                            <a href="{{ url_for('auth.myAccount') }}" class="btn">Personal Information</a>
+                            <a href="{{ url_for('auth.login_security') }}" class="btn">Login & Security</a>
+                            <a href="{{ url_for('views.appointments') }}" class="btn">Appointments History</a>
+                            <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </nav>
@@ -51,18 +61,18 @@
                 <form action="{{ url_for('auth.myAccount') }}" id="signup-form" method="POST" enctype="multipart/form-data">
                     {{ form.hidden_tag() }}
                     {% if user.user_type == 'doctor' %}
-                    <div class="doctor-img">
-                        <label for="file">Profile Picture<sup class="required">*</sup></label>
-                        {{ form.image(class="form-control", required=True) }}
-                    </div>
+                        <div class="doctor-img">
+                            <label for="image">Profile Picture<sup class="required">*</sup></label>
+                            {{ form.image(class="form-control", required=True) }}
+                        </div>
                     {% endif %}
                     <div class="two-column">
                         <div class="two-column-content">
-                            <label for="first-name">First Name<sup class="required">*</sup></label>
+                            <label for="first_name">First Name<sup class="required">*</sup></label>
                             {{ form.first_name(class="form-control", required=True) }}
                         </div>
                         <div class="two-column-content">
-                            <label for="last-name">Last Name<sup class="required">*</sup></label>
+                            <label for="last_name">Last Name<sup class="required">*</sup></label>
                             {{ form.last_name(class="form-control", required=True) }}
                         </div>
                         <div class="two-column-content">
@@ -77,18 +87,14 @@
                             <label for="sex">Sex<sup class="required">*</sup></label>
                             {{ form.sex(class="form-control", required=True) }}
                         </div>
-                        <div class="two-column-content">
-                            <label for="preferred_language">Preferred Language<sup class="required"></sup></label>
-                            {{ form.preferred_language(class="form-control") }}
-                        </div>
         
                         {# Patient-specific Fields #}
                         {% if user.user_type == 'patient' %}
                             <div class="two-column-content">
-                                <label for="insurance">Health Insurance<sup class="required"></sup></label>
-                                {{ form.insurance(class="form-control") }}
+                                <label for="preferred_language">Preferred Language<sup class="required"></sup></label>
+                                {{ form.preferred_language(class="form-control") }}
                             </div>
-                        
+
                         {# Doctor-specific Fields #}
                         {% elif user.user_type == 'doctor' %}
                             <div class="two-column-content">
@@ -96,7 +102,7 @@
                                 {{ form.medical_school(class="form-control", required=True) }}
                             </div>
                             <div class="two-column-content">
-                                <label for="specialty">Specialization<sup class="required">*</sup></label>
+                                <label for="specialty">Specialty<sup class="required">*</sup></label>
                                 {{ form.specialty(class="form-control", required=True) }}
                             </div>
                             <div class="two-column-content">
@@ -107,16 +113,26 @@
                                 <label for="license_number">Medical License Number<sup class="required">*</sup></label>
                                 {{ form.license_number(class="form-control", required=True) }}
                             </div>
+                            <div class="two-column-content">
+                                <label for="preferred_language">Preferred Language<sup class="required"></sup></label>
+                                {{ form.preferred_language(class="form-control") }}
+                            </div>
                         {% endif %}
                     </div>
         
                     {# Address and Additional Information #}
                     <div class="one-column">
+                        {% if user.user_type == 'patient' %}
+                            <div class="one-column-content">
+                                <label for="insurance">Health Insurance<sup class="required"></sup></label>
+                                {{ form.insurance(class="form-control") }}
+                            </div>
+                        {% endif %}
                         <div class="one-column-content">
                             <label for="address">Address<sup class="required">*</sup></label>
                             {{ form.address(class="form-control", placeholder="123 gil Yanghwa-ro, Mapo-gu, Seoul") }}
                         </div>
-                        
+
                         {# Patient Medical Information #}
                         {% if user.user_type == 'patient' %}
                             <div class="one-column-content">
@@ -183,7 +199,7 @@
                     {% if user.user_type == 'doctor' %}
                         <div class="doctor-myaccount-profile">
                             <div class="doctor-profile-content">
-                                <div class="doctor-profile-img">
+                                <div class="doctor-profile-img" style="margin-bottom: 0;">
                                     <label for="file">Profile Picture</label>
                                     <div class="doctor-img" style="width: 100px;">
                                         {% if user.image %}
@@ -248,41 +264,36 @@
                             <label>Preferred Language</label>
                             {{ user.preferred_language | upper }}
                         </div>
+                        {# User Type Specific Information #}
+                        {% if user.user_type == 'doctor' %}
+                        <div class="two-column-content">
+                            <label>Medical School</label>
+                            {{ user.medical_school }}
+                        </div>
+                        <div class="two-column-content">
+                            <label>Specialty</label>
+                            {{ user.specialty | upper }}
+                        </div>
+                        <div class="two-column-content">
+                            <label>Graduation Year</label>
+                            {{ user.graduation_year }}
+                        </div>
+                        <div class="two-column-content">
+                            <label>Medical License Number</label>
+                            {{ user.license_number }}
+                        </div>
+                        {% endif %}
                     </div>
-        
-                    {# User Type Specific Information #}
-                    {% if user.user_type == 'patient' %}
-                        <div class="one-column">
+
+                    
+                    {# Additional Information Display #}
+                    <div class="one-column">
+                        {% if user.user_type == 'patient' %}
                             <div class="one-column-content">
                                 <label>Health Insurance</label>
                                 {{ 'Yes' | upper if user.insurance == 'y' else 'No' | upper }}
                             </div>
-                        </div>
-                    {% elif user.user_type == 'doctor' %}
-                        <div class="two-column">
-                            <div class="two-column-content">
-                                <label>Medical School</label>
-                                {{ user.medical_school }}
-                            </div>
-                            <div class="two-column-content">
-                                <label>Specialization</label>
-                                {{ user.specialty | upper }}
-                            </div>
-                        </div>
-                        <div class="two-column">
-                            <div class="two-column-content">
-                                <label>Graduation Year</label>
-                                {{ user.graduation_year }}
-                            </div>
-                            <div class="two-column-content">
-                                <label>Medical License Number</label>
-                                {{ user.license_number }}
-                            </div>
-                        </div>
-                    {% endif %}
-        
-                    {# Additional Information Display #}
-                    <div class="one-column">
+                        {% endif %}
                         <div class="one-column-content">
                             <label>Address</label>
                             {{ user.address }}

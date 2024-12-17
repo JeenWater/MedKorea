@@ -9,7 +9,7 @@
 
 .back-btn{
     width: 80%;
-    margin: 0 0 0 1em;
+    margin: 0 0 1em 1em;
     display: flex;
     align-items: center;
 }
@@ -19,16 +19,18 @@
     justify-content: flex-start;
     align-items: baseline;
     font-size: 16px;
-    background-color: #fff;
+    background-color: #f0f8ff;
     box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
     border-radius: .3em;
     padding: .3em .4em .2em 0;
     transition: ease-in-out .3s;
     color: #777;
+    cursor: pointer;
 }
 
 .back-btn span:hover{
     text-decoration: underline;
+    
     box-shadow: -.01em 0 .5em #E74C3C, .01em 0 .1em #E74C3C;
 }
 
@@ -52,7 +54,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #fff;
+    background-color: #f0f8ff;
     border-radius: 1em;
     transition: ease-in-out .3s;
 }
@@ -97,6 +99,7 @@
 
 .visit-btn {
     padding: 0.5em 1.5em;
+    margin: .5em;
     background-color: #f1f1f1;
     border: 1px solid #ddd;
     border-radius: .3em;
@@ -135,13 +138,12 @@
 }
 
 .booking-content {
-    /* width: 55%; */
-    width: 45%;
+    width: 55%;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: #fff;
+    background-color: #f0f8ff;
     border-radius: 1em;
     margin: 0 2em;
     padding: 2em;
@@ -164,7 +166,7 @@
     flex-direction: column;
 }
 
-.first-visit-buttons p{
+.first-visit-tit{
     font-weight: bold;
     color: #333;
 }
@@ -212,10 +214,12 @@
 .two-column {
     display: grid;
     grid-template-columns: repeat(2, 0.5fr);
+    width: 100%;
     gap: 1em;
 }
 
 .two-column .two-column-content {
+    width: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -286,8 +290,41 @@
 
 
 
-@media (max-width: 768px) {
+@media (max-width: 824px) {
+    .first-visit-buttons{
+        flex-direction: column;
+    }
+
+    .booking-content{
+        width: 60%;
+    }
+
     .two-column {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 0.5fr);
+    }
+}
+
+@media (max-width: 768px){
+    .doctor-profile {
+        width: 80%;
+    }
+    .booking-content h2{
+        font-size: 25px;
+    }
+
+    .doctor-detail h2, h3{
+        font-size: 17px;
+    }
+}
+@media (max-width: 620px){
+    .booking-content{
+        width: 80%;
+    }
+    #booking-doctor-profile {
+        margin-bottom: 2em;
+    }
+    .two-column {
+        display: flex;
+        flex-direction: column;
     }
 }

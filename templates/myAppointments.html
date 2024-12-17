@@ -6,8 +6,9 @@
     <title>My Appointments</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/footer.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/preloader.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}">
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/book.css') }}"> -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_myAccount.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/mvpStyle.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/myAppointments.css') }}">
@@ -33,12 +34,21 @@
                         <span></span>
                         <span></span>
                     </div>
-                    <div class="menu-content" id="user-menu">
-                        <a href="{{ url_for('auth.myAccount') }}" class="btn">Personal Information</a>
-                        <a href="{{ url_for('auth.login_security') }}" class="btn">Login & Security</a>
-                        <a href="{{ url_for('views.appointments') }}" class="btn">Appointments</a>
-                        <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
-                    </div>
+                    {% if user_type == 'doctor' %}
+                        <div class="menu-content-doctor" id="user-menu">
+                            <a href="{{ url_for('auth.myAccount') }}" class="btn">Personal Information</a>
+                            <a href="{{ url_for('auth.login_security') }}" class="btn">Login & Security</a>
+                            <a href="{{ url_for('views.appointments') }}" class="btn">Appointments History</a>
+                            <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
+                        </div>
+                    {% elif user_type == 'patient' %}
+                        <div class="menu-content-patient" id="user-menu">
+                            <a href="{{ url_for('auth.myAccount') }}" class="btn">Personal Information</a>
+                            <a href="{{ url_for('auth.login_security') }}" class="btn">Login & Security</a>
+                            <a href="{{ url_for('views.appointments') }}" class="btn">Appointments History</a>
+                            <a href="{{ url_for('auth.logout') }}" class="logout-btn">Logout</a>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
         </nav>
@@ -51,7 +61,15 @@
                 <div class="main-mid" id="doctor-container">
                     {% if upcoming_appointments %}
                         {% for appt in upcoming_appointments %}
-                            {% include 'myAppointment_details.html' %}
+                            {% if user_type == 'doctor' %}
+                                <div class="doctor-info">
+                                    {% include 'myAppointment_details.html' %}
+                                </div>
+                            {% else %}
+                                <div class="doctor-info">
+                                    {% include 'myAppointment_details.html' %}
+                                </div>
+                            {% endif %}
                         {% endfor %}
                     {% else %}
                         <h3 style="margin-bottom: 2em;">No upcoming appointments</h3>
@@ -65,7 +83,9 @@
                 <div class="main-mid" id="doctor-container">
                     {% if past_appointments %}
                         {% for appt in past_appointments %}
-                            {% include 'myAppointment_details.html' %}
+                            <div class="doctor-info">
+                                {% include 'myAppointment_details.html' %}
+                            </div>
                         {% endfor %}
                     {% else %}
                         <h3 style="margin-bottom: 2em;">No past appointments</h3>

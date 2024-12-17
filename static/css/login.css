@@ -1,13 +1,9 @@
-.nav-bar {
-    /* justify-content: center; */
-}
-
 .login-section {
     width: 80%;
     max-width: 25em;
     margin: 2em auto 11%;
     padding: 2em;
-    background-color: #fff;
+    background-color: #f0f8ff;
     box-shadow: -.01em 0 .5em #5DADE2, .01em 0 .1em #5DADE2;
     border-radius: .5em;
     transition: box-shadow 0.3s ease-in-out;

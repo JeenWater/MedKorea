@@ -33,21 +33,3 @@ function toggleMenu() {
         }
     });
 }
-
-
-
-// For login menu
-function loginMenu() {
-    const menu = document.getElementById('login-menu');
-    menu.classList.toggle('show');
-
-    window.addEventListener('click', (event) => {
-        const menu = document.getElementById('login-menu');
-        if (event.target === menu) {
-            menu.style.display = 'none';
-        }
-        if (!event.target.closest('.nav-right')) {
-            menu.classList.remove('show');
-        }
-    });
-}
